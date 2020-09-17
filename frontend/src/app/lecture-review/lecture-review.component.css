@@ -1,0 +1,14 @@
+.home-btn {
+  float: right;
+}
+.detail-container {
+  margin-left: 20px;
+  margin-top: 20px;
+  background-color: #E7EDFF;
+  margin: 20px;
+  height: 100vh;
+}
+.home-card {
+  margin-left: 10px;
+  margin-right: 0px;
+}

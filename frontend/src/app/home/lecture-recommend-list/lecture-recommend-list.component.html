@@ -1,0 +1,12 @@
+<div class="row">
+<div class="col-sm-3" *ngFor="let lecture of lectures; let i = index">
+  <div class="card">
+    <img class="card-img-top" src="https://www.codeit.kr/static/images/course/catalog__seqId--26.png" alt="Card image">
+    <div class="card-body">
+      <h5 class="card-title">{{lecture.title}}</h5>
+      <p class="card-text">기초 python </p>
+      <a href="lecturereview/{{lecture.id}}" class="btn btn-primary" (click)="lectureClicked(lecture)">강의 듣기</a>
+    </div>
+  </div>
+</div>
+</div>

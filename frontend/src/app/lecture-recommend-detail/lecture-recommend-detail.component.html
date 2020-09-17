@@ -1,0 +1,22 @@
+<div class="home-btn">
+  <button routerLink="/auth" type="button" class="btn btn-primary">로그인</button>
+  <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
+</div>
+<div class="logo text-center" routerLink="/">
+</div>
+<!--<app-main-nav-bar></app-main-nav-bar>-->
+<div class="detail-container">
+  <div class="row">
+    <div class="col-sm-3">
+      <!--      <h2>page {{paramId}}</h2>-->
+      <p>평점</p>
+      <p>수준</p>
+      <p>가격</p>
+    </div>
+    <div class="col-sm-9">
+      <h4>Flutter로 쇼핑몰 만들기</h4>
+      <a>http://codeing.com 수강하러 가기</a>
+<app-lecture-recommend [lectures]="lectures" (selectLecture)="selectedLecture($event)"></app-lecture-recommend>
+    </div>
+  </div>
+</div>

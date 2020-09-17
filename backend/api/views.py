@@ -1,16 +1,20 @@
+import datetime
+
 from django.shortcuts import render, get_object_or_404
+from django.utils import timezone
 from rest_framework import viewsets, status
+from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from api.serializers import MovieSerializer, ReviewSerializer
+from api.serializers import MovieSerializer, ReviewSerializer, UserSerializer
 from .models import Review, Movie
 
 from .form import ReviewForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib.auth.models import User
-import datetime
 
 from django.contrib.auth import logout
 from django.shortcuts import redirect
@@ -107,9 +111,16 @@ def get_suggestions(request):
 
 
 # 이후 강의
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 class MovieViewSet(viewsets.ModelViewSet):
-    queryset = Movie.objects.all()
+    queryset = Movie.objects.all()[:8]
     serializer_class = MovieSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     @action(detail=True, methods=['POST'])
     def rate_movie(self, request, pk=None):
@@ -117,23 +128,30 @@ class MovieViewSet(viewsets.ModelViewSet):
             # movie = Movie.objects.get(id=pk)
             movie = get_object_or_404(Movie, id=pk)
             rating = request.data['rating']
-            # user = request.user
-            user = User.objects.get(id=1)
-            # print('user', user.id, user)
-
+            user = request.user
+            # print(user)
+            # user = User.objects.get(id=1)
             try:
-                try:
-                    review = Review.objects.get(user_id=user.id, movie=movie.id)
-                    # review = get_object_or_404(Review, user_id=user.id, movie=movie.id)
-                    review.rating = rating
-                    review.save()
-                except:
-                    review = None
+                # try:
+                review = Review.objects.get(user_id=user.id, movie=movie.id)
+                print(review)
+                # review = get_object_or_404(Review, user_id=user.id, movie=movie.id)
+                review.rating = rating
+                review.save()
+                serializer = ReviewSerializer(review, many=False)
+                response = {'message': 'Rating updated', 'result': serializer.data}
+                return Response(response, status=status.HTTP_200_OK)
+                # except:
+                #     review = None
             except:
-                Review.objects.create(user_id=user.id, movie=movie.id, rating=rating)
-
-            response = {'message': 'its working'}
-            return Response(response, status=status.HTTP_200_OK)
+                print('create')
+                review = Review(user_id=user, movie=movie, rating=rating, pub_date=timezone.now())
+                # Review.objects.create(user_id=user.id, movie=movie.id, rating=rating, pub_date=timezone.now())
+                # review.rating = rating
+                review.save()
+                serializer = ReviewSerializer(review, many=False)
+                response = {'message': 'Rating created', 'result': serializer.data}
+                return Response(response, status=status.HTTP_200_OK)
         else:
             response = {'message': 'You need to provide ratings'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
@@ -142,3 +160,13 @@ class MovieViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def update(self, request, *args, **kwargs):
+        response = {'message': "You can't update review like that"}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def create(self, request, *args, **kwargs):
+        response = {'message': "You can't create review like that"}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)

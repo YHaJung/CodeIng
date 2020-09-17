@@ -1,0 +1,19 @@
+<div class="home-btn">
+  <button routerLink="/auth" type="button" class="btn btn-primary">로그인</button>
+  <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
+</div>
+<div class="logo text-center" routerLink="/">
+</div>
+<!--<app-main-nav-bar></app-main-nav-bar>-->
+<div class="detail-container">
+  <div class="row">
+    <div class="col-sm-3">
+      <!--      <h2>page {{paramId}}</h2>-->
+      <p>필터</p>
+      <p>카테고리</p>
+    </div>
+    <div class="col-sm-9">
+      <h4>웹 프론트엔드 랭킹</h4>
+      <app-lecture-rank  [lectures]="lectures" (selectLecture)="selectedLecture($event)"></app-lecture-rank>
+<!--      <a>http://codeing.com 수강하러 가기</a>-->
+</div>

@@ -1,35 +1,52 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import {HttpClientModule} from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-// import { HomeComponent } from './home/home.component';
-import { HomeNavBarComponent } from './home-nav-bar/home-nav-bar.component';
+
 import {RouterModule, Routes} from '@angular/router';
-import { RecommendationComponent } from './recommendation/recommendation.component';
 import {AuthModule} from './auth/auth.module';
 import {HomeModule} from './home/home.module';
+import {LectureReviewModule} from './lecture-review/lecture-review.module';
+
+import {LectureRecommendDetailModule} from './lecture-recommend-detail/lecture-recommend-detail.module';
+import {LectureRankDetailModule} from './lecture-rank-detail/lecture-rank-detail.module';
+
+
 
 const appRoutes: Routes = [
-  // {path: '', component: HomeComponent},
-  {path: 'homenavbar', component: HomeNavBarComponent},
-  {path: 'recommendation', component: RecommendationComponent}
+  {path: '', pathMatch: 'full', redirectTo: ''},
+  {path: 'lecturereview/:id', redirectTo: 'lecturereview/'},
+  {path: 'lectureqa/:id', redirectTo: 'lectureqa/'},
+  // {path: 'lecturerankdetail', component: LectureRankDetailComponent},
+  // {path: 'lecturerecommenddetail', component: LectureRecommendDetailComponent},
+  // {path: 'mainnavbar', component: MainNavBarComponent}
 ];
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeNavBarComponent,
-    RecommendationComponent
+    // LectureRankDetailComponent,
+    // LectureRecommendDetailComponent,
+    // LectureReviewNavBarComponent,
+    // MainNavBarComponent,
+    // LectureRankComponent,
+    // LectureRecommendComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
+    // AppRoutingModule,
     AuthModule,
     HomeModule,
+    LectureReviewModule,
+    LectureRecommendDetailModule,
+    LectureRankDetailModule,
+    HttpClientModule,
     RouterModule.forRoot(appRoutes)
   ],
   providers: [RouterModule],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
