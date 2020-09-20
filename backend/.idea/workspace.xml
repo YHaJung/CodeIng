@@ -3,9 +3,78 @@
   <component name="ChangeListManager">
     <list default="true" id="da958ffc-8557-4fea-b41e-32e3bf85737b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/admin.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/form.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0002_auto_20200913_1506.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0003_auto_20200914_0047.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0004_auto_20200914_0113.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0005_auto_20200915_1130.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0006_auto_20200915_1133.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0007_auto_20200915_1133.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0008_auto_20200915_1958.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0009_auto_20200915_2014.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0010_auto_20200915_2023.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0011_auto_20200915_2026.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0012_auto_20200915_2030.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0013_auto_20200915_2033.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0014_auto_20200915_2121.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0015_auto_20200916_1113.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0016_auto_20200916_1229.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0017_auto_20200916_1554.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0018_auto_20200918_0114.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0019_auto_20200919_0058.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0020_auto_20200919_0113.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0021_auto_20200919_0118.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0022_auto_20200919_0123.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0023_auto_20200919_1244.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0024_auto_20200919_1512.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0025_auto_20200919_1526.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0026_auto_20200919_2234.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0027_auto_20200919_2235.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0028_auto_20200919_2238.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0029_auto_20200919_2248.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0030_auto_20200920_1125.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0031_auto_20200920_1439.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0032_auto_20200920_1442.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/0033_auto_20200920_1505.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/migrations/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/serializers.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-grid.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-grid.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-grid.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-grid.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-reboot.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-reboot.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-reboot.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap-reboot.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/css/bootstrap.min.css.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/img/Coding_logo_Final.ai" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/img/coding_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.bundle.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.bundle.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.bundle.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.bundle.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/static/js/bootstrap.min.js.map" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/moviesreviews/base.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/moviesreviews/get_suggestions.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/moviesreviews/movie_detail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/moviesreviews/movie_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/moviesreviews/review_detail.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/moviesreviews/review_list.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/registration/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/templates/registration/signup.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/api/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lecture/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/lecture/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lecture/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/lecture/serializers.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
