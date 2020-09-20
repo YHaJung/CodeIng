@@ -2,13 +2,13 @@ from django.urls import path, include
 from django.conf.urls import url
 from rest_framework import routers
 
-from api.views import MovieViewSet, ReviewViewSet, UserViewSet
+#from api.views import MovieViewSet, ReviewViewSet, UserViewSet
 from . import views
 
 router = routers.DefaultRouter()
-router.register('movies', MovieViewSet)
-router.register('reviews', ReviewViewSet)
-router.register('users', UserViewSet)
+#router.register('movies', MovieViewSet)
+#router.register('reviews', ReviewViewSet)
+#router.register('users', UserViewSet)
 
 urlpatterns = [
     # path('review/', views.review_list, name='review_list'),

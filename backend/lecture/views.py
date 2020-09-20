@@ -7,7 +7,7 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Lecture, Category, Siteinfo, Lecturecategory, Review, Userinfo, Profile, Reviewpros, Reviewcons, \
-    Likesforreview
+    Likesforreview, Qna, Likesforqna
 from rest_framework import viewsets, status
 from .serializers import LectureSerializer, CategorySerializer
 from rest_framework.authentication import TokenAuthentication
@@ -335,3 +335,53 @@ def review_list(request, pk):
 
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def qna_list(request, pk):
+    if request.method == 'GET':
+        try:
+            page = int(request.GET.get('page', '1'))
+
+            qna_list = []
+            qna_dict = {}
+            qna_dict['isSuccess'] = 'true'
+            qna_dict['code'] = 200
+            qna_dict['message'] = 'qna 목록 조회 성공'
+
+            qna = Qna.objects.filter(lecture__lectureidx=pk).select_related('userinfo','lecture')[page*5-5:page*5]
+
+            likes = Likesforqna.objects.filter(qna__lecture__lectureidx=pk).select_related('qna').values('qna').annotate(count=Count('qna'))
+            likes_dict = {}
+
+            for i in likes:
+                likes_dict[i['qna']] = i['count']
+
+
+            for r in qna:
+                try:
+                    likes_count = likes_dict[r.qnaidx]
+                except Exception:
+                    likes_count = 0
+                    pass
+                print(r.createdat)
+                qna_list.append(dict(
+                  [('qnaIdx', r.qnaidx), ('qnaTitle', r.title),('qnaDes',r.qnades),('profileImg',r.userinfo.profileimg),
+                   ('likesCount', likes_count)
+                 ]))
+
+            qna_dict['result'] = qna_list
+
+
+            return_value = json.dumps(qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+
+        except Exception:
+
+            lec_dict = {}
+            lec_dict['isSuccess'] = 'false'
+            lec_dict['code'] = 400
+            lec_dict['message'] = '파라미터 입력값 오류'
+
+            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)

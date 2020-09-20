@@ -25,7 +25,7 @@ SECRET_KEY = 'reqw&#9#!k7aycdn=17d%&)+6y+q7=a9-$7@2r-@lpyghb5)q3'
 DEBUG = True
 
 ALLOWED_HOSTS = [".ap-northeast-2.compute.amazonaws.com",
-                 '3.34.74.250']
+                 '3.34.74.250','127.0.0.1']
 
 # Application definition
 
