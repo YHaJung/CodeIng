@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.db.models import Avg
 
 
 class Siteinfo(models.Model):
@@ -27,9 +28,28 @@ class Lecture(models.Model):
     siteinfo = models.ForeignKey(Siteinfo, on_delete=models.CASCADE,
                                  db_column='siteidx')  # Field name made lowercase.
 
+    def average_rating(self):
+        # sum = 0
+        # ratings = Review.objects.filter(movie=self)
+        # for rating in ratings:
+        #     sum += rating.rating
+        # if len(ratings) >0:
+        #     return sum/len(ratings)
+        # else:
+        #     return 0
+        return self.review_set.aggregate(Avg('rating'))['rating__avg']
+
+    def __str__(self):
+        return self.title
+
+    def no_of_ratings(self):
+        ratings = Review.objects.filter(movie=self)
+        return len(ratings)
+
     class Meta:
         managed = False
         db_table = 'lecture'
+
 
 
 class Category(models.Model):
@@ -113,14 +133,12 @@ class Profile(models.Model):
 
 
 class Review(models.Model):
+    lectureidx = models.ForeignKey(Lecture, on_delete=models.CASCADE, blank=True, null=True, db_column='lectureIdx')
     reviewidx = models.AutoField(db_column='reviewIdx', primary_key=True)  # Field name made lowercase.
-    lectureidx = models.IntegerField(db_column='lectureIdx')  # Field name made lowercase.
-    totalrating = models.DecimalField(db_column='totalRating', max_digits=2,
-                                      decimal_places=1)  # Field name made lowercase.
-    pricerating = models.DecimalField(db_column='priceRating', max_digits=2,
-                                      decimal_places=1)  # Field name made lowercase.
-    teachingpowerrating = models.DecimalField(db_column='teachingPowerRating', max_digits=2,
-                                              decimal_places=1)  # Field name made lowercase.
+    # lectureidx = models.IntegerField(db_column='lectureIdx')  # Field name made lowercase.
+    totalrating = models.DecimalField(db_column='totalRating', max_digits=2, decimal_places=1)  # Field name made lowercase.
+    pricerating = models.DecimalField(db_column='priceRating', max_digits=2, decimal_places=1)  # Field name made lowercase.
+    teachingpowerrating = models.DecimalField(db_column='teachingPowerRating', max_digits=2, decimal_places=1)  # Field name made lowercase.
     recommend = models.CharField(max_length=1)
     isblocked = models.CharField(db_column='isBlocked', max_length=1)  # Field name made lowercase.
     improvement = models.TextField(blank=True, null=True)
@@ -133,6 +151,8 @@ class Review(models.Model):
     class Meta:
         managed = False
         db_table = 'review'
+        unique_together = (('profile', 'lectureidx'),)
+        index_together = (('profile', 'lectureidx'),)
 
 
 class Cons(models.Model):
