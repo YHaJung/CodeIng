@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Avg
 
@@ -70,11 +71,12 @@ class Subcategory(models.Model):
 
 
 class Lecturecategory(models.Model):
-
     categoryidx = models.IntegerField(db_column='categoryIdx')  # Field name made lowercase.
-    lecturecategoryidx = models.AutoField(db_column='lectureCategoryIdx', primary_key=True)  # Field name made lowercase.
+    lecturecategoryidx = models.AutoField(db_column='lectureCategoryIdx',
+                                          primary_key=True)  # Field name made lowercase.
 
-    subcategory = models.ForeignKey(Subcategory,on_delete=models.CASCADE, db_column='subCategoryIdx')  # Field name made lowercase.
+    subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE,
+                                    db_column='subCategoryIdx')  # Field name made lowercase.
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, db_column='lectureIdx')  # Field name made lowercase.
 
     class Meta:
@@ -84,7 +86,8 @@ class Lecturecategory(models.Model):
 
 class Level(models.Model):
     levelidx = models.AutoField(db_column='levelIdx', primary_key=True)  # Field name made lowercase.
-    levelname = models.CharField(db_column='levelName', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    levelname = models.CharField(db_column='levelName', max_length=20, blank=True,
+                                 null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -93,12 +96,12 @@ class Level(models.Model):
 
 class Userinfo(models.Model):
     useridx = models.AutoField(db_column='userIdx', primary_key=True)  # Field name made lowercase.
-    profileimg = models.CharField(db_column='profileImg', max_length=45, blank=True, null=True)  # Field name made lowercase.
+    profileimg = models.CharField(db_column='profileImg', max_length=45, blank=True,
+                                  null=True)  # Field name made lowercase.
     nickname = models.CharField(db_column='nickName', max_length=45)  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
-
 
     class Meta:
         managed = False
@@ -124,7 +127,6 @@ class Profile(models.Model):
 
     level = models.ForeignKey(Level, on_delete=models.CASCADE, blank=True, null=True, db_column='level')
 
-
     class Meta:
         managed = False
         db_table = 'profile'
@@ -146,12 +148,12 @@ class Review(models.Model):
 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
 
-
     class Meta:
         managed = False
         db_table = 'review'
         unique_together = (('profile', 'lectureidx'),)
         index_together = (('profile', 'lectureidx'),)
+
 
 class Cons(models.Model):
     considx = models.AutoField(db_column='consIdx', primary_key=True)  # Field name made lowercase.
@@ -160,6 +162,7 @@ class Cons(models.Model):
     class Meta:
         managed = False
         db_table = 'cons'
+
 
 class Pros(models.Model):
     prosidx = models.AutoField(db_column='prosIdx', primary_key=True)  # Field name made lowercase.
@@ -178,7 +181,6 @@ class Reviewcons(models.Model):
 
     review = models.ForeignKey(Review, on_delete=models.CASCADE, db_column='reviewIdx')  # Field name made lowercase.
     cons = models.ForeignKey(Cons, on_delete=models.CASCADE, db_column='consIdx')
-
 
     class Meta:
         managed = False
@@ -200,17 +202,6 @@ class Reviewpros(models.Model):
 
 
 
-class Likesforqna(models.Model):
-    likesforqnaidx = models.AutoField(db_column='likesForQnAIdx', primary_key=True)  # Field name made lowercase.
-    useridx = models.IntegerField(db_column='userIdx')  # Field name made lowercase.
-    qnaidx = models.IntegerField(db_column='qnaIdx')  # Field name made lowercase.
-    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
-    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'likesForQnA'
 
 
 class Likesforreview(models.Model):
@@ -226,4 +217,77 @@ class Likesforreview(models.Model):
         managed = False
         db_table = 'likesForReview'
 
+class Qna(models.Model):
+    qnaidx = models.AutoField(db_column='qnaIdx', primary_key=True)  # Field name made lowercase.
+    title = models.TextField()
+    qnades = models.TextField(db_column='qnaDes')  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
+    isblocked = models.CharField(db_column='isBlocked', max_length=1)  # Field name made lowercase.
 
+    userinfo = models.ForeignKey(Userinfo, on_delete=models.CASCADE,
+                                 db_column='userIdx')  # Field name made lowercase.
+    lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE,
+                                db_column='lectureIdx')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'qna'
+
+class Qnaimage(models.Model):
+    qnaimageidx = models.AutoField(db_column='qnaImageIdx', primary_key=True)  # Field name made lowercase.
+    imgurl = models.TextField(db_column='imgUrl')  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
+
+    qnaidx = models.ForeignKey(Qna, on_delete=models.CASCADE, db_column='qnaIdx')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'qnaImage'
+
+
+class Comment(models.Model):
+    commentidx = models.AutoField(db_column='commentIdx', primary_key=True)  # Field name made lowercase.
+    useridx = models.CharField(db_column='userIdx', max_length=45)  # Field name made lowercase.
+    lectureidx = models.CharField(db_column='lectureIdx', max_length=45)  # Field name made lowercase.
+    title = models.CharField(max_length=45)
+    qnades = models.TextField(db_column='qnaDes')  # Field name made lowercase.
+    parentidx = models.IntegerField(db_column='parentIdx', blank=True, null=True)  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
+    isblocked = models.CharField(db_column='isBlocked', max_length=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'comment'
+
+
+class Commentimage(models.Model):
+    commentimageidx = models.AutoField(db_column='commentImageIdx', primary_key=True)  # Field name made lowercase.
+    commentidx = models.IntegerField(db_column='commentIdx')  # Field name made lowercase.
+    imageurl = models.TextField(db_column='imageUrl')  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'commentImage'
+
+
+class Likesforqna(models.Model):
+    likesforqnaidx = models.AutoField(db_column='likesForQnAIdx', primary_key=True)  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
+    qna = models.ForeignKey(Qna, on_delete=models.CASCADE, db_column='qnaIdx')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'likesForQnA'
