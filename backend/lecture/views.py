@@ -1,15 +1,17 @@
+from datetime import datetime
+from django.utils import timezone
 import simplejson as json
 from django.db.models import Count
 
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, QueryDict
 from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Lecture, Category, Siteinfo, Lecturecategory, Review, Userinfo, Profile, Reviewpros, Reviewcons, \
-    Likesforreview, Qna, Likesforqna
+    Likesforreview, Qna, Likesforqna, Qnaimage
 from rest_framework import viewsets, status
-from .serializers import LectureSerializer, CategorySerializer
+from .serializers import LectureSerializer, CategorySerializer, QnaSerializer
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
@@ -335,7 +337,7 @@ def review_list(request, pk):
 
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def qna_list(request, pk):
     if request.method == 'GET':
         try:
@@ -347,7 +349,7 @@ def qna_list(request, pk):
             qna_dict['code'] = 200
             qna_dict['message'] = 'qna 목록 조회 성공'
 
-            qna = Qna.objects.filter(lecture__lectureidx=pk).select_related('userinfo','lecture')[page*5-5:page*5]
+            qna = Qna.objects.filter(lecture__lectureidx=pk,isblocked='N',isdeleted='N').select_related('userinfo','lecture')[page*5-5:page*5]
 
             likes = Likesforqna.objects.filter(qna__lecture__lectureidx=pk).select_related('qna').values('qna').annotate(count=Count('qna'))
             likes_dict = {}
@@ -384,4 +386,86 @@ def qna_list(request, pk):
             lec_dict['message'] = '파라미터 입력값 오류'
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'POST':
+
+        try:
+            serializer = QnaSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save(isblocked='N',isdeleted='N')
+
+                post_qna = {}
+                post_qna['isSuccess'] = 'true'
+                post_qna['code'] = 201
+                post_qna['message'] = 'qna 작성 성공'
+                post_qna['result'] = serializer.data
+
+                return Response(post_qna, status=status.HTTP_201_CREATED)
+
+            return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+
+        except Exception:
+
+            lec_dict = {}
+            lec_dict['isSuccess'] = 'false'
+            lec_dict['code'] = 400
+            lec_dict['message'] = '파라미터 입력값 오류'
+
+            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET','PUT','DELETE'])
+def qna_detail(request, pk, qnaIdx):
+    try:
+        qna_item = Qna.objects.get(pk=qnaIdx)
+
+        if request.method =='GET':
+            item = Qna.objects.select_related('userinfo').get(pk=qnaIdx)
+            qnaimages = Qnaimage.objects.filter(qnaidx=qnaIdx).values('imgurl')
+            for i in qnaimages:
+                print(i['imgurl'])
+            print(item.qnaidx, item.title, item.qnades, item.userinfo.profileimg, item.userinfo.nickname, item.createdat)
+
+
+
+        elif request.method == 'PUT':
+        # 내가 쓴 글일때만 수정 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, 이미지 수정은 어떻게 ..? ..?
+            print(request.data, '이다')
+            serializer = QnaSerializer(qna_item, data=request.data, partial=True)
+
+            if serializer.is_valid():
+               serializer.save()
+
+            return Response(serializer.data)
+
+        elif request.method == 'DELETE':
+        # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
+            item ={}
+            item['isdeleted']='Y'
+            itemQuery = QueryDict('', mutable=True)
+            itemQuery.update(item)
+            serializer = QnaSerializer(qna_item, data=itemQuery, partial=True)
+
+            if serializer.is_valid():
+               serializer.save()
+
+            return Response(serializer.data)
+
+    except Qna.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+
+            lec_dict = {}
+            lec_dict['isSuccess'] = 'false'
+            lec_dict['code'] = 400
+            lec_dict['message'] = '파라미터 입력값 오류'
+
+            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)

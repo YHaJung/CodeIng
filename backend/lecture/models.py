@@ -202,7 +202,7 @@ class Qna(models.Model):
     title = models.TextField()
     qnades = models.TextField(db_column='qnaDes')  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
     isblocked = models.CharField(db_column='isBlocked', max_length=1)  # Field name made lowercase.
 
