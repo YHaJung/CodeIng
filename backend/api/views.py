@@ -92,6 +92,10 @@ def get_suggestions(request):
     # return HttpResponse(json.dumps(context), content_type='application/json')
     return JsonResponse(response, safe=False)
 
+@api_view(['GET'])
+def get_con(request):
+    response = {'results': 'show'}
+    return JsonResponse(response, safe=False)
 # 이후 강의
 
 class LectureViewSet(viewsets.ModelViewSet):
