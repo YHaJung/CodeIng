@@ -10,6 +10,7 @@ router = routers.DefaultRouter()
 # router.register('reviews', ReviewViewSet)
 # router.register('users', UserViewSet)
 
+
 urlpatterns = [
     # path('review/', views.review_list, name='review_list'),
     # path('', views.movie_list, name='movie_list'),
