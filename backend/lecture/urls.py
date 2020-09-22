@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 from .views import LectureViewSet, snippet_list, snippet_detail, lecture_list, lectures_ranking, ranking_overview, \
-    lecture_detail, review_list, qna_list, qna_detail
+    lecture_detail, review_list, qna_list, qna_detail, comment_list
 from rest_framework.authtoken.views import obtain_auth_token
 
 router = routers.DefaultRouter()
@@ -9,7 +9,7 @@ router.register('', LectureViewSet)
 
 
 urlpatterns = [
-
+    path('lectures/<int:pk>/qna/<int:qnaIdx>/comments',comment_list),
     path('lectures/<int:pk>/qna/<int:qnaIdx>',qna_detail),
     path('lectures/<int:pk>/qna',qna_list),
     path('lectures/<int:pk>/reviews',review_list),
