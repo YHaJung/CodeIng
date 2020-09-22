@@ -14,8 +14,8 @@ from django.contrib.auth.models import User
 
 def save_user_from_row(user_row):
     user = Userinfo()
-    user.id = user_row[0]
-    user.username = user_row[1]
+    user.useridx = user_row[0]
+    user.nickname = user_row[1]
     user.save()
 
 
