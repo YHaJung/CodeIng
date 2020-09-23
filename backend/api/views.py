@@ -1,3 +1,5 @@
+import decimal
+import simplejson as json
 from django.shortcuts import render
 
 # Create your views here.
@@ -11,7 +13,7 @@ from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
-from rest_framework.utils import json
+# from rest_framework.utils import json
 
 # from api.form import LectureReviewForm
 # from api.serializers import UserSerializer, LectureReviewSerializer, LectureSerializer
@@ -41,7 +43,6 @@ import scipy as sp
 
 from sklearn.neighbors import NearestNeighbors
 
-
 # Create your views here.
 
 # 이후 코드
@@ -57,9 +58,9 @@ def CBRS(request):
     all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
     # print('all users',all_user_names[0])
     # print(Review.objects.only("lectureidx")[1].pricerating)
-    #subcategory 71개 maincategory 12개
+    # subcategory 71개 maincategory 12개
     # all_lecture_ids = set(map(lambda x: x.lectureidx, Lecturecategory.objects.only("lectureidx")))
-    all_category_ids = list(map(lambda x: x.categoryname, Category.objects.all() ))
+    all_category_ids = list(map(lambda x: x.categoryname, Category.objects.all()))
     # print(Category.objects.all())
     # print('====================')
     # print(type(all_category_ids))
@@ -70,9 +71,9 @@ def CBRS(request):
     num_users = len(list(all_user_names))
     lectureRatings_m = sp.sparse.dok_matrix((num_users, len(all_categorys) + 1), dtype=np.float32)
     for i in range(num_users):
-    #     # profile = Profile.objects.filter(userinfo=all_user_names[i])
-    #     profile = get_object_or_404(Profile, userinfo=all_user_names[i])
-    #     print(all_user_names[i].useridx)
+        #     # profile = Profile.objects.filter(userinfo=all_user_names[i])
+        #     profile = get_object_or_404(Profile, userinfo=all_user_names[i])
+        #     print(all_user_names[i].useridx)
         user_subcategory_interest = Subcategoryinterest.objects.filter(useridx=all_user_names[i].useridx)
         user_category_interest = Categoryinterest.objects.filter(useridx=all_user_names[i].useridx)
         # print(user_category_interest)
@@ -97,6 +98,7 @@ def CBRS(request):
     response = {'message': 'sussccess'}
     return JsonResponse(response, safe=False)
 
+
 @api_view(['GET'])
 def KNN_IBCF(request, pk=None):
     num_reviews = Review.objects.count()
@@ -110,13 +112,14 @@ def KNN_IBCF(request, pk=None):
         # profile = Profile.objects.filter(userinfo=all_user_names[i])
         profile = get_object_or_404(Profile, userinfo=all_user_names[i])
         user_reviews = Review.objects.filter(profile=profile)
+
         for user_review in user_reviews:
             lectureRatings_m[i, user_review.lectureidx] = user_review.totalrating
     lectureRatings = lectureRatings_m.transpose()
     coo = lectureRatings.tocoo(copy=False)
     df = pd.DataFrame({'lectures': coo.row, 'users': coo.col, 'rating': coo.data}
                       )[['lectures', 'users', 'rating']].sort_values(['lectures', 'users']
-                                                                   ).reset_index(drop=True)
+                                                                     ).reset_index(drop=True)
     mo = df.pivot_table(index=['lectures'], columns=['users'], values='rating')
     mo.fillna(0, inplace=True)
     if mo.shape[0] < 7:
@@ -125,8 +128,7 @@ def KNN_IBCF(request, pk=None):
     else:
         model_knn = NearestNeighbors(algorithm='brute', metric='cosine', n_neighbors=7)
         model_knn.fit(mo.values)
-    userid = pk
-
+    userid = int(pk)
     distances, indices = model_knn.kneighbors(mo.iloc[userid, :].values.reshape(1, -1), return_distance=True)
     # context = list(map(lambda x: Lecture.objects.filter(id=indices.flatten()[x]).values_list('id','title'), range(0, len(distances.flatten()))))
     # for x in range(0, len(distances.flatten())):
@@ -134,21 +136,57 @@ def KNN_IBCF(request, pk=None):
     #     # print(json.dumps(context))
     #     data = serializers.serialize('json', Movie.objects.filter(id=indices.flatten()[x]), fields=('id','title'))
     #     print(data)
-    context = list(map(lambda x: serializers.serialize('json', Lecture.objects.filter(lectureidx=indices.flatten()[x]), fields=('lectureidx','lecturename')),
-                       range(0, len(distances.flatten()))))
+
+    # context = list(map(lambda x: serializers.serialize('json', Lecture.objects.filter(lectureidx=indices.flatten()[x]),
+    #                 fields=('lectureidx','lecturename','thumburl','lecturer','level')),
+    #                    range(0, len(distances.flatten())) ))
+
     # print('5')
-    # response = {'results': 'show'}
+    response = {'results': 'show'}
     # print(type(context))
     # print(context)
     # context_json = serializers.serialize('json', context)
     # return JsonResponse(response, status=status.HTTP_200_OK)
     # return HttpResponse(json.dumps(context), content_type='application/json')
-    return JsonResponse(context, safe=False)
+    overview_list = []
+    overview_dict = {}
+    overview_dict['isSuccess'] = 'true'
+    overview_dict['code'] = 200
+    overview_dict['message'] = '추천컨텐츠 조회 성공'
+    # context = list(map(lambda x: Lecture.objects.filter(id=indices.flatten()[x]).values_list('id', 'title'),
+    #                    range(0, len(distances.flatten()))))
+    # categoryIdx = int(request.GET.get('categoryIdx', '1'))
+    # overview = Lecturecategory.objects.select_related('lecture')
+    overview2 = list(map(
+        lambda x: Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('lectureidx', 'lecturename',
+                                                                                 'thumburl', 'lecturer',
+                                                                                 'level').distinct().order_by(
+            'lectureidx')[:5]
+        , range(0, len(distances.flatten()))))
+    for i in overview2:
+        # print(i[0])
+        # print(i[0].lectureidx)
+        # print(i[0]['lectureidx'], i[0]['lecturename'])
+        overview_list.append(
+            dict([('lectureIdx', i[0]['lectureidx']),
+                  ('lectureName', i[0]['lecturename']),
+                  ('thumbUrl', i[0]['thumburl']),
+                  ('lecturer', i[0]['lecturer']),
+                  ('level', decimal.Decimal(i[0]['level']))
+                  ]))
+    overview_dict['result'] = overview_list
+    return_value = json.dumps(overview_dict,indent=4, use_decimal=True, ensure_ascii=False)
+    # use_decimal = True,
+    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+    # return JsonResponse(context, safe=False)
+
 
 @api_view(['GET'])
 def get_con(request):
     response = {'results': 'show'}
     return JsonResponse(response, safe=False)
+
+
 # 이후 강의
 
 class LectureViewSet(viewsets.ModelViewSet):
@@ -205,4 +243,3 @@ class ReviewViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         response = {'message': "You can't create review like that"}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-

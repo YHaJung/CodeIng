@@ -12,12 +12,12 @@
       <button routerLink="/lecturerankdetail">전체보기</button>
     </div>
   </div>
-  <app-lecture-rank-list [lectures]="lectures" (selectLecture)="selectedLecture($event)"></app-lecture-rank-list>
+  <app-lecture-rank-list [lectures]="rankingdoverview" (selectLecture)="selectedLecture($event)"></app-lecture-rank-list>
   <div class="row">
     <div class="col-sm-12">
       <h4>오늘의 추천 컨텐츠</h4>
       <button routerLink="/lecturerecommenddetail">전체보기</button>
     </div>
   </div>
-  <app-lecture-recommend-list [lectures]="lectures" (selectLecture)="selectedLecture($event)"></app-lecture-recommend-list>
+  <app-lecture-recommend-list [lectures]="recommendoverview" (selectLecture)="selectedLecture($event)"></app-lecture-recommend-list>
 </div>
