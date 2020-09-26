@@ -179,7 +179,7 @@ class Review(models.Model):
     isblocked = models.CharField(db_column='isBlocked', max_length=1)  # Field name made lowercase.
     improvement = models.TextField(blank=True, null=True)
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
@@ -212,7 +212,7 @@ class Pros(models.Model):
 class Reviewcons(models.Model):
     reviewconsidx = models.AutoField(db_column='reviewConsIdx', primary_key=True)  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
     review = models.ForeignKey(Review, on_delete=models.CASCADE, db_column='reviewIdx')  # Field name made lowercase.
@@ -226,7 +226,7 @@ class Reviewcons(models.Model):
 class Reviewpros(models.Model):
     reviewprosidx = models.AutoField(db_column='reviewProsIdx', primary_key=True)  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
     review = models.ForeignKey(Review, on_delete=models.CASCADE, db_column='reviewIdx')
@@ -272,10 +272,10 @@ class Qnaimage(models.Model):
     qnaimageidx = models.AutoField(db_column='qnaImageIdx', primary_key=True)  # Field name made lowercase.
     imgurl = models.TextField(db_column='imgUrl')  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
-    qnaidx = models.ForeignKey(Qna, on_delete=models.CASCADE, db_column='qnaIdx')  # Field name made lowercase.
+    qna = models.ForeignKey(Qna, on_delete=models.CASCADE, db_column='qnaIdx')  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -287,7 +287,7 @@ class Comment(models.Model):
     commentdes = models.TextField(db_column='commentDes')  # Field name made lowercase.
     parentidx = models.IntegerField(db_column='parentIdx', blank=True, null=True)  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
     isblocked = models.CharField(db_column='isBlocked', max_length=1)  # Field name made lowercase.
 
@@ -304,7 +304,7 @@ class Commentimage(models.Model):
     commentimageidx = models.AutoField(db_column='commentImageIdx', primary_key=True)  # Field name made lowercase.
     imageurl = models.TextField(db_column='imageUrl')  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, db_column='commentIdx')  # Field name made lowercase.
