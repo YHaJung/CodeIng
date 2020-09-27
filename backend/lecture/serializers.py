@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Lecture, Category, Qna, Review, Comment, Userinfo, Commentimage, Qnaimage, Reviewpros, Reviewcons
+from .models import Lecture, Category, Qna, Review, Comment, Userinfo, Commentimage, Qnaimage, Reviewpros, Reviewcons, \
+    Favoritesite, Favoritelecture
 
 
 class LectureSerializer(serializers.ModelSerializer):  # 객체 형식을 xml혹은 json 형식으로 바꿔줌
@@ -60,3 +61,13 @@ class ReviewconsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reviewcons
         fields = ['review', 'cons', 'isdeleted']
+
+class FavoritesiteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favoritesite
+        fields = ['user', 'siteinfo', 'isdeleted']
+
+class FavoritelectureSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favoritelecture
+        fields = ['user', 'lecture', 'isdeleted']
