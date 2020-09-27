@@ -9,6 +9,7 @@ import { LectureRecommendListComponent } from './lecture-recommend-list/lecture-
 import { LectureRecommendDetailComponent } from '../lecture-recommend-detail/lecture-recommend-detail.component';
 import { LectureRankDetailComponent } from '../lecture-rank-detail/lecture-rank-detail.component';
 import {HomeNavBarComponent} from './home-nav-bar/home-nav-bar.component';
+import {FormsModule} from '@angular/forms';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
@@ -26,7 +27,8 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    FormsModule
   ],
   exports: [
     RouterModule

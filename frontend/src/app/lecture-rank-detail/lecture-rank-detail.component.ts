@@ -15,7 +15,7 @@ export class LectureRankDetailComponent implements OnInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.apiService.getLectures().subscribe(
+    this.apiService.getLecturesRanking().subscribe(
       data => {
         this.lectures = data;
       },

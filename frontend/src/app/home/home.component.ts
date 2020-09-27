@@ -9,17 +9,35 @@ import {ApiService} from '../api.service';
 export class HomeComponent implements OnInit {
 
   lectures: any = [];
+  rankingdoverview: any = [];
+  recommendoverview: any = [];
   selectedLecture = null;
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.apiService.getLectures().subscribe(
+    // this.apiService.getLectures().subscribe(
+    //   data => {
+    //     this.lectures = data['result'];
+    //     console.log(this.lectures);
+    //   },
+    //   error => console.log(error)
+    // );
+    this.apiService.getRankingOverview()
+      .subscribe(
       data => {
-        this.lectures = data;
+        this.rankingdoverview = data['result'];
       },
       error => console.log(error)
     );
+    this.apiService.getRecommendOverview()
+      .subscribe(
+        data => {
+          this.recommendoverview = data['result'];
+          // console.log(this.recommendoverview);
+        },
+        error => console.log(error)
+      );
   }
 
   // tslint:disable-next-line:typedef

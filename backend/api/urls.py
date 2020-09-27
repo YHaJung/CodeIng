@@ -17,7 +17,9 @@ urlpatterns = [
     path('', include(router.urls)),
     # url(r'^api/tutorials$', views.tutorial_list),
     # url(r'^api/tutorials/(?P<pk>[0-9]+)$', views.tutorial_detail),
-    url(r'^api/get_suggestions$', views.get_suggestions),
-    url(r'^api/get_con$', views.get_con)
+# <int:pk>
+    url(r'^api/KNN_IBCF/(?P<pk>\d+)$', views.KNN_IBCF),
+    url(r'^api/CBRS/$', views.CBRS),
+    # url(r'^api/get_con$', views.get_con)
     # path('reviews/<int:pk>', views.review_detail, name='review_detail'),
 ]

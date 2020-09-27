@@ -14,7 +14,7 @@ export class LectureRecommendDetailComponent implements OnInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.apiService.getLectures().subscribe(
+    this.apiService.getLecturesRecommend().subscribe(
       data => {
         this.lectures = data;
       },

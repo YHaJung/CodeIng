@@ -37,10 +37,10 @@ class Lecture(models.Model):
         #     return sum/len(ratings)
         # else:
         #     return 0
-        return self.review_set.aggregate(Avg('rating'))['rating__avg']
+        return self.review_set.aggregate(Avg('totalrating'))['rating__avg']
 
     def __str__(self):
-        return self.title
+        return self.lecturename
 
     def no_of_ratings(self):
         ratings = Review.objects.filter(movie=self)
@@ -92,6 +92,42 @@ class Level(models.Model):
     class Meta:
         managed = False
         db_table = 'level'
+
+class Categoryinterest(models.Model):
+    categoryinterestidx = models.AutoField(db_column='categoryInterestIdx', primary_key=True)  # Field name made lowercase.
+    useridx = models.IntegerField(db_column='userIdx')  # Field name made lowercase.
+    categoryidx = models.IntegerField(db_column='categoryIdx')  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True,null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  #Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'categoryInterest'
+
+
+class Subcategoryinterest(models.Model):
+    subcategoryinterestidx = models.AutoField(db_column='subCategoryInterestIdx', primary_key=True)  # Field name made lowercase.
+    useridx = models.IntegerField(db_column='userIdx')  # Field name made lowercase.
+    subcategoryidx = models.IntegerField(db_column='subCategoryIdx')  #Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True,null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  #Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'subCategoryInterest'
+
+class Lectureinfo(models.Model):
+    lectureidx = models.AutoField(db_column='lectureIdx', primary_key=True)  # Field name made lowercase.
+    popularity = models.DecimalField(max_digits=4, decimal_places=3)
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True,null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  #Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'lectureInfo'
 
 
 class Userinfo(models.Model):
