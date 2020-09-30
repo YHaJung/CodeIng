@@ -1,4 +1,7 @@
 from datetime import datetime
+
+import jwt
+from django.conf.global_settings import SECRET_KEY
 from django.utils import timezone
 import simplejson as json
 from django.db.models import Count
@@ -14,15 +17,28 @@ from rest_framework import viewsets, status
 from .serializers import LectureSerializer, CategorySerializer, QnaSerializer, CommentSerializer, \
     CommentimageSerializer, QnaimageSerializer, ReviewSerializer, ReviewprosSerializer, ReviewconsSerializer, \
     FavoritesiteSerializer, FavoritelectureSerializer
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
 
 
-class LectureViewSet(viewsets.ModelViewSet):
-    serializer_class = LectureSerializer
-    queryset = Lecture.objects.all()
-    authentication_classes = (TokenAuthentication,)  # 기본적으로는 하나의 Auth를 이용하는데 추가할 수 있음
-    permission_classes = (IsAuthenticated,)  # 이 함수는 authentication이 필요
+
+
+def login_decorator(func):
+    def wrapper(self, request, *args, **kwargs):
+        try:
+            access_token = request.headers.get('Authorization', None)
+            payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+            user = Profile.objects.get(email=payload['email'])
+            request.user = user
+
+        except jwt.exceptions.DecodeError:
+            return JsonResponse({'message' : 'INVALID_TOKEN' }, status=400)
+
+        except Profile.DoesNotExist:
+            return JsonResponse({'message' : 'INVALID_USER'}, status=400)
+
+        return func(self, request, *args, **kwargs)
+
+    return wrapper
+
 
 
 # 이미지 삭제 함수(comment or qna)
@@ -53,10 +69,11 @@ def for_exception():
 
 
 @api_view(['GET'])
-def lecture_list(request):
+@login_decorator
+def lecture_list(self, request):
     if request.method == 'GET':
         try:
-
+            print(request.user.email,'이당')
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
             selected_level = float(request.GET.get('level', '0'))
             selected_price = int(request.GET.get('price', '0'))
