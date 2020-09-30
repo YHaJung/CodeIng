@@ -93,13 +93,30 @@ class Level(models.Model):
         managed = False
         db_table = 'level'
 
+
+class Userinfo(models.Model):
+    useridx = models.AutoField(db_column='userIdx', primary_key=True)  # Field name made lowercase.
+    profileimg = models.CharField(db_column='profileImg', max_length=45, blank=True,
+                                  null=True)  # Field name made lowercase.
+    nickname = models.CharField(db_column='nickName', max_length=45)  # Field name made lowercase.
+    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
+    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
+    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'userInfo'
+
+
 class Categoryinterest(models.Model):
     categoryinterestidx = models.AutoField(db_column='categoryInterestIdx', primary_key=True)  # Field name made lowercase.
-    useridx = models.IntegerField(db_column='userIdx')  # Field name made lowercase.
-    categoryidx = models.IntegerField(db_column='categoryIdx')  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='updatedAt', blank=True,null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  #Field name made lowercase.
+
+    useridx = models.ForeignKey(Userinfo, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
+    categoryidx = models.ForeignKey(Category, on_delete=models.CASCADE, db_column='categoryIdx')  # Field name made lowercase.
+
 
     class Meta:
         managed = False
@@ -108,11 +125,14 @@ class Categoryinterest(models.Model):
 
 class Subcategoryinterest(models.Model):
     subcategoryinterestidx = models.AutoField(db_column='subCategoryInterestIdx', primary_key=True)  # Field name made lowercase.
-    useridx = models.IntegerField(db_column='userIdx')  # Field name made lowercase.
-    subcategoryidx = models.IntegerField(db_column='subCategoryIdx')  #Field name made lowercase.
+
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='updatedAt', blank=True,null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  #Field name made lowercase.
+
+    useridx = models.ForeignKey(Userinfo, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
+    subcategoryidx = models.ForeignKey(Subcategory, on_delete=models.CASCADE, db_column='subcategoryIdx')  # Field name made lowercase.
+
 
     class Meta:
         managed = False
@@ -130,24 +150,11 @@ class Lectureinfo(models.Model):
         db_table = 'lectureInfo'
 
 
-class Userinfo(models.Model):
-    useridx = models.AutoField(db_column='userIdx', primary_key=True)  # Field name made lowercase.
-    profileimg = models.CharField(db_column='profileImg', max_length=45, blank=True,
-                                  null=True)  # Field name made lowercase.
-    nickname = models.CharField(db_column='nickName', max_length=45)  # Field name made lowercase.
-    createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
-    updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
-    isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'userInfo'
 
 
 class Profile(models.Model):
     userinfo = models.OneToOneField(Userinfo, on_delete=models.CASCADE, db_column='userIdx', primary_key=True)
-    userid = models.CharField(db_column='userId', max_length=45)  # Field name made lowercase.
-    userpwd = models.CharField(db_column='userPwd', max_length=45)  # Field name made lowercase.
+    userpwd = models.CharField(db_column='userPwd', max_length=200)  # Field name made lowercase.
     gender = models.CharField(max_length=1)
     name = models.CharField(max_length=45)
     birthday = models.DateField()
