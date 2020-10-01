@@ -1,4 +1,7 @@
 from datetime import datetime
+
+import jwt
+from django.conf.global_settings import SECRET_KEY
 from django.utils import timezone
 import simplejson as json
 from django.db.models import Count
@@ -9,72 +12,68 @@ from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from django.core import serializers
 from .models import Lecture, Category, Siteinfo, Lecturecategory, Review, Userinfo, Profile, Reviewpros, Reviewcons, \
-    Likesforreview, Qna, Likesforqna, Qnaimage, Comment, Commentimage
+    Likesforreview, Qna, Likesforqna, Qnaimage, Comment, Commentimage, Pros, Favoritesite, Favoritelecture
 from rest_framework import viewsets, status
-from .serializers import LectureSerializer, CategorySerializer, QnaSerializer
-from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from .serializers import LectureSerializer, CategorySerializer, QnaSerializer, CommentSerializer, \
+    CommentimageSerializer, QnaimageSerializer, ReviewSerializer, ReviewprosSerializer, ReviewconsSerializer, \
+    FavoritesiteSerializer, FavoritelectureSerializer
 
 
-class LectureViewSet(viewsets.ModelViewSet):
-    serializer_class = LectureSerializer
-    queryset = Lecture.objects.all()
-    authentication_classes = (TokenAuthentication,)  # 기본적으로는 하나의 Auth를 이용하는데 추가할 수 있음
-    permission_classes = (IsAuthenticated,)  # 이 함수는 authentication이 필요
 
 
-@api_view(['GET', 'POST'])
-def snippet_list(request):
-    if request.method == 'GET':
-        snippets = Category.objects.all()
-        serializer = CategorySerializer(snippets, many=True)
+def login_decorator(func):
+    def wrapper(self, request, *args, **kwargs):
+        try:
+            access_token = request.headers.get('Authorization', None)
+            payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+            user = Profile.objects.get(email=payload['email'])
+            request.user = user
 
-        return Response(serializer.data)
-    elif request.method == 'POST':
+        except jwt.exceptions.DecodeError:
+            return JsonResponse({'message' : 'INVALID_TOKEN' }, status=400)
 
-        serializer = CategorySerializer(data=request.data)
+        except Profile.DoesNotExist:
+            return JsonResponse({'message' : 'INVALID_USER'}, status=400)
 
-        if serializer.is_valid():
-            serializer.save()
+        return func(self, request, *args, **kwargs)
 
-            return Response(serializer.data, status=201)
-
-        return Response(serializer.errors, status=400)
+    return wrapper
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
-def snippet_detail(request, pk):
-    try:
-        snippet = Category.objects.get(pk=pk)
-    except Category.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
 
-    if request.method == 'GET':
-        serializer = CategorySerializer(snippet)
-
-        return Response(serializer.data)
-    elif request.method == 'PUT':
-        print(request.data, '이다')
-        serializer = CategorySerializer(snippet, data=request.data, partial=True)
+# 이미지 삭제 함수(comment or qna)
+def delete(list_value, serializer_type):
+    for ele in list_value:
+        item = {}
+        item['isdeleted'] = 'Y'
+        itemQuery = QueryDict('', mutable=True)
+        itemQuery.update(item)
+        print(itemQuery)
+        serializer = serializer_type(ele, data=itemQuery, partial=True)
 
         if serializer.is_valid():
             serializer.save()
 
-            return Response(serializer.data)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        snippet.delete()
+# 예외 처리 함수 (파라미터 입력값 오류)
+def for_exception():
+    lec_dict = {}
+    lec_dict['isSuccess'] = 'false'
+    lec_dict['code'] = 400
+    lec_dict['message'] = '파라미터 입력값 오류'
 
-        return Response(status=status.HTTP_204_NO_CONTENT)
+    return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+
+    return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
-##################################
 @api_view(['GET'])
-def lecture_list(request):
+@login_decorator
+def lecture_list(self, request):
     if request.method == 'GET':
         try:
-
+            print(request.user.email,'이당')
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
             selected_level = float(request.GET.get('level', '0'))
             selected_price = int(request.GET.get('price', '0'))
@@ -118,18 +117,9 @@ def lecture_list(request):
 
         except Exception:
 
-            lec_dict = {}
-            lec_dict['isSuccess'] = 'false'
-            lec_dict['code'] = 400
-            lec_dict['message'] = '파라미터 입력값 오류'
-
-            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
-
-            return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+            return for_exception()
 
 
-################################
 @api_view(['GET'])
 def lectures_ranking(request):
     if request.method == 'GET':
@@ -194,18 +184,9 @@ def lectures_ranking(request):
 
         except Exception:
 
-            lec_dict = {}
-            lec_dict['isSuccess'] = 'false'
-            lec_dict['code'] = 400
-            lec_dict['message'] = '파라미터 입력값 오류'
-
-            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
-
-            return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+            return for_exception()
 
 
-##################################
 @api_view(['GET'])
 def ranking_overview(request):
     try:
@@ -237,14 +218,7 @@ def ranking_overview(request):
 
     except Exception:
 
-        lec_dict = {}
-        lec_dict['isSuccess'] = 'false'
-        lec_dict['code'] = 400
-        lec_dict['message'] = '파라미터 입력값 오류'
-
-        return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
-
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
+        return for_exception()
 
 
 @api_view(['GET'])
@@ -272,98 +246,250 @@ def lecture_detail(request, pk):
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
     except Exception:
-
-        lec_dict = {}
-        lec_dict['isSuccess'] = 'false'
-        lec_dict['code'] = 400
-        lec_dict['message'] = '파라미터 입력값 오류'
-
-        return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
-
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
+        return for_exception()
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def review_list(request, pk):
     try:
-        page = int(request.GET.get('page', '1'))
-        review_list = []
-        review_dict = {}
-        review_dict['isSuccess'] = 'true'
-        review_dict['code'] = 200
-        review_dict['message'] = '강의 리뷰 목록 조회 성공'
+        if request.method == 'GET':
+            page = int(request.GET.get('page', '1'))
+            review_list = []
+            review_dict = {}
+            review_dict['isSuccess'] = 'true'
+            review_dict['code'] = 200
+            review_dict['message'] = '강의 리뷰 목록 조회 성공'
 
-        review_userinfo = Review.objects.filter(lectureidx=pk).select_related('profile')[page * 5 - 5:page * 5]
+            review_userinfo = Review.objects.filter(lectureidx=pk).select_related('profile')[page * 5 - 5:page * 5]
 
-        pros = Reviewpros.objects.filter(review__lectureidx=pk).select_related('review')
+            pros = Reviewpros.objects.filter(review__lectureidx=pk).select_related('review')
 
-        cons = Reviewcons.objects.filter(review__lectureidx=pk).select_related('review')
+            cons = Reviewcons.objects.filter(review__lectureidx=pk).select_related('review')
 
-        likes = Likesforreview.objects.filter(review__lectureidx=pk).select_related('review').values('review').annotate(
-            count=Count('review'))
+            likes = Likesforreview.objects.filter(review__lectureidx=pk).select_related('review').values(
+                'review').annotate(
+                count=Count('review'))
 
-        likes_dict = {}
+            likes_dict = {}
 
-        for i in likes:
-            likes_dict[i['review']] = i['count']
+            for i in likes:
+                likes_dict[i['review']] = i['count']
 
-        major = {'Y': '전공자', 'N': '비전공자'}
-        job = {'S': '학생', 'D': '개발자', 'N': '비개발 직군'}
+            major = {'Y': '전공자', 'N': '비전공자'}
+            job = {'S': '학생', 'D': '개발자', 'N': '비개발 직군'}
 
-        print(len(review_userinfo))
-        for r in review_userinfo:
+            print(len(review_userinfo))
+            for r in review_userinfo:
 
-            if r.isblocked == 'Y':
-                continue
-            a = r.reviewidx
-            try:
-                likes_count = likes_dict[a]
-            except Exception:
-                likes_count = 0
-                pass
+                if r.isblocked == 'Y':
+                    continue
+                a = r.reviewidx
+                try:
+                    likes_count = likes_dict[a]
+                except Exception:
+                    likes_count = 0
+                    pass
 
-            pros2 = pros.filter(review=r.reviewidx)
-            pros_list = []
-            cons2 = cons.filter(review=r.reviewidx)
-            cons_list = []
+                pros2 = pros.filter(review=r.reviewidx)
+                pros_list = []
+                cons2 = cons.filter(review=r.reviewidx)
+                cons_list = []
 
-            for p in pros2:
-                pros_list.append(p.pros.prostype)
+                for p in pros2:
+                    pros_list.append(p.pros.prostype)
 
-            for c in cons2:
-                cons_list.append(c.cons.constype)
+                for c in cons2:
+                    cons_list.append(c.cons.constype)
 
-            review_list.append(dict(
-                [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
-                 ('profileImage', r.profile.userinfo.profileimg),
-                 ('job', job[r.profile.job]), ('major', major[r.profile.major]), ('reviewidx', r.reviewidx),
-                 ('totalRating', r.totalrating),
-                 ('priceRating', r.pricerating), ('teachingpowerRating', r.teachingpowerrating),
-                 ('recommend', r.recommend), ('improvement', r.improvement),
-                 ('likesCount', likes_count), ('pros', pros_list), ('cons', cons_list)
-                 ]))
+                review_list.append(dict(
+                    [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
+                     ('profileImage', r.profile.userinfo.profileimg),
+                     ('job', job[r.profile.job]), ('major', major[r.profile.major]), ('reviewidx', r.reviewidx),
+                     ('totalRating', r.totalrating),
+                     ('priceRating', r.pricerating), ('teachingpowerRating', r.teachingpowerrating),
+                     ('recommend', r.recommend), ('improvement', r.improvement),
+                     ('likesCount', likes_count), ('pros', pros_list), ('cons', cons_list)
+                     ]))
 
-        review_dict['result'] = review_list
-        return_value = json.dumps(review_dict, indent=4, use_decimal=True, ensure_ascii=False)
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+            review_dict['result'] = review_list
+            return_value = json.dumps(review_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        elif request.method == 'POST':
+            # 리뷰 저장
+            a = Review.objects.last()
+            reviewIdx = a.reviewidx + 1
+            # 리뷰
+            review_dict = QueryDict.dict(request.data)
+            # 장점
+            pros_list_dict = {}
+            pros_list_dict['pros'] = review_dict['pros']
+            # 단점
+            cons_list_dict = {}
+            cons_list_dict['cons'] = review_dict['cons']
+
+            review_dict['profile'] = 1  # 나중에 writer 확인하는 로직 작성 시 변경
+            review_dict['lectureidx'] = pk
+            review_dict['isdeleted'] = 'N'
+            del review_dict['pros']
+            del review_dict['cons']
+
+            query_dict = QueryDict('', mutable=True)
+            query_dict.update(review_dict)
+
+            serializer = ReviewSerializer(data=query_dict)
+            if serializer.is_valid():
+                serializer.save()
+
+            for pros in pros_list_dict['pros']:
+                temp_pros_dict = {}
+                temp_pros_dict['pros'] = pros
+                temp_pros_dict['review'] = reviewIdx
+                temp_pros_dict['isdeleted'] = 'N'
+
+                query_dict = QueryDict('', mutable=True)
+                query_dict.update(temp_pros_dict)
+                print(temp_pros_dict)
+
+                serializer = ReviewprosSerializer(data=query_dict)
+                if serializer.is_valid():
+                    serializer.save()
+
+            for cons in cons_list_dict['cons']:
+                temp_cons_dict = {}
+                temp_cons_dict['cons'] = cons
+                temp_cons_dict['review'] = reviewIdx
+                temp_cons_dict['isdeleted'] = 'N'
+
+                query_dict = QueryDict('', mutable=True)
+                query_dict.update(temp_cons_dict)
+                print(temp_cons_dict)
+
+                serializer = ReviewconsSerializer(data=query_dict)
+                if serializer.is_valid():
+                    serializer.save()
+
+            post_review = {}
+            post_review['isSuccess'] = 'true'
+            post_review['code'] = 201
+            post_review['message'] = '리뷰 작성 성공'
+
+            return_value = json.dumps(post_review, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_201_CREATED)
+
 
 
     except Exception:
+        return for_exception()
 
-        lec_dict = {}
-        lec_dict['isSuccess'] = 'false'
-        lec_dict['code'] = 400
-        lec_dict['message'] = '파라미터 입력값 오류'
 
-        return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+@api_view(['PUT', 'DELETE'])
+def review_detail(request, pk, reviewIdx):
+    try:
 
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
+        review_item = Review.objects.get(pk=reviewIdx)
+        pros_item = Reviewpros.objects.filter(review=reviewIdx, isdeleted='N')
+        cons_item = Reviewcons.objects.filter(review=reviewIdx, isdeleted='N')
+
+        if request.method == 'PUT':
+
+            review_dict = QueryDict.dict(request.data)
+            pros_list_dict = {}
+            pros_list_dict['pros'] = review_dict['pros']
+            # 단점
+            cons_list_dict = {}
+            cons_list_dict['cons'] = review_dict['cons']
+            del review_dict['pros']
+            del review_dict['cons']
+
+            if 'improvement' not in review_dict:
+                review_dict['improvement'] = ""
+
+            # 리뷰 테이블에 수정사항 반영
+            reviewQuery = QueryDict('', mutable=True)
+            reviewQuery.update(review_dict)
+            serializer = ReviewSerializer(review_item, data=reviewQuery, partial=True)
+
+            if serializer.is_valid():
+                serializer.save(isblocked='N')
+
+            # 기존의 장단점 삭제
+            delete(pros_item, ReviewprosSerializer)
+            delete(cons_item, ReviewconsSerializer)
+
+            # 장단점 새로 넣기
+            for pros in pros_list_dict['pros']:
+                temp_pros_dict = {}
+                temp_pros_dict['pros'] = pros
+                temp_pros_dict['review'] = reviewIdx
+                temp_pros_dict['isdeleted'] = 'N'
+
+                query_dict = QueryDict('', mutable=True)
+                query_dict.update(temp_pros_dict)
+                print(query_dict)
+
+                serializer = ReviewprosSerializer(data=query_dict)
+                if serializer.is_valid():
+                    serializer.save()
+
+            for cons in cons_list_dict['cons']:
+                temp_cons_dict = {}
+                temp_cons_dict['cons'] = cons
+                temp_cons_dict['review'] = reviewIdx
+                temp_cons_dict['isdeleted'] = 'N'
+
+                query_dict = QueryDict('', mutable=True)
+                query_dict.update(temp_cons_dict)
+                print(temp_cons_dict)
+
+                serializer = ReviewconsSerializer(data=query_dict)
+                if serializer.is_valid():
+                    serializer.save()
+
+            put_review = {}
+            put_review['isSuccess'] = 'true'
+            put_review['code'] = 200
+            put_review['message'] = '리뷰 수정 성공'
+
+            return_value = json.dumps(put_review, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        elif request.method == 'DELETE':
+            # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
+            item = {}
+            item['isdeleted'] = 'Y'
+            itemQuery = QueryDict('', mutable=True)
+            itemQuery.update(item)
+            serializer = ReviewSerializer(review_item, data=itemQuery, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+
+                # pros cons 삭제
+                delete(pros_item, ReviewprosSerializer)
+                delete(cons_item, ReviewconsSerializer)
+
+            del_comment = {}
+            del_comment['isSuccess'] = 'true'
+            del_comment['code'] = 200
+            del_comment['message'] = '리뷰 삭제 성공'
+
+            return_value = json.dumps(del_comment, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                                status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception:
+
+        return for_exception()
 
 
 @api_view(['GET', 'POST'])
 def qna_list(request, pk):
-    if request.method == 'GET':
-        try:
+    try:
+        if request.method == 'GET':
             page = int(request.GET.get('page', '1'))
 
             qna_list = []
@@ -401,56 +527,61 @@ def qna_list(request, pk):
             return_value = json.dumps(qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
+        elif request.method == 'POST':
 
+            # qna 저장
+            a = Qna.objects.last()
+            qnaIdx = a.qnaidx + 1
 
-        except Exception:
+            qna_dict = QueryDict.dict(request.data)
+            images = QueryDict.dict(request.data)
 
-            lec_dict = {}
-            lec_dict['isSuccess'] = 'false'
-            lec_dict['code'] = 400
-            lec_dict['message'] = '파라미터 입력값 오류'
+            qna_dict['lecture'] = pk
+            qna_dict['userinfo'] = 1  # 나중에 writer 확인하는 로직 작성 시 변경
+            if 'image' in qna_dict:
+                del qna_dict['image']
+                print(qna_dict)
+            query_dict = QueryDict('', mutable=True)
+            query_dict.update(qna_dict)
 
-            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
-
-            return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == 'POST':
-
-        try:
-            serializer = QnaSerializer(data=request.data)
-
+            serializer = QnaSerializer(data=query_dict)
             if serializer.is_valid():
                 serializer.save(isblocked='N', isdeleted='N')
 
-                post_qna = {}
-                post_qna['isSuccess'] = 'true'
-                post_qna['code'] = 201
-                post_qna['message'] = 'qna 작성 성공'
-                post_qna['result'] = serializer.data
+            # 댓글첨부된 이미지 저장
+            if 'image' in images:
+                for i in range(len(images['image'])):
 
-                return Response(post_qna, status=status.HTTP_201_CREATED)
+                    qna_image_dict = {}
+                    qna_image_dict['imgurl'] = images['image'][i]
+                    qna_image_dict['qna'] = qnaIdx
+                    qna_image_dict['isdeleted'] = 'N'
 
-            return Response(serializer.errors, status=status.HTTP_406_NOT_ACCEPTABLE)
+                    query_dict = QueryDict('', mutable=True)
+                    query_dict.update(qna_image_dict)
+                    print(query_dict)
 
+                    serializer = QnaimageSerializer(data=query_dict)
+                    if serializer.is_valid():
+                        serializer.save()
 
-        except Exception:
+            post_comment = {}
+            post_comment['isSuccess'] = 'true'
+            post_comment['code'] = 201
+            post_comment['message'] = 'qna 작성 성공'
 
-            lec_dict = {}
-            lec_dict['isSuccess'] = 'false'
-            lec_dict['code'] = 400
-            lec_dict['message'] = '파라미터 입력값 오류'
+            return_value = json.dumps(post_comment, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_201_CREATED)
 
-            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
-
-            return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+    except Exception:
+        return for_exception()
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def qna_detail(request, pk, qnaIdx):
     try:
         qna_item = Qna.objects.get(pk=qnaIdx)
+        qna_image_item = Qnaimage.objects.filter(qna=qnaIdx, isdeleted='N')
 
         if request.method == 'GET':
             item = Qna.objects.select_related('userinfo').get(pk=qnaIdx)
@@ -476,55 +607,114 @@ def qna_detail(request, pk, qnaIdx):
             return_value = json.dumps(qna_detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
-
         elif request.method == 'PUT':
-            # 내가 쓴 글일때만 수정 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, 이미지 수정은 어떻게 ..? ..?
-            print(request.data, '이다')
-            serializer = QnaSerializer(qna_item, data=request.data, partial=True)
+
+            qna_dict = QueryDict.dict(request.data)
+            images = QueryDict.dict(request.data)
+            if 'image' in qna_dict:  # 사진도 수정을 원할 경우
+                # 사진 지우고 사진은 따로 삭제후 저장
+                del qna_dict['image']
+
+                # comment image 값 차례로 삭제
+
+                delete(qna_image_item, QnaimageSerializer)
+
+                for i in range(len(images['image'])):
+                    qna_image_dict = {}
+                    qna_image_dict['imgurl'] = images['image'][i]
+                    qna_image_dict['qna'] = qnaIdx
+                    qna_image_dict['isdeleted'] = 'N'
+
+                    # 새로운 값 차례로 넣기
+                    query_dict = QueryDict('', mutable=True)
+                    query_dict.update(qna_image_dict)
+                    serializer = QnaimageSerializer(data=query_dict)
+                    if serializer.is_valid():
+                        serializer.save()
+
+            qnaQuery = QueryDict('', mutable=True)
+            qnaQuery.update(qna_dict)
+            serializer = QnaSerializer(qna_item, data=qnaQuery, partial=True)
 
             if serializer.is_valid():
                 serializer.save()
 
-            return Response(serializer.data)
+            put_comment = {}
+            put_comment['isSuccess'] = 'true'
+            put_comment['code'] = 200
+            put_comment['message'] = 'qna 수정 성공'
+
+            return_value = json.dumps(put_comment, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                                status=status.HTTP_400_BAD_REQUEST)
+
 
         elif request.method == 'DELETE':
+
             # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
+
             item = {}
             item['isdeleted'] = 'Y'
             itemQuery = QueryDict('', mutable=True)
             itemQuery.update(item)
-            serializer = QnaSerializer(qna_item, data=itemQuery, partial=True)
 
+            serializer = QnaSerializer(qna_item, data=itemQuery, partial=True)
+            # qna의 댓글 삭제
             if serializer.is_valid():
                 serializer.save()
+                # qna image 값 차례로 삭제
+                delete(qna_image_item, QnaimageSerializer)
 
-            return Response(serializer.data)
+            comments = Comment.objects.filter(qna=pk)
+
+            images = Commentimage.objects.filter(isdeleted='N', comment__qna=qnaIdx)
+
+            for ele in comments:
+
+                item = {}
+                item['isdeleted'] = 'Y'
+                itemQuery = QueryDict('', mutable=True)
+                itemQuery.update(item)
+                serializer = CommentSerializer(ele, data=itemQuery, partial=True)
+
+                if serializer.is_valid():
+                    serializer.save()
+
+                    # comment image 값 차례로 삭제
+
+                    images_per_comment = images.filter(comment=ele.commentidx)
+                    delete(images_per_comment, CommentimageSerializer)
+
+            del_qna = {}
+            del_qna['isSuccess'] = 'true'
+            del_qna['code'] = 200
+            del_qna['message'] = 'qna 삭제 성공'
+
+            return_value = json.dumps(del_qna, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered",
+
+                                status=status.HTTP_400_BAD_REQUEST)
 
     except Qna.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
-
-        lec_dict = {}
-        lec_dict['isSuccess'] = 'false'
-        lec_dict['code'] = 400
-        lec_dict['message'] = '파라미터 입력값 오류'
-
-        return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
-
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
+        return for_exception()
 
 
-@api_view(['GET'])
+@api_view(['GET', 'POST'])
 def comment_list(request, pk, qnaIdx):
     try:
         if request.method == 'GET':
 
-            comment = Comment.objects.filter(qna=qnaIdx, parentidx__isnull=True).select_related('userinfo')
-            reply = Comment.objects.filter(qna=qnaIdx, parentidx__isnull=False)
+            comment = Comment.objects.filter(qna=qnaIdx, parentidx__isnull=True, isdeleted='N',
+                                             isblocked='N').select_related('userinfo')
+            reply = Comment.objects.filter(qna=qnaIdx, parentidx__isnull=False, isdeleted='N', isblocked='N')
             type = reply.values('parentidx').annotate(count=Count('parentidx'))
 
-            #qna 글을 참조하는 모든 사진 불러오기
-            images = Commentimage.objects.filter(comment__qna__qnaidx=qnaIdx)
+            # qna 글을 참조하는 모든 사진 불러오기
+            images = Commentimage.objects.filter(comment__qna__qnaidx=qnaIdx, isdeleted='N')
 
             parent_list = []
             comment_dict = {}
@@ -533,8 +723,6 @@ def comment_list(request, pk, qnaIdx):
             comment_dict['code'] = 200
             comment_dict['message'] = '댓글 리스트 조회 성공'
             comments_list = []
-
-
 
             for i in type:
                 parent_list.append(i['parentidx'])
@@ -552,30 +740,555 @@ def comment_list(request, pk, qnaIdx):
                 if i.commentidx in parent_list:
                     children = reply.filter(parentidx=i.commentidx)
                     for child in children:
-                        reply_image_list=[]
+                        reply_image_list = []
                         images3 = images.filter(comment=child.commentidx).values('imageurl')
                         for h in images3:
                             reply_image_list.append(h['imageurl'])
-                        reply_list.append(dict([('commentIdx',child.commentidx),('commentDes',child.commentdes),
-                                                ('nickname',child.userinfo.nickname),('image',reply_image_list)]))
+                        reply_list.append(dict([('commentIdx', child.commentidx), ('commentDes', child.commentdes),
+                                                ('nickname', child.userinfo.nickname), ('image', reply_image_list)]))
 
                 comments_list.append(dict(
                     [('commentIdx', i.commentidx), ('commentDes', i.commentdes), ('nickname', i.userinfo.nickname),
-                    ('image',image_list),('reply',reply_list)]))
+                     ('image', image_list), ('reply', reply_list)]))
 
                 comment_dict['result'] = comments_list
 
             return_value = json.dumps(comment_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
+        elif request.method == 'POST':
+            # 댓글 저장
+            a = Comment.objects.last()
+            commentIdx = a.commentidx + 1
+
+            comment_dict = QueryDict.dict(request.data)
+            images = QueryDict.dict(request.data)
+            print(comment_dict)
+            comment_dict['qna'] = qnaIdx
+            comment_dict['userinfo'] = 1  # 나중에 writer 확인하는 로직 작성 시 변경
+            if 'image' in comment_dict:
+                del comment_dict['image']
+                print(comment_dict)
+            query_dict = QueryDict('', mutable=True)
+            query_dict.update(comment_dict)
+            serializer = CommentSerializer(data=query_dict)
+            if serializer.is_valid():
+                serializer.save(isblocked='N', isdeleted='N')
+
+            # 댓글첨부된 이미지 저장
+            if 'image' in images:
+                for i in range(len(images['image'])):
+
+                    comment_image_dict = {}
+                    comment_image_dict['imageurl'] = images['image'][i]
+                    comment_image_dict['comment'] = commentIdx
+                    comment_image_dict['isdeleted'] = 'N'
+                    print(comment_image_dict)
+                    query_dict = QueryDict('', mutable=True)
+                    query_dict.update(comment_image_dict)
+                    print(query_dict)
+
+                    serializer = CommentimageSerializer(data=query_dict)
+                    if serializer.is_valid():
+                        serializer.save()
+
+            post_comment = {}
+            post_comment['isSuccess'] = 'true'
+            post_comment['code'] = 201
+            post_comment['message'] = '댓글 작성 성공'
+
+            return_value = json.dumps(post_comment, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_201_CREATED)
+
+
+
+    except Qna.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+@api_view(['PUT', 'DELETE'])
+def comment_detail(request, pk, qnaIdx, commentIdx):
+    try:
+
+        comment_item = Comment.objects.get(pk=commentIdx)
+        comment_image_item = Commentimage.objects.filter(comment=commentIdx, isdeleted='N')
+        print(comment_item)
+
+        if request.method == 'PUT':
+            comment_dict = QueryDict.dict(request.data)
+            images = QueryDict.dict(request.data)
+            if 'image' in comment_dict:  # 사진도 수정을 원할 경우
+                # 사진 지우고 사진은 따로 삭제후 저장
+                del comment_dict['image']
+
+                # comment image 값 차례로 삭제
+                delete(comment_image_item, CommentimageSerializer)
+
+                for i in range(len(images['image'])):
+                    comment_image_dict = {}
+                    comment_image_dict['imageurl'] = images['image'][i]
+                    comment_image_dict['comment'] = commentIdx
+                    comment_image_dict['isdeleted'] = 'N'
+
+                    # 새로운 값 차례로 넣기
+                    query_dict = QueryDict('', mutable=True)
+                    query_dict.update(comment_image_dict)
+
+                    serializer = CommentimageSerializer(data=query_dict)
+                    if serializer.is_valid():
+                        serializer.save()
+
+            commentQuery = QueryDict('', mutable=True)
+            commentQuery.update(comment_dict)
+            serializer = CommentSerializer(comment_item, data=commentQuery, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+
+            put_comment = {}
+            put_comment['isSuccess'] = 'true'
+            put_comment['code'] = 200
+            put_comment['message'] = '댓글 수정 성공'
+
+            return_value = json.dumps(put_comment, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                                status=status.HTTP_400_BAD_REQUEST)
+
+        elif request.method == 'DELETE':
+            # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
+            item = {}
+            item['isdeleted'] = 'Y'
+            itemQuery = QueryDict('', mutable=True)
+            itemQuery.update(item)
+            serializer = CommentSerializer(comment_item, data=itemQuery, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+
+                # comment image 값 차례로 삭제
+                delete(comment_image_item, CommentimageSerializer)
+
+            del_comment = {}
+            del_comment['isSuccess'] = 'true'
+            del_comment['code'] = 200
+            del_comment['message'] = '댓글 삭제 성공'
+
+            return_value = json.dumps(del_comment, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                                status=status.HTTP_400_BAD_REQUEST)
 
     except Exception:
 
-        lec_dict = {}
-        lec_dict['isSuccess'] = 'false'
-        lec_dict['code'] = 400
-        lec_dict['message'] = '파라미터 입력값 오류'
+        return for_exception()
 
-        return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
 
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_400_BAD_REQUEST)
+@api_view(['GET', 'PATCH'])
+def favorite_sites(request):
+    try:
+        if request.method == 'GET':
+
+            #user idx 나중에 바꿔주기
+            favorite_sites = Favoritesite.objects.filter(user=1, isdeleted='N')
+            favsites_list = []
+
+            for i in favorite_sites:
+
+                favsites_list.append(
+                    dict([('siteIdx', i.siteinfo.siteidx), ('siteName', i.siteinfo.sitename)]))
+
+            favsite_dict={}
+            favsite_dict['isSuccess'] = 'true'
+            favsite_dict['code'] = 200
+            favsite_dict['message'] = '즐겨찾기한 사이트 조회 성공'
+            favsite_dict['result'] = favsites_list
+
+            return_value = json.dumps(favsite_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        elif request.method == 'PATCH':
+
+            siteIdx = int(request.GET.get('siteIdx'))
+            favsite = Favoritesite.objects.filter(user=1, siteinfo=siteIdx)
+            favsite_dict = {}
+            if favsite.exists():
+
+                if favsite.filter(isdeleted='N'):  # 이미 즐겨찾기함 -> 즐겨찾기 해제
+                    favsite_dict['isdeleted'] ='Y'
+
+                else:  # 즐겨찾기 해제(기록 O) -> 즐겨찾기 추가
+                    favsite_dict['isdeleted'] ='N'
+
+                favsiteQuery = QueryDict('', mutable=True)
+                favsiteQuery.update(favsite_dict)
+                serializer = FavoritesiteSerializer(favsite[0], data=favsiteQuery, partial=True)
+                if serializer.is_valid():
+                    serializer.save()
+
+            else:
+
+                favsite_dict['user'] = 1
+                favsite_dict['siteinfo'] = siteIdx
+                favsite_dict['isdeleted'] ='N'
+                favsiteQuery = QueryDict('', mutable=True)
+                favsiteQuery.update(favsite_dict)
+
+                serializer = FavoritesiteSerializer(data=favsiteQuery)
+                if serializer.is_valid():
+                    serializer.save()
+
+            favsite_dict = {}
+            favsite_dict['isSuccess'] = 'true'
+            favsite_dict['code'] = 200
+            favsite_dict['message'] = '사이트 즐겨찾기 여부 변경'
+
+
+            return_value = json.dumps(favsite_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_Ok)
+
+
+
+
+
+    except Favoritesite.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+@api_view(['GET', 'PATCH'])
+def favorite_lectures(request):
+    try:
+        if request.method == 'GET':
+            page = int(request.GET.get('page', '1'))
+            if page <= 0:
+                page = 1
+            favlectures_list=[]
+            fav_lectures = Favoritelecture.objects.filter(user=1, isdeleted='N')[page * 5 - 5:page * 5]
+            for i in fav_lectures:
+                price_sql = i.lecture.price
+                if price_sql == 0:
+                    price_sql = 'free'
+                elif price_sql == -1:
+                    price_sql = 'membership'
+
+                favlectures_list.append(
+                    dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level),
+                          ('rating',i.lecture.rating),('thumbUrl',i.lecture.thumburl),('siteName',i.lecture.siteinfo.siteidx),('professor',i.lecture.lecturer)]))
+
+
+            favlecture_dict={}
+            favlecture_dict['isSuccess'] = 'true'
+            favlecture_dict['code'] = 200
+            favlecture_dict['message'] = '즐겨찾기한 강의 조회 성공'
+            favlecture_dict['result'] = favlectures_list
+
+            return_value = json.dumps(favlecture_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        elif request.method == 'PATCH':
+
+            lectureIdx = int(request.GET.get('lectureIdx'))
+            favlectures = Favoritelecture.objects.filter(user=1, lecture=lectureIdx)
+            favlectures_dict = {}
+
+            if favlectures.exists():
+
+                if favlectures.filter(isdeleted='N'):  # 이미 즐겨찾기함 -> 즐겨찾기 해제
+                    favlectures_dict['isdeleted'] ='Y'
+
+                else:  # 즐겨찾기 해제(기록 O) -> 즐겨찾기 추가
+                    favlectures_dict['isdeleted'] ='N'
+
+                favlectureQuery = QueryDict('', mutable=True)
+                favlectureQuery.update(favlectures_dict)
+                serializer = FavoritelectureSerializer(favlectures[0], data=favlectureQuery, partial=True)
+
+                if serializer.is_valid():
+                    serializer.save()
+
+            else:
+
+                favlectures_dict['user'] = 1
+                favlectures_dict['lecture'] = lectureIdx
+                favlectures_dict['isdeleted'] ='N'
+                favlectureQuery = QueryDict('', mutable=True)
+                favlectureQuery.update(favlectures_dict)
+
+                serializer = FavoritelectureSerializer(data=favlectureQuery)
+                if serializer.is_valid():
+                    serializer.save()
+
+            favlec_dict = {}
+            favlec_dict['isSuccess'] = 'true'
+            favlec_dict['code'] = 200
+            favlec_dict['message'] = '강의 즐겨찾기 여부 변경'
+
+            return_value = json.dumps(favlec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+    except Favoritelecture.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+@api_view(['GET'])
+def my_reviews(request):
+    try:
+        page = int(request.GET.get('page', '1'))
+        if page <= 0:
+            page = 1
+
+
+        my_review_list=[]
+        my_review = Review.objects.filter(profile=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+
+        pros = Reviewpros.objects.filter(review__profile=1, isdeleted='N')
+
+        cons = Reviewcons.objects.filter(review__profile=1, isdeleted='N')
+
+        likes = Likesforreview.objects.filter(review__profile=1).values('review').annotate(count=Count('review'))
+
+        for i in my_review:
+
+            likes_dict = {}
+
+            for k in likes:
+                likes_dict[k['review']] = k['count']
+
+                try:
+                    likes_count = likes_dict[i.reviewidx]
+                except Exception:
+                    likes_count = 0
+                    pass
+
+            pros2 = pros.filter(review=i.reviewidx)
+            pros_list = []
+            cons2 = cons.filter(review=i.reviewidx)
+            cons_list = []
+
+            for p in pros2:
+                pros_list.append(p.pros.prostype)
+
+            for c in cons2:
+                cons_list.append(c.cons.constype)
+
+            my_review_list.append(
+                dict([('reviewIdx', i.reviewidx),('lectureIdx',i.lectureidx.lectureidx),('lectureName',i.lectureidx.lecturename), ('totalRating', i.totalrating), ('priceRating', i.pricerating),
+                      ('teachingpowerRating',i.teachingpowerrating),('recommend',i.recommend),('improvement',i.improvement),
+                      ('pros',pros_list),('cons',cons_list), ('likesCount', likes_count)]))
+
+
+        my_review_dict={}
+        my_review_dict['isSuccess'] = 'true'
+        my_review_dict['code'] = 200
+        my_review_dict['message'] = '내가 쓴 리뷰 조회 성공'
+        my_review_dict['result'] = my_review_list
+
+        return_value = json.dumps(my_review_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+@api_view(['GET'])
+def my_qnas(request):
+    try:
+        page = int(request.GET.get('page', '1'))
+        if page <= 0:
+            page = 1
+
+
+        my_qna_list=[]
+        my_qna = Qna.objects.filter(userinfo=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+
+        likes = Likesforqna.objects.filter(qna__userinfo=1).values('qna').annotate(count=Count('qna'))
+
+        for i in my_qna:
+
+            likes_dict = {}
+
+            for k in likes:
+                likes_dict[k['qna']] = k['count']
+
+                try:
+                    likes_count = likes_dict[i.qnaidx]
+                except Exception:
+                    likes_count = 0
+                    pass
+
+
+            my_qna_list.append(
+                dict([('qnaIdx', i.qnaidx),('qnaTitle',i.title),('qnaDes',i.qnades),('likesCount', likes_count)]))
+
+
+        my_qna_dict={}
+        my_qna_dict['isSuccess'] = 'true'
+        my_qna_dict['code'] = 200
+        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
+        my_qna_dict['result'] = my_qna_list
+
+        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+@api_view(['GET'])
+def my_qnas(request):
+    try:
+        page = int(request.GET.get('page', '1'))
+        if page <= 0:
+            page = 1
+
+
+        my_qna_list=[]
+        my_qna = Qna.objects.filter(userinfo=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+
+        likes = Likesforqna.objects.filter(qna__userinfo=1).values('qna').annotate(count=Count('qna'))
+
+        for i in my_qna:
+
+            likes_dict = {}
+
+            for k in likes:
+                likes_dict[k['qna']] = k['count']
+
+                try:
+                    likes_count = likes_dict[i.qnaidx]
+                except Exception:
+                    likes_count = 0
+                    pass
+
+
+            my_qna_list.append(
+                dict([('qnaIdx', i.qnaidx),('qnaTitle',i.title),('qnaDes',i.qnades),('likesCount', likes_count)]))
+
+
+        my_qna_dict={}
+        my_qna_dict['isSuccess'] = 'true'
+        my_qna_dict['code'] = 200
+        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
+        my_qna_dict['result'] = my_qna_list
+
+        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+@api_view(['GET'])
+def my_qnas(request):
+    try:
+        page = int(request.GET.get('page', '1'))
+        if page <= 0:
+            page = 1
+
+
+        my_qna_list=[]
+        my_qna = Qna.objects.filter(userinfo=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+
+        likes = Likesforqna.objects.filter(qna__userinfo=1).values('qna').annotate(count=Count('qna'))
+
+        for i in my_qna:
+
+            likes_dict = {}
+
+            for k in likes:
+                likes_dict[k['qna']] = k['count']
+
+                try:
+                    likes_count = likes_dict[i.qnaidx]
+                except Exception:
+                    likes_count = 0
+                    pass
+
+
+            my_qna_list.append(
+                dict([('qnaIdx', i.qnaidx),('qnaTitle',i.title),('qnaDes',i.qnades),('likesCount', likes_count)]))
+
+
+        my_qna_dict={}
+        my_qna_dict['isSuccess'] = 'true'
+        my_qna_dict['code'] = 200
+        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
+        my_qna_dict['result'] = my_qna_list
+
+        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+@api_view(['GET'])
+def my_comments(request):
+    try:
+        page = int(request.GET.get('page', '1'))
+        if page <= 0:
+            page = 1
+
+
+        my_comment_list=[]
+        my_comment = Comment.objects.filter(userinfo=1, isdeleted='N', isblocked='N', qna__isdeleted='N', qna__isblocked='N').values(
+            'qna__qnaidx', 'qna__title', 'qna__qnades','qna__userinfo__nickname','qna__userinfo__profileimg').distinct()[page * 5 - 5:page * 5]
+
+        qnas = []
+        for i in my_comment:
+            qnas.append(i['qna__qnaidx'])
+
+        likes = Likesforqna.objects.filter(isdeleted='N',qna__in=qnas).values('qna').annotate(count=Count('qna'))
+
+        for i in my_comment:
+
+            likes_dict = {}
+
+            for k in likes:
+                likes_dict[k['qna']] = k['count']
+
+                try:
+                    likes_count = likes_dict[i['qna__qnaidx']]
+                except Exception:
+                    likes_count = 0
+                    pass
+
+
+            my_comment_list.append(
+                dict([('qnaIdx', i['qna__qnaidx']),('qnaTitle',i['qna__title']),('qnaDes',i['qna__qnades']),('nickname',i['qna__userinfo__nickname']),
+                      ('profileImg',i['qna__userinfo__profileimg']),('likes',likes_count)]))
+
+
+        my_qna_dict={}
+        my_qna_dict['isSuccess'] = 'true'
+        my_qna_dict['code'] = 200
+        my_qna_dict['message'] = '댓글 쓴 글 조회 성공'
+        my_qna_dict['result'] = my_comment_list
+
+        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
