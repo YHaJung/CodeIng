@@ -56,46 +56,62 @@ def CBRS(request):
     num_reviews = Review.objects.count()
     # all_user_names = list(map(lambda x: x.userinfo, Categoryinterest.objects.only("userIdx")))
     all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
-    # print('all users',all_user_names[0])
-    # print(Review.objects.only("lectureidx")[1].pricerating)
-    # subcategory 71개 maincategory 12개
-    # all_lecture_ids = set(map(lambda x: x.lectureidx, Lecturecategory.objects.only("lectureidx")))
     all_category_ids = list(map(lambda x: x.categoryname, Category.objects.all()))
-    # print(Category.objects.all())
-    # print('====================')
-    # print(type(all_category_ids))
     all_subcategory_ids = list(map(lambda x: x.subcategoryname, Subcategory.objects.all()))
-    # print(type(all_subcategory_ids))
+    all_lectures = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
     all_categorys = all_category_ids + all_subcategory_ids
     # print(all_categorys)
     num_users = len(list(all_user_names))
-    lectureRatings_m = sp.sparse.dok_matrix((num_users, len(all_categorys) + 1), dtype=np.float32)
+    num_lectures = len(list(all_lectures))
+    # (num_users, len(all_categorys) + 1)
+    userInterest_m = pd.DataFrame(columns=all_categorys,index=all_user_names, dtype=np.float32)
+    lectureCategory_m = pd.DataFrame(columns=all_categorys,index=all_lectures, dtype=np.float32)
+    # lectureCategory = pd.DataFrame((num_lectures, len(all_categorys) + 1), dtype=np.float32)
+    # userInterest_m = sp.sparse.dok_matrix((num_users, len(all_categorys) + 1), dtype=np.float32)
+    # lectureCategory_m = sp.sparse.dok_matrix((num_lectures, len(all_categorys) + 1), dtype=np.float32)
+    print(lectureCategory_m.shape)
+    for i in range(num_lectures):
+        all_lecturecategory_ids = Lecturecategory.objects.filter(lecture=all_lectures[i])
+        for lecturecategory in all_lecturecategory_ids:
+            lectureCategory_m.iloc[i, lecturecategory.categoryidx-1] = 1
+            lectureCategory_m.iloc[i, 11 + lecturecategory.subcategory.subcategoryidx] = 1
+            # print(lecturecategory.categoryidx, lecturecategory.subcategory.subcategoryidx, lectureCategory_m.iloc[i, lecturecategory.subcategory.subcategoryidx])
+            # print(i, lecturecategory.categoryidx, lectureCategory_m.iloc[i, lecturecategory.subcategory.subcategoryidx])
+            # if lectureCategory_m.iloc[i, lecturecategory.categoryidx] != 1:
+            #     # lectureCategory_m[i, lecturecategory.categoryidx] = 1
+            #     lectureCategory_m.iloc[i, lecturecategory.categoryidx] = 1
+            # if lectureCategory_m.iloc[i, 12+lecturecategory.subcategory.subcategoryidx] != 1:
+            #     # lectureCategory_m[i, 12+lecturecategory.subcategory.subcategoryidx] = 1
+            #     lectureCategory_m.iloc[i, 12 + lecturecategory.subcategory.subcategoryidx] = 1
+    print(lectureCategory_m)
     for i in range(num_users):
-        #     # profile = Profile.objects.filter(userinfo=all_user_names[i])
-        #     profile = get_object_or_404(Profile, userinfo=all_user_names[i])
-        #     print(all_user_names[i].useridx)
-        user_subcategory_interest = Subcategoryinterest.objects.filter(useridx=all_user_names[i].useridx)
-        user_category_interest = Categoryinterest.objects.filter(useridx=all_user_names[i].useridx)
-        # print(user_category_interest)
-    #     for user_review in user_reviews:
-    #         lectureRatings_m[i, user_review.lectureidx] = user_review.totalrating
-    # lectureRatings = lectureRatings_m.transpose()
-    # coo = lectureRatings.tocoo(copy=False)
-    # df = pd.DataFrame({'lectures': coo.row, 'users': coo.col, 'rating': coo.data}
-    #                   )[['lectures', 'users', 'rating']].sort_values(['lectures', 'users']
-    #                                                                ).reset_index(drop=True)
-    # mo = df.pivot_table(index=['lectures'], columns=['users'], values='rating')
-    # mo.fillna(0, inplace=True)
-    # # print('3')
-    # selected = [1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    # if mo.shape[0] < 7:
-    #     model_knn = NearestNeighbors(algorithm='brute', metric='cosine', n_neighbors=mo.shape[0])
-    #     model_knn.fit(mo.values)
-    # else:
-    #     model_knn = NearestNeighbors(algorithm='brute', metric='cosine', n_neighbors=7)
-    #     model_knn.fit(mo.values)
-    # context = model_knn.kneighbors([selected])
-    response = {'message': 'sussccess'}
+        user_subcategory_interests = Subcategoryinterest.objects.filter(useridx=all_user_names[i].useridx)
+        user_category_interests = Categoryinterest.objects.filter(useridx=all_user_names[i].useridx)
+        for user_category_interest in user_category_interests:
+            # userInterest_m[i, user_category_interest.categoryidx-1] = 1
+            userInterest_m.loc[i, user_category_interest.categoryidx - 1] = 1
+        for user_subcategory_interest in user_subcategory_interests:
+            # userInterest_m[i, 11+ user_subcategory_interest.subcategoryidx] = 1
+            userInterest_m.loc[i, 11 + user_subcategory_interest.subcategoryidx] = 1
+        # print(i)
+    userInterest_m.fillna(0, inplace=True)
+    # print(userInterest_m)
+    # lectureCategory = lectureCategory_m.transpose()
+    # coo = lectureCategory.tocoo(copy=False)
+    # df = pd.DataFrame({'categories': coo.row, 'users': coo.col, 'interest': coo.data}
+    #                   )[['categories', 'users', 'interest']].sort_values(['categories', 'users']
+    #                                                                  ).reset_index(drop=True)
+    # lectureCategory = df.pivot_table(index=['categories'], columns=['users'], values='interest')
+    # lectureCategory.fillna(0, inplace=True)
+    # userid = 619
+    nbrs = NearestNeighbors(n_neighbors=5).fit(lectureCategory_m)
+    lectureCategory_m.fillna(0, inplace=True)
+    userid = 619
+    # print(lectureCategory_m)
+    # nbrs = NearestNeighbors(n_neighbors=5).fit(lectureCategory_m)
+    selected = [1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    print(nbrs.kneighbors([selected]))
+    response = {'message': 'success'}
     return JsonResponse(response, safe=False)
 
 
@@ -164,9 +180,6 @@ def KNN_IBCF(request, pk=None):
             'lectureidx')[:5]
         , range(0, len(distances.flatten()))))
     for i in overview2:
-        # print(i[0])
-        # print(i[0].lectureidx)
-        # print(i[0]['lectureidx'], i[0]['lecturename'])
         overview_list.append(
             dict([('lectureIdx', i[0]['lectureidx']),
                   ('lectureName', i[0]['lecturename']),
@@ -176,9 +189,8 @@ def KNN_IBCF(request, pk=None):
                   ]))
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict,indent=4, use_decimal=True, ensure_ascii=False)
-    # use_decimal = True,
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-    # return JsonResponse(context, safe=False)
+
 
 
 @api_view(['GET'])
