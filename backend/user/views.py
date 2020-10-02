@@ -1,4 +1,6 @@
 import datetime
+import time
+
 import bcrypt
 import jwt
 import simplejson as json
@@ -28,16 +30,16 @@ def validatePasswd(value):
     # check for digit
 
     if len(value) < 8:
-        raise ValueError
+        raise ValueError("비번설정")
     if not any(char.isdigit() for char in value):
         raise ValueError
 
     if not any(char.isalpha() for char in value):
-        raise ValueError
+        raise ValueError("비번설정")
 
     special_characters = "[~\!@#\$%\^&\*\(\)_\+{}\":;'\[\]]"
     if not any(char in special_characters for char in value):
-        raise ValueError
+        raise ValueError("비번설정")
 
 
 # 이메일에 대한 validation
@@ -51,7 +53,7 @@ def validateEmail(email):
        return False
 
 # 예외 처리 함수 (파라미터 입력값 오류)
-def for_exception(code, message, status_):
+def for_exception(code = 400, message = '파라미터 값 오류', status_=400):
     lec_dict = {}
     lec_dict['isSuccess'] = 'false'
     lec_dict['code'] = code
@@ -118,11 +120,16 @@ def sign_up(request):
             else:
                 raise ValueError('정보없음')
 
-            #비밀번호가 일치하면 토큰 발행
-            if bcrypt.checkpw(sign_in_dict['userpwd'].encode('utf-8'), user.userpwd.encode('utf-8')):
-                token = jwt.encode({'email': sign_in_dict['email']}, SECRET_KEY, algorithm="HS256")
-                token = token.decode('utf-8')  # 유니코드 문자열로 디코딩
-            else:
+            try:
+                #비밀번호가 일치하면 토큰 발행
+                if bcrypt.checkpw(sign_in_dict['userpwd'].encode('utf-8'), user.userpwd.encode('utf-8')):
+                    # 토큰은 한 달 동안만 유효
+                    expire_ts = int(time.time()) + 3600*24*30
+                    token = jwt.encode({'email': sign_in_dict['email'],'expire':expire_ts}, SECRET_KEY, algorithm="HS256")
+                    token = token.decode('utf-8')  # 유니코드 문자열로 디코딩
+                else:
+                    raise ValueError('비번불일치')
+            except:
                 raise ValueError('비번불일치')
 
             token_dict = {}
@@ -250,8 +257,10 @@ def sign_up(request):
             return for_exception(404, "해당 이메일로 가입된 정보가 없습니다", status.HTTP_404_NOT_FOUND)
         elif str(e) == '비번불일치':
             return for_exception(409, "비밀번호가 틀렸습니다", status.HTTP_409_CONFLICT)
-        else:
+        elif str(e) == '비번설정':
             return for_exception(406, "비밀번호는 8자리 이상의 숫자/문자/특수문자의 조합으로 이루어져야 합니다", status.HTTP_406_NOT_ACCEPTABLE)
+
+
 
     except Exception:
 

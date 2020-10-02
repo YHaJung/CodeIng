@@ -1,16 +1,14 @@
-from datetime import datetime
+import datetime
+import time
 
 import jwt
 from django.conf.global_settings import SECRET_KEY
-from django.utils import timezone
 import simplejson as json
 from django.db.models import Count
 
 from django.http import JsonResponse, HttpResponse, QueryDict
 from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
-from django.core import serializers
 from .models import Lecture, Category, Siteinfo, Lecturecategory, Review, Userinfo, Profile, Reviewpros, Reviewcons, \
     Likesforreview, Qna, Likesforqna, Qnaimage, Comment, Commentimage, Pros, Favoritesite, Favoritelecture
 from rest_framework import viewsets, status
@@ -19,29 +17,85 @@ from .serializers import LectureSerializer, CategorySerializer, QnaSerializer, C
     FavoritesiteSerializer, FavoritelectureSerializer
 
 
+def convert_time(createdat):
+    now = datetime.datetime.now()
+    createdAt = createdat
+    time = now - createdAt
 
+    if time < datetime.timedelta(minutes=1):
+        return '방금 전'
+    elif time < datetime.timedelta(hours=1):
+        return str(int(time.seconds / 60)) + '분 전'
+    elif time < datetime.timedelta(days=1):
+        return str(int(time.seconds / 3600)) + '시간 전'
+    elif time < datetime.timedelta(days=7):
+        time = now.date() - createdAt.date()
+        return str(time.days) + '일 전'
+    elif time < datetime.timedelta(weeks=4):
+        time = now.date() - createdAt.date()
+        return str(int(time.days / 7)) + '주 전'
+    elif time < datetime.timedelta(weeks=48):
+        time = now.date() - createdAt.date()
+        return str(int(time.days / 28)) + '달 전'
+    else:
+        time = now.date() - createdAt.date()
+        return str(int(time.days / (28 * 12))) + '년 전'
 
 def login_decorator(func):
-    def wrapper(self, request, *args, **kwargs):
+    def wrapper(request, *args, **kwargs):
         try:
             access_token = request.headers.get('Authorization', None)
             payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+            #만료 확인
+            expire = payload['expire']
+
+            if int(time.time()) > expire:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '유효기간이 만료된 토큰'}, status=400)
+
+
+            #유저 확인
             user = Profile.objects.get(email=payload['email'])
             request.user = user
 
         except jwt.exceptions.DecodeError:
-            return JsonResponse({'message' : 'INVALID_TOKEN' }, status=400)
+            return JsonResponse({'isSuccess' : 'false',
+                                 'code' : 400,
+                                 'message' : 'INVALID_TOKEN' }, status=400)
 
         except Profile.DoesNotExist:
-            return JsonResponse({'message' : 'INVALID_USER'}, status=400)
+            return JsonResponse({'isSuccess' : 'false',
+                                 'code' : 400,
+                                 'message' : 'INVALID_USER' }, status=400)
 
-        return func(self, request, *args, **kwargs)
+        return func( request, *args, **kwargs)
 
     return wrapper
 
 
+def expire_check(access_token):
 
-# 이미지 삭제 함수(comment or qna)
+        try:
+            payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+            # 만료 확인
+            expire = payload['expire']
+            if int(time.time()) > expire:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '유효기간이 만료된 토큰'}, status=400)
+
+
+
+        except jwt.exceptions.DecodeError:
+            return JsonResponse({'isSuccess' : 'false',
+                                 'code' : 400,
+                                 'message' : 'INVALID_TOKEN' }, status=400)
+
+
+
+
+# 삭제 함수(comment or qna or review)
 def delete(list_value, serializer_type):
     for ele in list_value:
         item = {}
@@ -69,11 +123,9 @@ def for_exception():
 
 
 @api_view(['GET'])
-@login_decorator
-def lecture_list(self, request):
+def lecture_list(request):
     if request.method == 'GET':
         try:
-            print(request.user.email,'이당')
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
             selected_level = float(request.GET.get('level', '0'))
             selected_price = int(request.GET.get('price', '0'))
@@ -226,7 +278,6 @@ def lecture_detail(request, pk):
     try:
         lecture = Lecture.objects.get(pk=pk)
         print(lecture)
-        detail_list = []
 
         detail_dict = {}
         detail_dict['isSuccess'] = 'true'
@@ -249,7 +300,7 @@ def lecture_detail(request, pk):
         return for_exception()
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET','POST'])
 def review_list(request, pk):
     try:
         if request.method == 'GET':
@@ -316,6 +367,34 @@ def review_list(request, pk):
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
         elif request.method == 'POST':
+            try:
+                access_token = request.headers.get('Authorization', None)
+                payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+
+                # 만료 확인
+                expire = payload['expire']
+
+                if int(time.time()) > expire:
+                    return JsonResponse({'isSuccess': 'false',
+                                         'code': 400,
+                                         'message': '유효기간이 만료된 토큰'}, status=400)
+
+                user = Profile.objects.get(email=payload['email'])
+                request.user = user
+
+            except jwt.exceptions.DecodeError:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_TOKEN'}, status=400)
+
+            except Profile.DoesNotExist:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_USER'}, status=400)
+
+            # jwt를 통해 얻어낸 정보
+            userIdx = request.user.userinfo.useridx
+
             # 리뷰 저장
             a = Review.objects.last()
             reviewIdx = a.reviewidx + 1
@@ -328,7 +407,7 @@ def review_list(request, pk):
             cons_list_dict = {}
             cons_list_dict['cons'] = review_dict['cons']
 
-            review_dict['profile'] = 1  # 나중에 writer 확인하는 로직 작성 시 변경
+            review_dict['profile'] = userIdx
             review_dict['lectureidx'] = pk
             review_dict['isdeleted'] = 'N'
             del review_dict['pros']
@@ -377,17 +456,25 @@ def review_list(request, pk):
             return_value = json.dumps(post_review, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_201_CREATED)
 
-
-
     except Exception:
         return for_exception()
 
 
+
 @api_view(['PUT', 'DELETE'])
+@login_decorator
 def review_detail(request, pk, reviewIdx):
     try:
-
+        #jwt를 통해 얻어낸 정보
+        userIdx = request.user.userinfo.useridx
         review_item = Review.objects.get(pk=reviewIdx)
+        writerIdx = review_item.profile.userinfo.useridx
+
+        if userIdx != writerIdx:
+            return JsonResponse({'isSuccess': 'false',
+                                 'code': 400,
+                                 'message': '본인의 리뷰만 수정/삭제할 수 있습니다.'}, status=400)
+
         pros_item = Reviewpros.objects.filter(review=reviewIdx, isdeleted='N')
         cons_item = Reviewcons.objects.filter(review=reviewIdx, isdeleted='N')
 
@@ -486,58 +573,38 @@ def review_detail(request, pk, reviewIdx):
         return for_exception()
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET','POST'])
 def qna_list(request, pk):
     try:
-        if request.method == 'GET':
-            page = int(request.GET.get('page', '1'))
-
-            qna_list = []
-            qna_dict = {}
-            qna_dict['isSuccess'] = 'true'
-            qna_dict['code'] = 200
-            qna_dict['message'] = 'qna 목록 조회 성공'
-
-            qna = Qna.objects.filter(lecture__lectureidx=pk, isblocked='N', isdeleted='N').select_related('userinfo',
-                                                                                                          'lecture')[
-                  page * 5 - 5:page * 5]
-
-            likes = Likesforqna.objects.filter(qna__lecture__lectureidx=pk).select_related('qna').values(
-                'qna').annotate(count=Count('qna'))
-            likes_dict = {}
-
-            for i in likes:
-                likes_dict[i['qna']] = i['count']
-
-            for r in qna:
-                try:
-                    likes_count = likes_dict[r.qnaidx]
-                except Exception:
-                    likes_count = 0
-                    pass
-                print(r.createdat)
-                qna_list.append(dict(
-                    [('qnaIdx', r.qnaidx), ('qnaTitle', r.title), ('qnaDes', r.qnades),
-                     ('profileImg', r.userinfo.profileimg),
-                     ('likesCount', likes_count)
-                     ]))
-
-            qna_dict['result'] = qna_list
-
-            return_value = json.dumps(qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
-            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-        elif request.method == 'POST':
-
+        if request.method == 'POST':
             # qna 저장
+            expire_check(request.headers.get('Authorization', None))
+            try:
+
+                access_token = request.headers.get('Authorization', None)
+                payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+
+                user = Profile.objects.get(email=payload['email'])
+                request.user = user
+            except jwt.exceptions.DecodeError:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_TOKEN'}, status=400)
+
+            except Profile.DoesNotExist:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_USER'}, status=400)
+
             a = Qna.objects.last()
             qnaIdx = a.qnaidx + 1
+            userIdx = request.user.userinfo.useridx
 
             qna_dict = QueryDict.dict(request.data)
             images = QueryDict.dict(request.data)
 
             qna_dict['lecture'] = pk
-            qna_dict['userinfo'] = 1  # 나중에 writer 확인하는 로직 작성 시 변경
+            qna_dict['userinfo'] = userIdx
             if 'image' in qna_dict:
                 del qna_dict['image']
                 print(qna_dict)
@@ -547,6 +614,10 @@ def qna_list(request, pk):
             serializer = QnaSerializer(data=query_dict)
             if serializer.is_valid():
                 serializer.save(isblocked='N', isdeleted='N')
+            else:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '제목/내용은 반드시 입력해야 합니다'}, status=400)
 
             # 댓글첨부된 이미지 저장
             if 'image' in images:
@@ -573,20 +644,58 @@ def qna_list(request, pk):
             return_value = json.dumps(post_comment, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_201_CREATED)
 
+        elif request.method == 'GET':
+            page = int(request.GET.get('page', '1'))
+
+            qna_list = []
+            qna_dict = {}
+            qna_dict['isSuccess'] = 'true'
+            qna_dict['code'] = 200
+            qna_dict['message'] = 'qna 목록 조회 성공'
+
+            qna = Qna.objects.filter(lecture__lectureidx=pk, isblocked='N', isdeleted='N').select_related('userinfo',
+                                                                                                          'lecture')[
+                  page * 5 - 5:page * 5]
+
+            likes = Likesforqna.objects.filter(qna__lecture__lectureidx=pk).select_related('qna').values(
+                'qna').annotate(count=Count('qna'))
+            likes_dict = {}
+
+            for i in likes:
+                likes_dict[i['qna']] = i['count']
+
+            for r in qna:
+                try:
+                    likes_count = likes_dict[r.qnaidx]
+                except Exception:
+                    likes_count = 0
+                    pass
+                #시간 변환
+                time = convert_time(r.createdat)
+
+                qna_list.append(dict(
+                    [('qnaIdx', r.qnaidx), ('qnaTitle', r.title), ('qnaDes', r.qnades),
+                     ('profileImg', r.userinfo.profileimg),
+                     ('likesCount', likes_count), ('createdAt',time )
+                     ]))
+
+            qna_dict['result'] = qna_list
+
+            return_value = json.dumps(qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
     except Exception:
         return for_exception()
 
 
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET','PUT', 'DELETE'])
 def qna_detail(request, pk, qnaIdx):
     try:
-        qna_item = Qna.objects.get(pk=qnaIdx)
-        qna_image_item = Qnaimage.objects.filter(qna=qnaIdx, isdeleted='N')
-
         if request.method == 'GET':
             item = Qna.objects.select_related('userinfo').get(pk=qnaIdx)
-            qnaimages = Qnaimage.objects.filter(qnaidx=qnaIdx).values('imgurl')
 
+            qnaimages = Qnaimage.objects.filter(qna=qnaIdx).values('imgurl')
             qna_image = []
             qna_detail_dict = {}
             qna_detail_dict['isSuccess'] = 'true'
@@ -599,103 +708,138 @@ def qna_detail(request, pk, qnaIdx):
             print(item.qnaidx, item.title, item.qnades, item.userinfo.profileimg, item.userinfo.nickname,
                   item.createdat)
 
+            # 시간 변환
+            time = convert_time(item.createdat)
+
             qna_detail_dict['result'] = (dict(
                 [('qnaIdx', item.qnaidx), ('qnaTitle', item.title), ('qnaDes', item.qnades),
                  ('profileImg', item.userinfo.profileimg),
-                 ('nickname', item.userinfo.nickname), ('image', qna_image)]))
+                 ('nickname', item.userinfo.nickname), ('image', qna_image), ('createAt',time)]))
 
             return_value = json.dumps(qna_detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
-        elif request.method == 'PUT':
 
-            qna_dict = QueryDict.dict(request.data)
-            images = QueryDict.dict(request.data)
-            if 'image' in qna_dict:  # 사진도 수정을 원할 경우
-                # 사진 지우고 사진은 따로 삭제후 저장
-                del qna_dict['image']
+        else:
 
-                # comment image 값 차례로 삭제
+            try:
+                expire_check(request.headers.get('Authorization', None))
+                access_token = request.headers.get('Authorization', None)
+                payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
 
-                delete(qna_image_item, QnaimageSerializer)
+                user = Profile.objects.get(email=payload['email'])
+                request.user = user
 
-                for i in range(len(images['image'])):
-                    qna_image_dict = {}
-                    qna_image_dict['imgurl'] = images['image'][i]
-                    qna_image_dict['qna'] = qnaIdx
-                    qna_image_dict['isdeleted'] = 'N'
+            except jwt.exceptions.DecodeError:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_TOKEN'}, status=400)
 
-                    # 새로운 값 차례로 넣기
-                    query_dict = QueryDict('', mutable=True)
-                    query_dict.update(qna_image_dict)
-                    serializer = QnaimageSerializer(data=query_dict)
-                    if serializer.is_valid():
-                        serializer.save()
+            except Profile.DoesNotExist:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_USER'}, status=400)
 
-            qnaQuery = QueryDict('', mutable=True)
-            qnaQuery.update(qna_dict)
-            serializer = QnaSerializer(qna_item, data=qnaQuery, partial=True)
+            userIdx = request.user.userinfo.useridx
+            qna_item = Qna.objects.get(pk=qnaIdx)
+            writerIdx = qna_item.userinfo.useridx
+            if userIdx != writerIdx:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '본인의 qna만 수정/삭제할 수 있습니다.'}, status=400)
 
-            if serializer.is_valid():
-                serializer.save()
+            qna_image_item = Qnaimage.objects.filter(qna=qnaIdx, isdeleted='N')
 
-            put_comment = {}
-            put_comment['isSuccess'] = 'true'
-            put_comment['code'] = 200
-            put_comment['message'] = 'qna 수정 성공'
-
-            return_value = json.dumps(put_comment, indent=4, use_decimal=True, ensure_ascii=False)
-
-            return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+            if request.method == 'PUT':
 
 
-        elif request.method == 'DELETE':
+                qna_dict = QueryDict.dict(request.data)
+                images = QueryDict.dict(request.data)
+                if 'image' in qna_dict:  # 사진도 수정을 원할 경우
+                    # 사진 지우고 사진은 따로 삭제후 저장
+                    del qna_dict['image']
 
-            # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
+                    # comment image 값 차례로 삭제
 
-            item = {}
-            item['isdeleted'] = 'Y'
-            itemQuery = QueryDict('', mutable=True)
-            itemQuery.update(item)
+                    delete(qna_image_item, QnaimageSerializer)
 
-            serializer = QnaSerializer(qna_item, data=itemQuery, partial=True)
-            # qna의 댓글 삭제
-            if serializer.is_valid():
-                serializer.save()
-                # qna image 값 차례로 삭제
-                delete(qna_image_item, QnaimageSerializer)
+                    for i in range(len(images['image'])):
+                        qna_image_dict = {}
+                        qna_image_dict['imgurl'] = images['image'][i]
+                        qna_image_dict['qna'] = qnaIdx
+                        qna_image_dict['isdeleted'] = 'N'
 
-            comments = Comment.objects.filter(qna=pk)
+                        # 새로운 값 차례로 넣기
+                        query_dict = QueryDict('', mutable=True)
+                        query_dict.update(qna_image_dict)
+                        serializer = QnaimageSerializer(data=query_dict)
+                        if serializer.is_valid():
+                            serializer.save()
 
-            images = Commentimage.objects.filter(isdeleted='N', comment__qna=qnaIdx)
+                qnaQuery = QueryDict('', mutable=True)
+                qnaQuery.update(qna_dict)
+                serializer = QnaSerializer(qna_item, data=qnaQuery, partial=True)
 
-            for ele in comments:
+                if serializer.is_valid():
+                    serializer.save()
+
+                put_comment = {}
+                put_comment['isSuccess'] = 'true'
+                put_comment['code'] = 200
+                put_comment['message'] = 'qna 수정 성공'
+
+                return_value = json.dumps(put_comment, indent=4, use_decimal=True, ensure_ascii=False)
+
+                return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                                    status=status.HTTP_400_BAD_REQUEST)
+
+
+            elif request.method == 'DELETE':
+
+                # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
 
                 item = {}
                 item['isdeleted'] = 'Y'
                 itemQuery = QueryDict('', mutable=True)
                 itemQuery.update(item)
-                serializer = CommentSerializer(ele, data=itemQuery, partial=True)
 
+                serializer = QnaSerializer(qna_item, data=itemQuery, partial=True)
+                # qna의 댓글 삭제
                 if serializer.is_valid():
                     serializer.save()
+                    # qna image 값 차례로 삭제
+                    delete(qna_image_item, QnaimageSerializer)
 
-                    # comment image 값 차례로 삭제
+                comments = Comment.objects.filter(qna=pk)
 
-                    images_per_comment = images.filter(comment=ele.commentidx)
-                    delete(images_per_comment, CommentimageSerializer)
+                images = Commentimage.objects.filter(isdeleted='N', comment__qna=qnaIdx)
 
-            del_qna = {}
-            del_qna['isSuccess'] = 'true'
-            del_qna['code'] = 200
-            del_qna['message'] = 'qna 삭제 성공'
+                for ele in comments:
 
-            return_value = json.dumps(del_qna, indent=4, use_decimal=True, ensure_ascii=False)
+                    item = {}
+                    item['isdeleted'] = 'Y'
+                    itemQuery = QueryDict('', mutable=True)
+                    itemQuery.update(item)
+                    serializer = CommentSerializer(ele, data=itemQuery, partial=True)
 
-            return HttpResponse(return_value, content_type="text/json-comment-filtered",
+                    if serializer.is_valid():
+                        serializer.save()
 
-                                status=status.HTTP_400_BAD_REQUEST)
+                        # comment image 값 차례로 삭제
+
+                        images_per_comment = images.filter(comment=ele.commentidx)
+                        delete(images_per_comment, CommentimageSerializer)
+
+                del_qna = {}
+                del_qna['isSuccess'] = 'true'
+                del_qna['code'] = 200
+                del_qna['message'] = 'qna 삭제 성공'
+
+                return_value = json.dumps(del_qna, indent=4, use_decimal=True, ensure_ascii=False)
+
+                return HttpResponse(return_value, content_type="text/json-comment-filtered",
+
+                                    status=status.HTTP_400_BAD_REQUEST)
 
     except Qna.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -737,6 +881,9 @@ def comment_list(request, pk, qnaIdx):
                 for j in images2:
                     image_list.append(j['imageurl'])
 
+                # 시간 변환
+                time = convert_time(i.createdat)
+
                 if i.commentidx in parent_list:
                     children = reply.filter(parentidx=i.commentidx)
                     for child in children:
@@ -744,12 +891,14 @@ def comment_list(request, pk, qnaIdx):
                         images3 = images.filter(comment=child.commentidx).values('imageurl')
                         for h in images3:
                             reply_image_list.append(h['imageurl'])
+                        # 시간 변환
+                        child_time = convert_time(child.createdat)
                         reply_list.append(dict([('commentIdx', child.commentidx), ('commentDes', child.commentdes),
-                                                ('nickname', child.userinfo.nickname), ('image', reply_image_list)]))
+                                                ('nickname', child.userinfo.nickname), ('image', reply_image_list),('createdAt',child_time)]))
 
                 comments_list.append(dict(
                     [('commentIdx', i.commentidx), ('commentDes', i.commentdes), ('nickname', i.userinfo.nickname),
-                     ('image', image_list), ('reply', reply_list)]))
+                     ('image', image_list), ('reply', reply_list),('createdAt',time)]))
 
                 comment_dict['result'] = comments_list
 
@@ -758,14 +907,33 @@ def comment_list(request, pk, qnaIdx):
 
         elif request.method == 'POST':
             # 댓글 저장
+            try:
+                expire_check(request.headers.get('Authorization', None))
+
+                access_token = request.headers.get('Authorization', None)
+                payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+
+                user = Profile.objects.get(email=payload['email'])
+                request.user = user
+
+            except jwt.exceptions.DecodeError:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_TOKEN'}, status=400)
+
+            except Profile.DoesNotExist:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': 'INVALID_USER'}, status=400)
+
             a = Comment.objects.last()
             commentIdx = a.commentidx + 1
-
+            userIdx = request.user.userinfo.useridx
             comment_dict = QueryDict.dict(request.data)
             images = QueryDict.dict(request.data)
             print(comment_dict)
             comment_dict['qna'] = qnaIdx
-            comment_dict['userinfo'] = 1  # 나중에 writer 확인하는 로직 작성 시 변경
+            comment_dict['userinfo'] = userIdx
             if 'image' in comment_dict:
                 del comment_dict['image']
                 print(comment_dict)
@@ -809,10 +977,17 @@ def comment_list(request, pk, qnaIdx):
 
 
 @api_view(['PUT', 'DELETE'])
+@login_decorator
 def comment_detail(request, pk, qnaIdx, commentIdx):
     try:
-
+        userIdx = request.user.userinfo.useridx
         comment_item = Comment.objects.get(pk=commentIdx)
+
+        if userIdx != comment_item.userinfo.useridx:
+            return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '자신의 댓글만 수정/삭제 가능합니다'}, status=400)
+
         comment_image_item = Commentimage.objects.filter(comment=commentIdx, isdeleted='N')
         print(comment_item)
 
@@ -887,12 +1062,12 @@ def comment_detail(request, pk, qnaIdx, commentIdx):
 
 
 @api_view(['GET', 'PATCH'])
+@login_decorator
 def favorite_sites(request):
     try:
         if request.method == 'GET':
-
-            #user idx 나중에 바꿔주기
-            favorite_sites = Favoritesite.objects.filter(user=1, isdeleted='N')
+            userIdx = request.user.userinfo.useridx
+            favorite_sites = Favoritesite.objects.filter(user=userIdx, isdeleted='N')
             favsites_list = []
 
             for i in favorite_sites:
@@ -910,9 +1085,9 @@ def favorite_sites(request):
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
         elif request.method == 'PATCH':
-
+            userIdx = request.user.userinfo.useridx
             siteIdx = int(request.GET.get('siteIdx'))
-            favsite = Favoritesite.objects.filter(user=1, siteinfo=siteIdx)
+            favsite = Favoritesite.objects.filter(user=userIdx, siteinfo=siteIdx)
             favsite_dict = {}
             if favsite.exists():
 
@@ -930,7 +1105,7 @@ def favorite_sites(request):
 
             else:
 
-                favsite_dict['user'] = 1
+                favsite_dict['user'] = userIdx
                 favsite_dict['siteinfo'] = siteIdx
                 favsite_dict['isdeleted'] ='N'
                 favsiteQuery = QueryDict('', mutable=True)
@@ -950,9 +1125,6 @@ def favorite_sites(request):
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_Ok)
 
 
-
-
-
     except Favoritesite.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
@@ -960,14 +1132,17 @@ def favorite_sites(request):
 
 
 @api_view(['GET', 'PATCH'])
+@login_decorator
 def favorite_lectures(request):
     try:
+        userIdx = request.user.userinfo.useridx
+
         if request.method == 'GET':
             page = int(request.GET.get('page', '1'))
             if page <= 0:
                 page = 1
             favlectures_list=[]
-            fav_lectures = Favoritelecture.objects.filter(user=1, isdeleted='N')[page * 5 - 5:page * 5]
+            fav_lectures = Favoritelecture.objects.filter(user=userIdx, isdeleted='N')[page * 5 - 5:page * 5]
             for i in fav_lectures:
                 price_sql = i.lecture.price
                 if price_sql == 0:
@@ -992,7 +1167,7 @@ def favorite_lectures(request):
         elif request.method == 'PATCH':
 
             lectureIdx = int(request.GET.get('lectureIdx'))
-            favlectures = Favoritelecture.objects.filter(user=1, lecture=lectureIdx)
+            favlectures = Favoritelecture.objects.filter(user=userIdx, lecture=lectureIdx)
             favlectures_dict = {}
 
             if favlectures.exists():
@@ -1012,7 +1187,7 @@ def favorite_lectures(request):
 
             else:
 
-                favlectures_dict['user'] = 1
+                favlectures_dict['user'] = userIdx
                 favlectures_dict['lecture'] = lectureIdx
                 favlectures_dict['isdeleted'] ='N'
                 favlectureQuery = QueryDict('', mutable=True)
@@ -1037,21 +1212,23 @@ def favorite_lectures(request):
 
 
 @api_view(['GET'])
+@login_decorator
 def my_reviews(request):
     try:
+        userIdx = request.user.userinfo.useridx
         page = int(request.GET.get('page', '1'))
         if page <= 0:
             page = 1
 
 
         my_review_list=[]
-        my_review = Review.objects.filter(profile=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+        my_review = Review.objects.filter(profile=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
 
-        pros = Reviewpros.objects.filter(review__profile=1, isdeleted='N')
+        pros = Reviewpros.objects.filter(review__profile=userIdx, isdeleted='N')
 
-        cons = Reviewcons.objects.filter(review__profile=1, isdeleted='N')
+        cons = Reviewcons.objects.filter(review__profile=userIdx, isdeleted='N')
 
-        likes = Likesforreview.objects.filter(review__profile=1).values('review').annotate(count=Count('review'))
+        likes = Likesforreview.objects.filter(review__profile=userIdx).values('review').annotate(count=Count('review'))
 
         for i in my_review:
 
@@ -1100,17 +1277,19 @@ def my_reviews(request):
 
 
 @api_view(['GET'])
+@login_decorator
 def my_qnas(request):
     try:
+        userIdx = request.user.userinfo.useridx
         page = int(request.GET.get('page', '1'))
         if page <= 0:
             page = 1
 
 
         my_qna_list=[]
-        my_qna = Qna.objects.filter(userinfo=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+        my_qna = Qna.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
 
-        likes = Likesforqna.objects.filter(qna__userinfo=1).values('qna').annotate(count=Count('qna'))
+        likes = Likesforqna.objects.filter(qna__userinfo=userIdx).values('qna').annotate(count=Count('qna'))
 
         for i in my_qna:
 
@@ -1146,64 +1325,20 @@ def my_qnas(request):
         return for_exception()
 
 @api_view(['GET'])
+@login_decorator
 def my_qnas(request):
     try:
+        userIdx = request.user.userinfo.useridx
+
         page = int(request.GET.get('page', '1'))
         if page <= 0:
             page = 1
 
 
         my_qna_list=[]
-        my_qna = Qna.objects.filter(userinfo=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+        my_qna = Qna.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
 
-        likes = Likesforqna.objects.filter(qna__userinfo=1).values('qna').annotate(count=Count('qna'))
-
-        for i in my_qna:
-
-            likes_dict = {}
-
-            for k in likes:
-                likes_dict[k['qna']] = k['count']
-
-                try:
-                    likes_count = likes_dict[i.qnaidx]
-                except Exception:
-                    likes_count = 0
-                    pass
-
-
-            my_qna_list.append(
-                dict([('qnaIdx', i.qnaidx),('qnaTitle',i.title),('qnaDes',i.qnades),('likesCount', likes_count)]))
-
-
-        my_qna_dict={}
-        my_qna_dict['isSuccess'] = 'true'
-        my_qna_dict['code'] = 200
-        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
-        my_qna_dict['result'] = my_qna_list
-
-        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-
-    except Review.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return for_exception()
-
-
-@api_view(['GET'])
-def my_qnas(request):
-    try:
-        page = int(request.GET.get('page', '1'))
-        if page <= 0:
-            page = 1
-
-
-        my_qna_list=[]
-        my_qna = Qna.objects.filter(userinfo=1, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
-
-        likes = Likesforqna.objects.filter(qna__userinfo=1).values('qna').annotate(count=Count('qna'))
+        likes = Likesforqna.objects.filter(qna__userinfo=userIdx).values('qna').annotate(count=Count('qna'))
 
         for i in my_qna:
 
@@ -1240,15 +1375,68 @@ def my_qnas(request):
 
 
 @api_view(['GET'])
+@login_decorator
+def my_qnas(request):
+    try:
+
+        userIdx = request.user.userinfo.useridx
+
+        page = int(request.GET.get('page', '1'))
+        if page <= 0:
+            page = 1
+
+
+        my_qna_list=[]
+        my_qna = Qna.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+
+        likes = Likesforqna.objects.filter(qna__userinfo=userIdx).values('qna').annotate(count=Count('qna'))
+
+        for i in my_qna:
+
+            likes_dict = {}
+
+            for k in likes:
+                likes_dict[k['qna']] = k['count']
+
+                try:
+                    likes_count = likes_dict[i.qnaidx]
+                except Exception:
+                    likes_count = 0
+                    pass
+
+
+            my_qna_list.append(
+                dict([('qnaIdx', i.qnaidx),('qnaTitle',i.title),('qnaDes',i.qnades),('likesCount', likes_count)]))
+
+
+        my_qna_dict={}
+        my_qna_dict['isSuccess'] = 'true'
+        my_qna_dict['code'] = 200
+        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
+        my_qna_dict['result'] = my_qna_list
+
+        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+@api_view(['GET'])
+@login_decorator
 def my_comments(request):
     try:
+        userIdx = request.user.userinfo.useridx
         page = int(request.GET.get('page', '1'))
         if page <= 0:
             page = 1
 
 
         my_comment_list=[]
-        my_comment = Comment.objects.filter(userinfo=1, isdeleted='N', isblocked='N', qna__isdeleted='N', qna__isblocked='N').values(
+        my_comment = Comment.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N', qna__isdeleted='N', qna__isblocked='N').values(
             'qna__qnaidx', 'qna__title', 'qna__qnades','qna__userinfo__nickname','qna__userinfo__profileimg').distinct()[page * 5 - 5:page * 5]
 
         qnas = []
