@@ -130,7 +130,11 @@ def lecture_list(request):
             selected_level = float(request.GET.get('level', '0'))
             selected_price = int(request.GET.get('price', '0'))
             selected_rating = float(request.GET.get('rating', '0'))
+            input_keyword = request.GET.get('keyword','')
             page = int(request.GET.get('page', '1'))
+
+
+
             if page <= 0:
                 page = 1
 
@@ -138,10 +142,19 @@ def lecture_list(request):
             if selected_level < 0 or selected_level > 5 or selected_rating < 0 or selected_rating > 5 or selected_price < 0:
                 raise Exception
 
-            # 쿼리문
-            lectures = Lecture.objects.filter(
-                level__gte=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
-                'siteinfo')[page * 6 - 6:page * 6]
+
+
+            if input_keyword =='':
+                # 쿼리문
+                lectures = Lecture.objects.filter(
+                    level__gte=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
+                    'siteinfo')[page * 6 - 6:page * 6]
+            else:
+                lectures = Lecture.objects.filter(lecturename__contains=input_keyword,
+                    level__gte=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
+                    'siteinfo')[page * 6 - 6:page * 6]
+
+
             lec_dict = {}
             lec_dict['isSuccess'] = 'true'
             lec_dict['code'] = 200

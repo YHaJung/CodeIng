@@ -267,4 +267,10 @@ def sign_up(request):
         return for_exception(code, message, status_)
 
 
+@api_view(['GET'])
+def google_login(request):
+    print('hi')
+    return JsonResponse({}, status=200)
+
+
 
