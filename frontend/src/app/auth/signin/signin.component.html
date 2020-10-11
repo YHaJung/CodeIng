@@ -1,0 +1,23 @@
+<div id="whole-page">
+  <div class="center-logo text-center" routerLink="/"></div>
+  <div>
+    <!--<form action="/action_page.php">-->
+    
+    <form  [formGroup]="signinForm" (submit)="saveForm()">
+      <input type="email" formControlName="id" placeholder="아이디">
+      <input type="password "formControlName="pw" placeholder="비밀번호">
+      <!--<button type="submit" routerLink="/">구글 로그인</button>-->
+      <br/>
+      <button type="submit">로그인</button>
+    </form>
+
+
+    <div class="row">
+    <div class="col-sm-3" style="text-align: center">아이디 찾기</div>
+    <div class="col-sm-3" style="text-align: center">비밀번호 찾기</div>
+    <div class="col-sm-3" style="text-align: center">회원가입</div>
+    </div>
+  </div>
+</div>
+
+

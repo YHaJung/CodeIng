@@ -1,0 +1,17 @@
+<div>
+    <section id="search">
+        <form [formGroup]="qnaForm" (submit)="searchQna()">
+            <input type="text" formControlName="question" placeholder="QnA 검색하기"/>
+            <button type="submit">검색</button>
+        </form>
+        <button>ADD</button>
+    </section>
+    <br/>
+    <section id="content">
+        <app-qna-card
+            class="card"
+            *ngFor="let qna of qnas"
+            [qna]="qna"
+        ></app-qna-card>
+    </section>
+</div>

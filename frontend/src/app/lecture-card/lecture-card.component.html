@@ -1,0 +1,24 @@
+<article class="row">
+    <div id="img-div" class="col-sm-3">
+        <img src="{{lecture.thumbUrl}}"/>
+    </div>
+    <div class="col-sm-9">
+        <div class="upper">
+            <h2>{{lecture.siteName}}</h2>
+            <h1>{{lecture.lectureName}}</h1>
+            <h3>{{lecture.professor}}</h3>
+        </div>
+        <div>
+            <h3>{{lecture.price}}</h3>
+            <h3 class="lecture-level">강의 수준 : </h3>
+            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 0}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 1}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 2}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 3}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 4}"></fa-icon>
+        </div>
+    </div>
+</article>
+
+
+

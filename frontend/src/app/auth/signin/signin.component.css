@@ -1,0 +1,7 @@
+body{margin: 0; padding: 0;}
+#whole-page{
+    background-color: var(--main-gray);
+    padding: 10vw 25vw 10vw 25vw;
+    color: white;
+    height: 100vh;
+}

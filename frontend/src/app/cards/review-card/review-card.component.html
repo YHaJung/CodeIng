@@ -1,0 +1,46 @@
+<div>
+    <h1>{{review.nickname}}</h1>
+    <h2>{{review.job}}/{{review.userlevel}}</h2>
+</div>
+<div class="row">
+    <div class="col-sm-6">
+        <div>
+            <h2>총점</h2>
+            <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating > 0}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating > 1}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating  > 2}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating  > 3}"></fa-icon>
+            <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating  > 4}"></fa-icon>
+        </div>
+        <div>
+            <h2>강의력</h2>
+            <fa-icon
+                [icon]="star"
+                *ngFor="let num of [0,1,2,3,4]"
+                [ngClass]="{'yellow':review.teachingpowerRating > num}"
+            ></fa-icon>
+        </div>
+        <div>
+            <h2>가격</h2>
+            <fa-icon
+                [icon]="star"
+                *ngFor="let num of [0,1,2,3,4]"
+                [ngClass]="{'yellow':review.priceRating > num}"
+            ></fa-icon>
+        </div>
+    </div>
+    <div class="col-sm-6"> 
+        <div>
+            <h2>장점</h2>
+            <p>{{review.pros}}</p>
+        </div>
+        <div>
+            <h2>단점</h2>
+            <p>{{review.cons}}</p>
+        </div>
+        <div>
+            <h2>개선점</h2>
+            <p>{{review.improvement}}</p>
+        </div>
+    </div>
+</div>

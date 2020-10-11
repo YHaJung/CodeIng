@@ -9,22 +9,41 @@ import {ApiService} from '../api.service';
 export class LectureRankDetailComponent implements OnInit {
 
 
-  lectures: any = [];
+  allLectures: any = [];
+  subcategories:any=[];
+  categoryLectures:any=[];
   selectedLecture = null;
 
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
+    this.apiService.getLectures().subscribe(
+      data => {
+        this.allLectures = data;
+        console.log(this.allLectures);
+      },
+      error => console.log(error)
+    );
     this.apiService.getLecturesRanking().subscribe(
       data => {
-        this.lectures = data;
+        this.subcategories = data['subcategory'];
+        console.log(data);
+      },
+      error => console.log(error)
+    );
+    this.apiService.getLecturesRanking().subscribe(
+      data => {
+        this.categoryLectures = data['result'];
+        console.log(this.categoryLectures);
       },
       error => console.log(error)
     );
   }
 
   // tslint:disable-next-line:typedef
-  selectLecture(lecture){
-    this.selectedLecture = lecture;
+  /*
+  selectLecture(allLecture){
+    this.selectedLecture = allLecture;
   }
+  */
 }

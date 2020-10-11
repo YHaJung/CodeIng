@@ -1,0 +1,20 @@
+#main-search{
+    margin: var(--main-body-margin);
+}
+
+/*side*/
+#side div{
+    margin-bottom: 15px;
+}
+fa-icon.orange{
+    color:orange;
+}
+
+fa-icon.purple{
+    color: purple;
+}
+#side div fa-icon{
+    cursor: pointer; /*mouse를 pointer모양으로*/
+    font-size: 1em;
+}
+

@@ -1,11 +1,28 @@
-.home-btn {
-  float: right;
+/*main-home*/
+#main-home{
+  padding:var(--main-body-margin);
 }
-.home-container {
-  margin-left: 20px;
-  margin-top: 20px;
+
+button{
+  border: 0px;
 }
-.home-card {
-  margin-left: 10px;
-  margin-right: 0px;
+
+article{
+  width: 13vw;
+  height: 30vw;
+  overflow: hidden;
+  display: inline-block;
+  word-break:break-all;
+  margin-right: 1.4vw;
+  margin-top: 1.4vw;
+}
+article .img-div{
+  height: 10vw;
+  width: 13vw;
+  background-color: var(--main-gray);
+}
+article .title{
+  height: 5vw;
+  overflow: hidden;
+  font-size: 1.2em;
 }

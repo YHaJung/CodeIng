@@ -1,0 +1,47 @@
+/*home top banner*/
+#top-bar{
+  margin : var(--main-body-margin);
+}
+#top-bar #nav-auth{
+  text-align: right;
+  font-size: 12px;
+}
+#top-bar #nav-auth a{
+  color:var(--main-gray);
+}
+#top-bar #middle{
+  line-height: 4.5vw;
+  height: 4.5vw;
+}
+#top-bar #middle .logo{
+  background-image: url("../../assets/images/Coding_logo_Final.png");
+  background-size: 100%;
+  width: 20vw;
+  height: 5vw;
+  float:left;
+  background-repeat: no-repeat;
+}
+#top-bar #middle form{
+  min-height: 20px;
+  height: 80%;
+  text-align: center;
+}
+#top-bar #middle form input{
+  width: 30vw;
+  height: 100%;
+  min-height: 20px;
+  font-size: 12px;
+  vertical-align: bottom;
+}
+#top-bar #middle form button{
+  width: 50px;
+  height: 100%;
+  vertical-align: bottom;
+
+  font-size: 12px;
+  border: 0px;
+  background-color: var(--main-gray);
+  color:white;
+
+  line-height: 100%;  /*글자 가운데 정렬*/
+}

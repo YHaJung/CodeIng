@@ -1,14 +1,14 @@
-.home-btn {
-  float: right;
+.main-ranking{
+  margin:var(--main-body-margin);
 }
-.detail-container {
-  margin-left: 20px;
-  margin-top: 20px;
-  /*background-color: #E7EDFF;*/
-  margin: 20px;
-  height: 100vh;
+
+h1{
+  font-size: 1.5vw;
+  text-align: center;
 }
-.home-card {
-  margin-left: 10px;
-  margin-right: 0px;
+
+#main-ranking{
+  margin-top: 1vh;
+  border-right:1px solid var(--main-gray);
+  border-bottom:1px solid var(--main-gray);
 }

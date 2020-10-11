@@ -1,18 +1,12 @@
-<div class="row">
-  <div class="col-sm-3" *ngFor="let lecture of lectures;">
-    <div class="card">
-      <img class="card-img-top"
-           src="{{lecture.thumbUrl}}" alt="Card image">
-      <div class="card-body">
-        <div (click)="lectureClicked(lecture)">
-          <h5 class="card-title">{{lecture.lectureName}}</h5>
-          <p class="card-text">
-            레벨 {{lecture.level}}
-            강사 {{lecture.professor}}
-          </p>
-        </div>
-        <button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>
-      </div>
+<div id="wrapper">
+  <article *ngFor="let lecture of lectures;">
+    <p>0{{lecture.ranking}}</p>
+    <img src="{{lecture.thumbUrl}}" alt="Card image">
+    <div (click)="lectureClicked(lecture)">
+      <p>{{lecture.siteName}}</p>
+      <p>{{lecture.lectureName}}</p>
+      <p>레벨 {{lecture.level}}</p>
     </div>
-  </div>
+  </article>
+      <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
 </div>

@@ -1,0 +1,15 @@
+<section id="top-bar">
+    <nav id="nav-auth">
+        <a href="/signin">로그인</a>&nbsp;
+        <a href="/signup">회원가입</a>&nbsp;
+        <a href="/mypage">mypage</a>&nbsp;
+        <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
+    </nav>
+    <div id="middle">
+        <div class="logo"  routerLink="/home"></div>
+        <form [formGroup]="searchForm" (submit)="searchLectures()">
+            <input type="text" formControlName="title" placeholder="강의 검색하기"/>
+            <button type="submit">검색</button>
+        </form>
+    </div>
+</section>

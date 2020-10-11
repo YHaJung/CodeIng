@@ -16,7 +16,8 @@ export class LectureRecommendDetailComponent implements OnInit {
   ngOnInit(): void {
     this.apiService.getLecturesRecommend().subscribe(
       data => {
-        this.lectures = data;
+        this.lectures = data['result'];
+        console.log(this.lectures);
       },
       error => console.log(error)
     );

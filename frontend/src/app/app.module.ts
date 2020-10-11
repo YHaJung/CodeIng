@@ -1,21 +1,33 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import {HttpClientModule} from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
+import {ReactiveFormsModule} from '@angular/forms';
+
 import { AppComponent } from './app.component';
 
 import {RouterModule, Routes} from '@angular/router';
-import {AuthModule} from './auth/auth.module';
 import {HomeModule} from './home/home.module';
-import {LectureReviewModule} from './lecture-review/lecture-review.module';
 
+import {MypageModule} from './mypage/mypage.module';
+import {ReviseUserinfoModule} from './revise-userinfo/revise-userinfo.module';
+import {BasketModule} from './basket/basket.module';
+import {MypageNavModule} from './mypage/mypage-nav/mypage-nav.module';
+
+import {MainModule} from './main/main.module';
 import {LectureRecommendDetailModule} from './lecture-recommend-detail/lecture-recommend-detail.module';
 import {LectureRankDetailModule} from './lecture-rank-detail/lecture-rank-detail.module';
+import {LectureSearchModule} from './lecture-search/lecture-search.module';
+import {LectureDetailModule} from './lecture-detail/lecture-detail.module';
+import {LectureCardModule} from './lecture-card/lecture-card.module';
 
+import {SigninModule} from './auth/signin/signin.module';
+import {SignupModule} from './auth/signup/signup.module';
 
+import {ReviewCardModule} from './cards/review-card/review-card.module';
+import {QnaCardModule} from './cards/qna-card/qna-card.module';
 
 const appRoutes: Routes = [
-  {path: '', pathMatch: 'full', redirectTo: ''},
+  {path: '', pathMatch: 'full', redirectTo: 'home'},
   {path: 'lecturereview/:id', redirectTo: 'lecturereview/'},
   {path: 'lectureqa/:id', redirectTo: 'lectureqa/'},
   // {path: 'lecturerankdetail', component: LectureRankDetailComponent},
@@ -35,12 +47,23 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     // AppRoutingModule,
-    AuthModule,
     HomeModule,
-    LectureReviewModule,
+    MypageModule,
+    BasketModule,
+    ReviseUserinfoModule,
+    MypageNavModule,
+    MainModule,
     LectureRecommendDetailModule,
     LectureRankDetailModule,
+    LectureSearchModule,
+    LectureDetailModule,
+    LectureCardModule,
+    ReviewCardModule,
+    QnaCardModule,
+    SigninModule,
+    SignupModule,
     HttpClientModule,
     RouterModule.forRoot(appRoutes)
   ],

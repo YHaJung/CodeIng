@@ -1,0 +1,21 @@
+#main-search{
+    margin: var(--main-body-margin);
+    background-color: rgba(21, 39, 60, 0.05);;
+}
+
+/*side*/
+#side div{
+    margin-bottom: 15px;
+}
+fa-icon.orange{  /*can delete [icon="star"] or fa-icon[icon="star"]*/
+    color:var(--main-yellow);
+}
+
+/*search-main*/
+#content div{
+    display: inline-block;
+    color:var(--main-gary);
+}
+#content .clicked-menu{
+    border-bottom: 4px solid var(--main-yellow);
+}

@@ -1,23 +1,55 @@
-<div class="home-btn">
-  <button routerLink="/auth" type="button" class="btn btn-primary">로그인</button>
-  <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
-</div>
-<div class="logo text-center" routerLink="/">
-</div>
-<app-home-nav-bar></app-home-nav-bar>
-<div class="home-container">
-  <div class="row">
-    <div class="col-sm-12">
-      <h4>프로그램 주제별 랭킹</h4>
-      <button routerLink="/lecturerankdetail">전체보기</button>
+<app-main></app-main>
+<section id="main-menu">
+  <nav>
+    <div class="clicked-menu"><a routerLink="/home">홈</a>&nbsp;</div>&nbsp;
+    <div><a routerLink="/lecturerankdetail">프로그램 주제별 랭킹</a></div>&nbsp;
+    <div><a routerLink="/lecturerecommenddetail">오늘의 추천 컨텐츠</a></div>&nbsp;
+    <div><a routerLink="/lecturersearch">강의 검색</a></div>
+  </nav>
+</section>
+
+<div id="main-home">
+  <!--lecture ranking-->
+  <section id="lecture-subject-rank">
+    <div>
+      <h1>프로그램 주제별 랭킹</h1>
     </div>
-  </div>
-  <app-lecture-rank-list [lectures]="rankingdoverview" (selectLecture)="selectedLecture($event)"></app-lecture-rank-list>
-  <div class="row">
-    <div class="col-sm-12">
-      <h4>오늘의 추천 컨텐츠</h4>
-      <button routerLink="/lecturerecommenddetail">전체보기</button>
+    <a href="/lecturerankdetail"><button>전체보기</button></a>
+    <div id="wrapper">
+      <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
+        0{{lecture.ranking}}
+        <div class="img-div"><img src="{{lecture?.thumbUrl}}" alt="Card image"></div>
+        <div (click)="lectureClicked(lecture)">
+          {{lecture.siteName}}
+          <p class="title">{{lecture.lectureName}}</p>
+          <p>레벨 {{lecture.level}}</p>
+        </div>
+      </article>
+          <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
     </div>
-  </div>
-  <app-lecture-recommend-list [lectures]="recommendoverview" (selectLecture)="selectedLecture($event)"></app-lecture-recommend-list>
+  </section>
+
+  <!--lecture ranking-->
+  <section id="lecture-subject-rank">
+    <div>
+      <h1>오늘의 추천 콘텐츠</h1>
+    </div>
+    <a href="/lecturerecommenddetail"><button>전체보기</button></a>
+    <div id="wrapper">
+      <!--recommendoverview 이어야 하지만 안되므로 임시-->
+      <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
+        0{{lecture.ranking}}
+        <div class="img-div"><img src="{{lecture.thumbUrl}}" alt="Card image"></div>
+        <div (click)="lectureClicked(lecture)">
+          {{lecture.siteName}}
+          <p class="title">{{lecture.lectureName}}</p>
+          <p>레벨 {{lecture.level}}</p>
+        </div>
+      </article>
+          <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
+    </div>
+  </section>
+
 </div>
+
+
