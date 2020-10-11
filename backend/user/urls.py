@@ -1,9 +1,10 @@
 from django.urls import path, include
 
-from .views import check_email,sign_up
+from .views import check_email, sign_up, google_login
 
 urlpatterns = [
     path('check-email',check_email),
     path('', sign_up),
+    path('google',google_login)
 
 ]
