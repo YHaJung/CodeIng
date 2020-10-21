@@ -1,5 +1,6 @@
 import decimal
 import simplejson as json
+
 from django.shortcuts import render
 
 # Create your views here.
@@ -42,13 +43,19 @@ import numpy as np
 import scipy as sp
 
 from sklearn.neighbors import NearestNeighbors
-
+import pickle
+import joblib
+from celery.schedules import crontab
+from celery.task import periodic_task
 # Create your views here.
 
 # 이후 코드
 from lecture.models import Lecture, Review, Profile, Lecturecategory, Categoryinterest, Subcategoryinterest, Category, \
     Subcategory
 from lecture.serializers import LectureSerializer, ReviewSerializer
+
+
+# 데이터 저장
 
 
 @api_view(['GET'])
@@ -64,8 +71,8 @@ def CBRS(request):
     num_users = len(list(all_user_names))
     num_lectures = len(list(all_lectures))
     # (num_users, len(all_categorys) + 1)
-    userInterest_m = pd.DataFrame(columns=all_categorys,index=all_user_names, dtype=np.float32)
-    lectureCategory_m = pd.DataFrame(columns=all_categorys,index=all_lectures, dtype=np.float32)
+    userInterest_m = pd.DataFrame(columns=all_categorys, index=all_user_names, dtype=np.float32)
+    lectureCategory_m = pd.DataFrame(columns=all_categorys, index=all_lectures, dtype=np.float32)
     # lectureCategory = pd.DataFrame((num_lectures, len(all_categorys) + 1), dtype=np.float32)
     # userInterest_m = sp.sparse.dok_matrix((num_users, len(all_categorys) + 1), dtype=np.float32)
     # lectureCategory_m = sp.sparse.dok_matrix((num_lectures, len(all_categorys) + 1), dtype=np.float32)
@@ -73,7 +80,7 @@ def CBRS(request):
     for i in range(num_lectures):
         all_lecturecategory_ids = Lecturecategory.objects.filter(lecture=all_lectures[i])
         for lecturecategory in all_lecturecategory_ids:
-            lectureCategory_m.iloc[i, lecturecategory.categoryidx-1] = 1
+            lectureCategory_m.iloc[i, lecturecategory.categoryidx - 1] = 1
             lectureCategory_m.iloc[i, 11 + lecturecategory.subcategory.subcategoryidx] = 1
             # print(lecturecategory.categoryidx, lecturecategory.subcategory.subcategoryidx, lectureCategory_m.iloc[i, lecturecategory.subcategory.subcategoryidx])
             # print(i, lecturecategory.categoryidx, lectureCategory_m.iloc[i, lecturecategory.subcategory.subcategoryidx])
@@ -116,10 +123,11 @@ def CBRS(request):
 
 
 @api_view(['GET'])
-def KNN_IBCF(request, pk=None):
+def KNN_IBCFF(request, pk=None):
     num_reviews = Review.objects.count()
     all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
-    all_lecture_ids = set(map(lambda x: x.lectureidx, Review.objects.only("lectureidx")))
+    all_lecture_ids = set(map(lambda x: x.values(), Review.objects))
+    # all_lecture_ids = set(map(lambda x: x.lectureidx, Review.objects.only("lectureidx")))
     num_users = len(list(all_user_names))
     lectureRatings_m = sp.sparse.dok_matrix((num_users, max(all_lecture_ids) + 1), dtype=np.float32)
     for i in range(num_users):
@@ -188,9 +196,128 @@ def KNN_IBCF(request, pk=None):
                   ('level', decimal.Decimal(i[0]['level']))
                   ]))
     overview_dict['result'] = overview_list
-    return_value = json.dumps(overview_dict,indent=4, use_decimal=True, ensure_ascii=False)
+    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
+
+# Final version
+# 하루에 한번 Model 바꾸기
+
+# @periodic_task(run_every=crontab(hour=7, minute=30, day_of_week="mon"))
+# @periodic_task(run_every=crontab(hour=4, minute=30))
+@periodic_task(run_every=crontab(hour=11, minute=22))
+def CREATE_MODEL(request, pk=None):
+    num_reviews = Review.objects.count()
+    all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
+    all_lecture_ids = set(map(lambda x: x.lectureidx_id, Review.objects.only("lectureidx_id")))
+    num_users = len(list(all_user_names))
+    lectureRatings_m = sp.sparse.dok_matrix((num_users, max(all_lecture_ids) + 1), dtype=np.float32)
+    for i in range(num_users):
+        profile = get_object_or_404(Profile, userinfo=all_user_names[i])
+        user_reviews = Review.objects.filter(profile=profile)
+        for user_review in user_reviews:
+            lectureRatings_m[i, user_review.lectureidx_id] = user_review.totalrating
+    lectureRatings = lectureRatings_m.transpose()
+    coo = lectureRatings.tocoo(copy=False)
+    df = pd.DataFrame({'lectures': coo.row, 'users': coo.col, 'rating': coo.data}
+                      )[['lectures', 'users', 'rating']].sort_values(['lectures', 'users']
+                                                                     ).reset_index(drop=True)
+    mo = df.pivot_table(index=['lectures'], columns=['users'], values='rating')
+    mo.fillna(0, inplace=True)
+    if mo.shape[0] < 7:
+        model_knn = NearestNeighbors(algorithm='brute', metric='cosine', n_neighbors=mo.shape[0])
+        model_knn.fit(mo.values)
+    else:
+        model_knn = NearestNeighbors(algorithm='brute', metric='cosine', n_neighbors=7)
+        model_knn.fit(mo.values)
+    filename = 'knn_model2.pkl'
+    pickle.dump(model_knn, open(filename, 'wb'))
+
+
+# 추천 시스템
+@api_view(['GET'])
+def KNN_IBCF(request, pk=None):
+    # aws s3 파일 저장하는 곳
+    # 하루에 한번에 하던지
+    # 바로 가져옴
+    model_knn = pickle.load(open('./knn_model2.pkl', 'rb'))
+    lectureid = int(pk)
+    num_reviews = Review.objects.count()
+    all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
+    num_users = len(list(all_user_names))
+    print('before 0', num_users)
+    all_lecture_ids = set(map(lambda x: x.lectureidx_id, Review.objects.only("lectureidx_id")))
+    # lectureRatings_m = sp.sparse.dok_matrix((num_users, max(all_lecture_ids) + 1), dtype=np.float32)
+    # for i in range(num_users):
+    #     profile = get_object_or_404(Profile, userinfo=all_user_names[i])
+    #     user_reviews = Review.objects.filter(profile=profile)
+    #     for user_review in user_reviews:
+    #         lectureRatings_m[i, user_review.lectureidx_id] = user_review.totalrating
+    # lectureRatings = lectureRatings_m.transpose()
+    # coo = lectureRatings.tocoo(copy=False)
+    # df = pd.DataFrame({'lectures': coo.row, 'users': coo.col, 'rating': coo.data}
+    #                   )[['lectures', 'users', 'rating']].sort_values(['lectures', 'users']
+    #                                                                  ).reset_index(drop=True)
+    # mo = df.pivot_table(index=['lectures'], columns=['users'], values='rating')
+    # mo.fillna(0, inplace=True)
+
+
+    # mo = pd.DataFrame(columns=range(0, num_users), index=all_lecture_ids)
+    # for i in range(num_users):
+    #     profile = get_object_or_404(Profile, userinfo=all_user_names[i])
+    #     user_reviews = Review.objects.filter(profile=profile)
+    #     for user_review in user_reviews:
+    #         mo.loc[user_review.lectureidx_id, i] = user_review.totalrating
+    # mo.fillna(0, inplace=True)
+    #
+    # if mo.shape[0] < 7:
+    #     model_knn = NearestNeighbors(algorithm='brute', metric='cosine', n_neighbors=mo.shape[0])
+    #     model_knn.fit(mo.values)
+    # else:
+    #     model_knn = NearestNeighbors(algorithm='brute', metric='cosine', n_neighbors=7)
+    #     model_knn.fit(mo.values)
+    # filename = 'knn_model2.pkl'
+    # pickle.dump(model_knn, open(filename, 'wb'))
+
+
+    lectureRating = pd.DataFrame(columns=range(0,num_users), index=[0])
+    for i in range(num_users):
+        profile = get_object_or_404(Profile, userinfo=all_user_names[i])
+        try:
+            user_review = Review.objects.get(profile=profile,lectureidx_id=lectureid)
+            lectureRating.iloc[0, i] = user_review.totalrating
+        except:
+            lectureRating.iloc[0, i] = 0.0
+            # print('error', lectureRatings_m[i, 0])
+    distances, indices = model_knn.kneighbors(lectureRating.iloc[0, :].values.reshape(1, -1), return_distance=True)
+
+    # distances, indices = model_knn.kneighbors(mo.iloc[lectureid, :].values.reshape(1, -1), return_distance=True)
+
+    # print('distance', distances, 'indices', indices)
+    response = {'results': 'show'}
+    overview_list = []
+    overview_dict = {}
+    overview_dict['isSuccess'] = 'true'
+    overview_dict['code'] = 200
+    overview_dict['message'] = '추천컨텐츠 조회 성공'
+    # print('ok2')
+    overview2 = list(map(
+        lambda x: Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('lectureidx', 'lecturename',
+                                                                                 'thumburl', 'lecturer',
+                                                                                 'level')
+        , range(0, len(distances.flatten()))))
+    # .distinct().order_by('lectureidx')
+    for i in overview2:
+        overview_list.append(
+            dict([('lectureIdx', i[0]['lectureidx']),
+                  ('lectureName', i[0]['lecturename']),
+                  ('thumbUrl', i[0]['thumburl']),
+                  ('lecturer', i[0]['lecturer']),
+                  ('level', decimal.Decimal(i[0]['level']))
+                  ]))
+    overview_dict['result'] = overview_list
+    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
