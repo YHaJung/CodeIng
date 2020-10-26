@@ -1,0 +1,10 @@
+{
+    "python.pythonPath": "/Users/codeing/.conda/envs/py37/bin/python",
+    "python.linting.pylintEnabled": false,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Args": [
+        "--max-line-length=88"
+    ],
+    "python.formatting.provider": "black",
+    "python.linting.enabled": true,
+}

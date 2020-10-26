@@ -174,6 +174,14 @@ class Profile(models.Model):
         managed = False
         db_table = 'profile'
 
+# class RecommendIBCF(models.Model):
+#     lectureidx = models.OneToOneField(Lecture, on_delete=models.CASCADE, db_column='lectureIdx', primary_key=True)
+#     # lectureidx = models.ForeignKey(Lecture, on_delete=models.CASCADE, blank=True, null=True, db_column='lectureIdx')
+#     l1 = models.ForeignKey(Lecture, on_delete=models.CASCADE, blank=True, null=True, db_column='l1')
+#
+#     class Meta:
+#         managed = False
+#         db_table = 'recommendIbcf'
 
 class Review(models.Model):
 
