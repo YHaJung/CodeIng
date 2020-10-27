@@ -56,6 +56,9 @@ from lecture.serializers import LectureSerializer, ReviewSerializer
 
 
 # 데이터 저장
+from lecture.views import for_exception
+
+
 def generate_binary():
     all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
     all_category_ids = list(map(lambda x: x.categoryidx, Category.objects.all()))
@@ -91,24 +94,6 @@ def generate_binary():
     filename = 'knn_models/data.pkl'
     pickle.dump(lectureData, open(filename, 'wb'))
 
-def get_sim(u,v):
-    all_category_ids = list(map(lambda x: x.categoryname, Category.objects.all()))
-    all_subcategory_ids = list(map(lambda x: x.subcategoryname, Subcategory.objects.all()))
-    all_lectures = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
-    all_categorys = len(all_category_ids) + len(all_subcategory_ids)
-    sim = 0
-    for j in range(all_categorys):
-        sim += (2*u[j]-1)*(2*v[j]-1)
-    return sim
-
-def findkneigh(query, data):
-    all_lectures = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
-    num_lectures = len(list(all_lectures))
-    sim_array = np.zeros([num_lectures])
-    for idx in range(num_lectures):
-        sim_array[idx] = get_sim(query, data[idx])
-    return np.argsort(-sim_array)
-
 @api_view(['GET'])
 def recommend_save(request):
     generate_binary()
@@ -132,17 +117,110 @@ def recommend_save(request):
 
 @api_view(['GET'])
 def CBRS(request, pk=None):
+
+    try:
+        data = pickle.load(open('knn_models/data.pkl', 'rb'))
+        querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+        recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+        selectIdx = int(request.GET.get('selectIdx', '1'))
+        nneigh = 5
+        krecommend = np.argsort(-recommend[int(pk)])[5*selectIdx-5:nneigh*selectIdx]
+
+        # print("query: {}".format(querys[int(pk)]))
+        # print("recommend: {}".format(recommend[int(pk)]))
+        #
+        # for lectureid in krecommend:
+        #     print('{}'.format(data[int(lectureid)]))
+        # for lectureid in recommend[pk]:
+        #     print('{}'.format(data[int(lectureid)]))
+
+        # response = {'hello' : 'hello'}
+        # return JsonResponse(response, safe=False)
+        overview_list = []
+        overview_dict = {}
+        overview_dict['isSuccess'] = 'true'
+        overview_dict['code'] = 200
+        overview_dict['message'] = '추천컨텐츠 조회 성공'
+        # .flatten()[x]
+        overview2 = list(map(
+            lambda x: Lecture.objects.filter(lectureidx=x)
+                .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level').distinct()
+            , krecommend))
+        for i in overview2:
+            overview_list.append(
+                dict([('lectureIdx', i[0]['lectureidx']),
+                      ('lectureName', i[0]['lecturename']),
+                      ('thumbUrl', i[0]['thumburl']),
+                      ('lecturer', i[0]['lecturer']),
+                      ('level', decimal.Decimal(i[0]['level']))
+                      ]))
+        overview_dict['result'] = overview_list
+        return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Exception:
+
+        return for_exception()
+
+
+
+# @api_view(['GET'])
+# def CBRS(request, pk=None):
+#    data = pickle.load(open('knn_models/data.pkl', 'rb'))
+#    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+#    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+#    nneigh = 10
+#    krecommend =np.argsort(-recommend[int(pk)])[:nneigh]
+#
+#    # print("query: {}".format(querys[int(pk)]))
+#    # print("recommend: {}".format(recommend[int(pk)]))
+#    #
+#    # for lectureid in krecommend:
+#    #     print('{}'.format(data[int(lectureid)]))
+#    # for lectureid in recommend[pk]:
+#    #     print('{}'.format(data[int(lectureid)]))
+#
+#    # response = {'hello' : 'hello'}
+#    # return JsonResponse(response, safe=False)
+#    overview_list = []
+#    overview_dict = {}
+#    overview_dict['isSuccess'] = 'true'
+#    overview_dict['code'] = 200
+#    overview_dict['message'] = '추천컨텐츠 조회 성공'
+#    # .flatten()[x]
+#    overview2 = list(map(
+#        lambda x: Lecture.objects.filter(lectureidx=x)
+#        .values('lectureidx', 'lecturename','thumburl', 'lecturer','level').distinct()
+#        , krecommend  ))
+#    for i in overview2:
+#        overview_list.append(
+#            dict([('lectureIdx', i[0]['lectureidx']),
+#                  ('lectureName', i[0]['lecturename']),
+#                  ('thumbUrl', i[0]['thumburl']),
+#                  ('lecturer', i[0]['lecturer']),
+#                  ('level', decimal.Decimal(i[0]['level']))
+#                  ]))
+#    overview_dict['result'] = overview_list
+#    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+#    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+   # response = {'hello','hello'}
+   # return JsonResponse(response, safe=False)
+
+@api_view(['GET'])
+def CBRSlist(request, pk=None):
    data = pickle.load(open('knn_models/data.pkl', 'rb'))
    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-   nneigh = 10
+   nneigh = 25
    krecommend =np.argsort(-recommend[int(pk)])[:nneigh]
 
-   print("query: {}".format(querys[int(pk)]))
-   print("recommend: {}".format(recommend[int(pk)]))
+   # print("query: {}".format(querys[int(pk)]))
+   # print("recommend: {}".format(recommend[int(pk)]))
 
-   for lectureid in krecommend:
-       print('{}'.format(data[int(lectureid)]))
+   # for lectureid in krecommend:
+   #     print('{}'.format(data[int(lectureid)]))
    # for lectureid in recommend[pk]:
    #     print('{}'.format(data[int(lectureid)]))
 
@@ -170,15 +248,50 @@ def CBRS(request, pk=None):
    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
-   # response = {'hello','hello'}
-   # return JsonResponse(response, safe=False)
-
 @api_view(['GET'])
 def Poprs(request, pk=None):
+    try:
+       # data = pickle.load(open('knn_models/data.pkl', 'rb'))
+       # querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+       recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+       selectIdx = int(request.GET.get('selectIdx', '1'))
+       nneigh = 5
+       krecommend =np.argsort(-recommend)[5*selectIdx-5:nneigh*selectIdx]
+       cnt = Counter(krecommend.flatten()) # age_C데이터를 카운트한다.
+       krecommend =  cnt.most_common()[:10]
+
+       krecommend = [x for x, _ in krecommend]
+       overview_list = []
+       overview_dict = {}
+       overview_dict['isSuccess'] = 'true'
+       overview_dict['code'] = 200
+       overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
+       # .flatten()[x]
+       overview2 = list(map(
+           lambda x : Lecture.objects.filter(lectureidx=x)
+           .values('lectureidx', 'lecturename','thumburl', 'lecturer','level').distinct()
+           , krecommend ))
+       for i in overview2:
+           overview_list.append(
+               dict([('lectureIdx', i[0]['lectureidx']),
+                     ('lectureName', i[0]['lecturename']),
+                     ('thumbUrl', i[0]['thumburl']),
+                     ('lecturer', i[0]['lecturer']),
+                     ('level', decimal.Decimal(i[0]['level']))
+                     ]))
+       overview_dict['result'] = overview_list
+       return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+       return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+    except Exception:
+        return for_exception()
+
+@api_view(['GET'])
+def Poprslist(request, pk=None):
    # data = pickle.load(open('knn_models/data.pkl', 'rb'))
    # querys = pickle.load(open('knn_models/query.pkl', 'rb'))
    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-   nneigh = 10
+   nneigh = 25
    krecommend =np.argsort(-recommend)[:nneigh]
    cnt = Counter(krecommend.flatten()) # age_C데이터를 카운트한다.
    krecommend =  cnt.most_common()[:10]
@@ -205,7 +318,6 @@ def Poprs(request, pk=None):
    overview_dict['result'] = overview_list
    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
 
 def generate_rating():
     all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
@@ -365,3 +477,4 @@ def KNN_UBCF(request, pk=None):
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
