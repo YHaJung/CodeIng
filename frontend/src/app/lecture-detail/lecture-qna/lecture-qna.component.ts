@@ -32,7 +32,8 @@ export class LectureQnaComponent implements OnInit {
     this.apiService.getLectureQnas(thisLectureIdx).subscribe(
       data => {
         this.qnas = data['result'];
-        console.log(this.qnas);
+        // console.log(this.qnas);
+        console.log(thisLectureIdx,data);
       },
       error => console.log(error)
     );

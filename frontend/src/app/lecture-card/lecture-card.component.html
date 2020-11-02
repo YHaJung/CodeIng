@@ -1,23 +1,31 @@
 <article class="row">
-    <div id="img-div" class="col-sm-3">
-        <img src="{{lecture.thumbUrl}}"/>
+  <div id="img-div" class="col-sm-3">
+    <img src="{{lecture.thumbUrl}}"/>
+  </div>
+  <div class="col-sm-9">
+      <section id="upper">
+      <h2 id = "site">{{lecture.siteName}}</h2>
+      <h1 id="title">{{lecture.lectureName}}</h1>
+      <h3 id = "professor">{{lecture.professor}}</h3>
+      <h3 class="lecture-level">강의 수준 :
+      <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 0}"></fa-icon>
+      <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 1}"></fa-icon>
+      <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 2}"></fa-icon>
+      <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 3}"></fa-icon>
+      <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 4}"></fa-icon>
+      </h3>
+
+
+      </section>
+    <div id="downer">
+      <button class="btn-cart"> 장바구니</button>
+<!--      <h3>₩{{lecture.price}}</h3>-->
+      <h3 class="price" *ngIf="lecture.price == 'free'">무료</h3>
+
+      <h3 class="price" *ngIf="lecture.price != 'free'">{{lecture.price}} 원</h3>
+
     </div>
-    <div class="col-sm-9">
-        <div class="upper">
-            <h2>{{lecture.siteName}}</h2>
-            <h1>{{lecture.lectureName}}</h1>
-            <h3>{{lecture.professor}}</h3>
-        </div>
-        <div>
-            <h3>{{lecture.price}}</h3>
-            <h3 class="lecture-level">강의 수준 : </h3>
-            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 0}"></fa-icon>
-            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 1}"></fa-icon>
-            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 2}"></fa-icon>
-            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 3}"></fa-icon>
-            <fa-icon [icon]="star" [ngClass]="{'orange': lecture.level > 4}"></fa-icon>
-        </div>
-    </div>
+  </div>
 </article>
 
 

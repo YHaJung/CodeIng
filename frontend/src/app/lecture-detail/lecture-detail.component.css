@@ -1,21 +1,27 @@
-#main-search{
-    margin: var(--main-body-margin);
-    background-color: rgba(21, 39, 60, 0.05);;
+#main-search {
+  margin: var(--main-body-margin);
+  background-color: #F6F7FA;
+  padding: 20px;
 }
 
 /*side*/
-#side div{
-    margin-bottom: 15px;
+#side div {
+  margin-bottom: 15px;
 }
-fa-icon.orange{  /*can delete [icon="star"] or fa-icon[icon="star"]*/
-    color:var(--main-yellow);
+
+fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
+  color: var(--main-yellow);
 }
 
 /*search-main*/
-#content div{
-    display: inline-block;
-    color:var(--main-gary);
+#content div {
+  display: inline-block;
+  color: var(--main-gray);
 }
-#content .clicked-menu{
-    border-bottom: 4px solid var(--main-yellow);
+
+#content .clicked-menu {
+  border-bottom: 4px solid var(--main-yellow);
+}
+.col-sm-3 {
+  font-weight: 600;
 }

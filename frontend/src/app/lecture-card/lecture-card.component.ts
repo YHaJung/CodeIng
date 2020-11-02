@@ -10,9 +10,13 @@ export class LectureCardComponent implements OnInit {
   star = faStar;
   @Input() lecture;
 
-  constructor() { }
+
+  constructor() {
+
+  }
 
   ngOnInit(): void {
+
   }
 
 }

@@ -1,5 +1,19 @@
-<article>
-    <h3>{{qna.createdAt}}</h3>
-    <h1>{{qna.qnaTitle}}</h1>
-    <h2>{{qna.qnaDes}}</h2>
-</article>
+ <!--  <ngx-avatar class="avatar" name="A"></ngx-avatar>-->
+  <!--  <article>-->
+  <!--        <h6>{{qna.createdAt}}</h6>-->
+  <!--        <h1>{{qna.qnaTitle}}</h1>-->
+  <!--        <h2>{{qna.qnaDes}}</h2>-->
+  <!--  </article>-->
+ <div class="container">
+   <div class="image-stack">
+     <div class="image-stack__item image-stack__item--bottom">
+       <h1>{{qna.qnaTitle}}</h1>
+       <h2>{{qna.qnaDes}}</h2>
+       <h2>Read more...</h2>
+     </div>
+     <div class="image-stack__item image-stack__item--top">
+       <ngx-avatar class="avatar" size="40" name="A"></ngx-avatar>
+       <h6>{{qna.createdAt}}</h6>
+     </div>
+   </div>
+ </div>

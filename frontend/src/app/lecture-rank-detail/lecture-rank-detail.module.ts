@@ -6,6 +6,7 @@ import {LectureRankDetailComponent} from './lecture-rank-detail.component';
 import {LectureCardModule} from '../lecture-card/lecture-card.module';
 import {MainModule} from '../main/main.module';
 
+
 const routes: Routes = [
   {path: 'lecturerankdetail', component: LectureRankDetailComponent},
   // {path: 'homenavbar', component: HomeNavBarComponent},
@@ -13,17 +14,18 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    LectureRankDetailComponent
+    LectureRankDetailComponent,
+
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     LectureCardModule,
-    MainModule
+    MainModule,
     // AppModule
   ],
   exports: [
-    RouterModule
+    RouterModule,
   ],
   providers: [
     ApiService

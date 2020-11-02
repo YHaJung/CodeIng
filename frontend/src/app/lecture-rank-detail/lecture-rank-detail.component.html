@@ -16,11 +16,19 @@
     <div class="col-sm-3">
       <!--      <h2>page {{paramId}}</h2>-->
       <p>카테고리</p>
+      <div class="div-cat">
+      <div class="div-cat-each" *ngFor = "let category of categories">
+        {{category.categoryName}}
+      </div>
+      </div>
     </div>
     <div class="col-sm-9">
-      <h1>웹 프론트엔드 랭킹</h1>
-      <button *ngFor = "let subcategory of subcategories">
+      <h1 id="ranking">웹 프론트엔드 랭킹</h1>
+      <button class="btn-cat" *ngFor = "let subcategory of subcategories | slice:0:10; let i=index">
         {{subcategory.subcategoryName}}
+      </button>
+      <button class="btn-cat">
+      ...
       </button>
       <section id="main-ranking" *ngFor="let lecture of categoryLectures ">
         <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>

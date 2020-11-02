@@ -1,7 +1,40 @@
 body{margin: 0; padding: 0;}
 #whole-page{
-    background-color: var(--main-gray);
+    background-color: var(--main-blue);
     padding: 10vw 25vw 10vw 25vw;
     color: white;
     height: 100vh;
+}
+.middle {
+  text-align: center;
+}
+.middle form input{
+  width: 396px;
+  height: 40px;
+  left: 522px;
+  top: 206px;
+
+  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF;
+  border: 0.5px solid #7F8080;
+  box-sizing: border-box;
+}
+.middle form button {
+  width: 396px;
+  height: 40px;
+  left: 522px;
+  top: 339px;
+
+  background: #FFFFFF;
+  border: 0.5px solid #7F8080;
+  box-sizing: border-box;
+}
+.row {
+  margin-top: 10px;
+  font-family: Noto Sans;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 15px;
+  /* identical to box height */
+  color: #FFFFFF;
 }

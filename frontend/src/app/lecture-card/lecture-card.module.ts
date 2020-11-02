@@ -8,7 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   declarations: [LectureCardComponent],
   imports: [
     CommonModule,
-    FontAwesomeModule 
+    FontAwesomeModule
   ],
   exports:[
     LectureCardComponent

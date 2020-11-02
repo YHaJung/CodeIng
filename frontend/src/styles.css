@@ -7,7 +7,8 @@ body{
 
 /*main colors*/
 :root{
-  --main-gray:#34353A;
+  --main-gray:#464646;
+  --main-blue:#0155FB;
   --main-yellow:#FFC000;
   --main-body-margin:4vh 12vw 4vh 12vw;
 }
@@ -38,7 +39,8 @@ body{
 /*logo*/
 .center-logo {
   margin: 30px auto;
-  background-image: url("./assets/images/Coding_logo_Final.png");
+  /*background-image: url("./assets/images/Coding_logo_Final.png");*/
+  background-image: url("./assets/images/logo.png");
   background-size: 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -47,4 +49,22 @@ body{
   border-radius: 0px;
   color: white;
   text-shadow: 2px 2px 5px black;
+  /* image 6 */
+
+}
+
+.sign-logo {
+  margin: 30px auto;
+  background-image: url("./assets/images/Coding_logo_Final_B.png");
+  /*background-image: url("./assets/images/logo.png");*/
+  background-size: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 40vw;
+  height: 20vh;
+  border-radius: 0px;
+  color: white;
+  text-shadow: 2px 2px 5px black;
+  /* image 6 */
+
 }

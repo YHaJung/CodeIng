@@ -403,6 +403,7 @@ def CREATE_MODEL(request, pk=None):
     response = {'message' : 'model saved'}
     return JsonResponse(response, safe=False)
 
+
 # 추천 시스템
 @api_view(['GET'])
 def KNN_IBCF(request, pk=None):

@@ -26,8 +26,8 @@
       <div (click)="viewReviews()" [ngClass]="{'clicked-menu':reviewChecked==1}">리뷰</div>&nbsp;
       <div (click)="viewQna()" [ngClass]="{'clicked-menu':qnaChecked==1}">QnA</div>
       <app-lecture-review *ngIf="reviewChecked==1"></app-lecture-review>
-      <app-lecture-qna class="qna" *ngIf="qnaChecked==1"></app-lecture-qna>
-  
+      <app-lecture-qna  *ngIf="qnaChecked==1"></app-lecture-qna>
+<!--      class="qna"-->
     </section>
-  
+
   </div>

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 
-//api명세서
+// api명세서
 /*https://docs.google.com/spreadsheets/d/1nkWZT2nQCqGKkkvK8B28_yZliRay6ngx6i9yA_YdLZU/edit#gid=0 */
 
 @Injectable({
@@ -9,7 +9,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 })
 export class ApiService {
 
-  baseUrl = 'http://3.34.74.250/';//'http://127.0.0.1:8000/';
+  baseUrl = 'http://3.34.74.250/'; // 'http://127.0.0.1:8000/';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     Authorization: 'Token 8529e34d1eb5c264103bc0a2b696bae243f509bf'
@@ -32,28 +32,31 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + 'ranking-overview', {headers: this.headers});
   }
   // tslint:disable-next-line:typedef
-  getRecommendOverview() {  //나중에 api 바꾸기
+  getRecommendOverview() {  // 나중에 api 바꾸기
     return this.httpClient.get(this.baseUrl + 'ranking-overview', {headers: this.headers});
   }
 
-
+  // 프로그램 주제별 랭킹
   // tslint:disable-next-line:typedef
-  //프로그램 주제별 랭킹
   getLecturesRanking() {
     return this.httpClient.get(this.baseUrl + 'lectures-ranking', {headers: this.headers});
   }
-  //today's recommend
-  getLecturesRecommend() {  //나중에 api 바꾸기
+  // today's recommend
+  // tslint:disable-next-line:typedef
+  getLecturesRecommend() {  // 나중에 api 바꾸기
     return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
   }
 
-  //강의별 리뷰 목록
+  // 강의별 리뷰 목록
+  // tslint:disable-next-line:typedef
   getLectureDetail(lectureIdx){
-    return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx, {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx, {headers: this.headers});
   }
+  // tslint:disable-next-line:typedef
   getLectureReviews(lectureIdx){
-    return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx+'/review', {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review', {headers: this.headers});
   }
+  // tslint:disable-next-line:typedef
   getLectureQnas(lectureIdx){
     return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx+'/qna', {headers: this.headers});
   }
@@ -67,7 +70,7 @@ export class ApiService {
 
 
 
-  //post example
+  // post example
   /*
   postLectureRate(rate:number, lectureId: number){
     const body =JSON.stringify({stars: rate});

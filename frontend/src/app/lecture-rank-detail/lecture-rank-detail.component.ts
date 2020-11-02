@@ -11,6 +11,7 @@ export class LectureRankDetailComponent implements OnInit {
 
   allLectures: any = [];
   subcategories:any=[];
+  categories:any=[];
   categoryLectures:any=[];
   selectedLecture = null;
 
@@ -27,6 +28,13 @@ export class LectureRankDetailComponent implements OnInit {
     this.apiService.getLecturesRanking().subscribe(
       data => {
         this.subcategories = data['subcategory'];
+        console.log(data);
+      },
+      error => console.log(error)
+    );
+    this.apiService.getLecturesRanking().subscribe(
+      data => {
+        this.categories = data['category'];
         console.log(data);
       },
       error => console.log(error)

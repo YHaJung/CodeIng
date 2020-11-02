@@ -12,9 +12,11 @@
   <!--lecture ranking-->
   <section id="lecture-subject-rank">
     <div>
-      <h1>프로그램 주제별 랭킹</h1>
+      <h3>프로그램 주제별 랭킹</h3>
     </div>
-    <a href="/lecturerankdetail"><button>전체보기</button></a>
+    <a href="/lecturerankdetail">
+      <button>전체보기</button>
+    </a>
     <div id="wrapper">
       <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
         0{{lecture.ranking}}
@@ -22,19 +24,26 @@
         <div (click)="lectureClicked(lecture)">
           {{lecture.siteName}}
           <p class="title">{{lecture.lectureName}}</p>
-          <p>레벨 {{lecture.level}}</p>
+          <p *ngIf="lecture.level == 0">입문</p>
+          <p *ngIf="2>lecture.level&& lecture.level >= 1">초급</p>
+          <p *ngIf="3>lecture.level&& lecture.level >= 2">중급</p>
+          <p *ngIf="4>lecture.level&&  lecture.level >= 3">고급</p>
+          <p *ngIf="5>lecture.level&&  lecture.level >= 4">전문가</p>
+<!--          레벨 {{lecture.level}}-->
         </div>
       </article>
-          <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
+      <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
     </div>
   </section>
 
   <!--lecture ranking-->
   <section id="lecture-subject-rank">
     <div>
-      <h1>오늘의 추천 콘텐츠</h1>
+      <h3>오늘의 추천 콘텐츠</h3>
     </div>
-    <a href="/lecturerecommenddetail"><button>전체보기</button></a>
+    <a href="/lecturerecommenddetail">
+      <button>전체보기</button>
+    </a>
     <div id="wrapper">
       <!--recommendoverview 이어야 하지만 안되므로 임시-->
       <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
@@ -43,10 +52,15 @@
         <div (click)="lectureClicked(lecture)">
           {{lecture.siteName}}
           <p class="title">{{lecture.lectureName}}</p>
-          <p>레벨 {{lecture.level}}</p>
+<!--          <p>레벨 {{lecture.level}}</p>-->
+          <p *ngIf="lecture.level == 0">입문</p>
+          <p *ngIf="2>lecture.level&& lecture.level >= 1">초급</p>
+          <p *ngIf="3>lecture.level&& lecture.level >= 2">중급</p>
+          <p *ngIf="4>lecture.level&&  lecture.level >= 3">고급</p>
+          <p *ngIf="5>lecture.level&&  lecture.level >= 4">전문가</p>
         </div>
       </article>
-          <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
+      <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
     </div>
   </section>
 
