@@ -8,6 +8,7 @@ from lecture.views import for_exception
 
 
 @api_view(['GET'])
+
 def book_list(request):
     if request.method == 'GET':
         try:

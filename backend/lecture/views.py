@@ -186,6 +186,40 @@ def lecture_list(request):
 
 
 @api_view(['GET'])
+def subcategory_list(request):
+    if request.method == 'GET':
+        try:
+            category_idx = int(request.GET.get('categoryIdx', '1'))
+
+
+            subcategorys = Lecturecategory.objects.filter(categoryidx=category_idx).values(
+            'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by('subcategory__subcategoryidx')
+
+            lec_dict = {}
+            lec_dict['isSuccess'] = 'true'
+            lec_dict['code'] = 200
+            lec_dict['message'] = '서브카테고리 목록 조회 성공'
+            info = []
+
+            for sub in subcategorys:
+
+                info.append(
+                    dict([('subcategoryIdx', sub['subcategory__subcategoryidx']), ('subcategoryName', sub['subcategory__subcategoryname'])]))
+
+            lec_dict['result'] = info
+
+            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        except Exception:
+
+            return for_exception()
+
+
+
+
+@api_view(['GET'])
 def lectures_ranking(request):
     if request.method == 'GET':
         try:
@@ -214,7 +248,7 @@ def lectures_ranking(request):
                 category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx).select_related(
                     'lecture').order_by('-lecture__rating')
 
-            category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename',
+            category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename','lecture__rating',
                                                            'lecture__lecturer', 'lecture__thumburl', 'lecture__price',
                                                            'lecture__level', 'lecture__siteinfo__sitename').distinct()[
                                    page * 5 - 5:page * 5]
@@ -236,7 +270,7 @@ def lectures_ranking(request):
                     price_sql = 'membership'
                 rank.append(
                     dict([('lectureIdx', c['lecture__lectureidx']), ('lectureName', c['lecture__lecturename']),
-                          ('professor', c['lecture__lecturer']),
+                          ('professor', c['lecture__lecturer']),('rating', c['lecture__rating']),
                           ('price', price_sql), ('level', c['lecture__level']), ('thumbUrl', c['lecture__thumburl']),
                           ('siteName', c['lecture__siteinfo__sitename'])]))
 
