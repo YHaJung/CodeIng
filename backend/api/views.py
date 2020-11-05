@@ -14,7 +14,11 @@ from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.parsers import JSONParser
-# from rest_framework.utils import json
+#
+
+
+
+from rest_framework.utils import json
 from collections import Counter
 # from api.form import LectureReviewForm
 # from api.serializers import UserSerializer, LectureReviewSerializer, LectureSerializer
@@ -45,6 +49,8 @@ import scipy as sp
 from sklearn.neighbors import NearestNeighbors
 import pickle
 import joblib
+
+
 from celery.schedules import crontab
 from celery.task import periodic_task
 # Create your views here.
@@ -52,8 +58,6 @@ from celery.task import periodic_task
 # 이후 코드
 from lecture.models import Lecture, Review, Profile, Lecturecategory, Categoryinterest, Subcategoryinterest, Category, \
     Subcategory
-from lecture.serializers import LectureSerializer, ReviewSerializer
-
 
 # 데이터 저장
 from lecture.views import for_exception

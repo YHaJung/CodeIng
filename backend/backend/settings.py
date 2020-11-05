@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'lecture',
     'user',
     'core',
+    # 책 랭킹
+    'book',
 
 
     # allauth
