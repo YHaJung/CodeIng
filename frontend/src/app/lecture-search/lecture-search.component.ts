@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faBookmark } from '@fortawesome/free-solid-svg-icons';
 //import {Lecture} from '../lecture/lecture';
 import {ApiService} from '../api.service';
 
@@ -11,7 +11,7 @@ import {ApiService} from '../api.service';
 export class LectureSearchComponent implements OnInit {
   lectures:any=[];
   keyword='';
-  clickedRate = 3;
+  clickedRate = 0;
   clickedLevel = 0; //제대로 작동x 
 
   constructor(private apiService: ApiService) { }
@@ -26,8 +26,16 @@ export class LectureSearchComponent implements OnInit {
   levelHover(level){
     this.levelHovered = level;   //마우스 가져가면 별 바뀜
   }
+  rateClicked(rate){
+    this.clickedRate= rate;
+    this.updateLectures();
+  }
+  levelClicked(level){
+    this.clickedLevel = level;
+    this.updateLectures();
+  }
 
-  ngOnInit(): void {
+  updateLectures(){
     this.apiService.searchLectures(this.keyword, this.clickedRate, this.clickedLevel).subscribe(
       data => {
         this.lectures = data['result'];
@@ -36,6 +44,11 @@ export class LectureSearchComponent implements OnInit {
       error => console.log(error)
     );
   }
+  
+  ngOnInit(): void {
+    this.updateLectures();
+  }
+  
   /*제품 상세로 넘어갈 때 쓰기
   @Output() selectPage = new EventEmitter();
   lecture = [];

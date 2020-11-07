@@ -19,7 +19,7 @@
         *ngFor="let rate of [1,2,3,4,5]" 
         (mouseenter)="rateHover(rate)"
         (mouseleave) = "rateHovered=0"
-        (clicked)="rateClicked(rate)"
+        (click)="rateClicked(rate)"
         [ngClass]="{'orange':rateHovered >= rate}"
       ></fa-icon>
     </div>
@@ -30,17 +30,12 @@
         *ngFor="let level of [1,2,3,4,5]" 
         (mouseenter)="levelHover(level)"
         (mouseleave) = "levelHovered=0"
-        (clicked)="rateClicked(level)"
+        (click)="levelClicked(level)"
         [ngClass]="{'orange':levelHovered >= level}"
       ></fa-icon>
     </div>
     <div>
       <p>가격</p>
-    </div>
-    <div>
-      <p>test</p>
-      <p>rate : {{clickedRate}}</p>
-      <p>level : {{clickedLevel}}</p>
     </div>
   </section>
 

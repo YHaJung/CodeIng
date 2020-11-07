@@ -29,6 +29,7 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword+'&rating='+rate+'&level='+level, {headers: this.headers});
   }
 
+
   /*for main-page*/
   // tslint:disable-next-line:typedef
   getRankingOverview() {
@@ -50,11 +51,13 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
   }
 
-  // 강의별 리뷰 목록
-  // tslint:disable-next-line:typedef
+ //강의 상세
   getLectureDetail(lectureIdx){
     return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx, {headers: this.headers});
   }
+  // 강의별 리뷰 목록
+  // tslint:disable-next-line:typedef
+  
   // tslint:disable-next-line:typedef
   getLectureReviews(lectureIdx){
     return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review', {headers: this.headers});
