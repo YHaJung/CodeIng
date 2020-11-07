@@ -1,6 +1,8 @@
 import decimal
-import simplejson as json
 
+# from django.utils import simplejson as json
+import simplejson as json
+import json
 from django.shortcuts import render
 
 # Create your views here.
@@ -61,6 +63,11 @@ from lecture.models import Lecture, Review, Profile, Lecturecategory, Categoryin
 
 # 데이터 저장
 from lecture.views import for_exception
+
+def decimal_default(obj):
+    if isinstance(obj, decimal.Decimal):
+        return float(obj)
+    raise TypeError
 
 
 def generate_binary():
@@ -159,7 +166,7 @@ def CBRS(request, pk=None):
                       ('level', decimal.Decimal(i[0]['level']))
                       ]))
         overview_dict['result'] = overview_list
-        return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
 
@@ -206,11 +213,12 @@ def CBRS(request, pk=None):
 #                  ('level', decimal.Decimal(i[0]['level']))
 #                  ]))
 #    overview_dict['result'] = overview_list
-#    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+#    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
 #    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
    # response = {'hello','hello'}
    # return JsonResponse(response, safe=False)
+
 
 @api_view(['GET'])
 def CBRSlist(request, pk=None):
@@ -219,7 +227,6 @@ def CBRSlist(request, pk=None):
    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
    nneigh = 25
    krecommend =np.argsort(-recommend[int(pk)])[:nneigh]
-
    # print("query: {}".format(querys[int(pk)]))
    # print("recommend: {}".format(recommend[int(pk)]))
 
@@ -249,7 +256,9 @@ def CBRSlist(request, pk=None):
                  ('level', decimal.Decimal(i[0]['level']))
                  ]))
    overview_dict['result'] = overview_list
-   return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+   # use_decimal = True,
+   print(overview_dict)
+   return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -257,25 +266,26 @@ def Poprs(request, pk=None):
     try:
        # data = pickle.load(open('knn_models/data.pkl', 'rb'))
        # querys = pickle.load(open('knn_models/query.pkl', 'rb'))
-       recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-       selectIdx = int(request.GET.get('selectIdx', '1'))
-       nneigh = 5
-       krecommend =np.argsort(-recommend)[5*selectIdx-5:nneigh*selectIdx]
-       cnt = Counter(krecommend.flatten()) # age_C데이터를 카운트한다.
-       krecommend =  cnt.most_common()[:10]
+        recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+        selectIdx = int(request.GET.get('selectIdx', '1'))
+        nneigh = 5
+        krecommend =np.argsort(-recommend)[5*selectIdx-5:nneigh*selectIdx]
+        cnt = Counter(krecommend.flatten()) # age_C데이터를 카운트한다.
+        krecommend =  cnt.most_common()[:10]
 
-       krecommend = [x for x, _ in krecommend]
-       overview_list = []
-       overview_dict = {}
-       overview_dict['isSuccess'] = 'true'
-       overview_dict['code'] = 200
-       overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
-       # .flatten()[x]
-       overview2 = list(map(
+        krecommend = [x for x, _ in krecommend]
+        overview_list = []
+        overview_dict = {}
+        overview_dict['isSuccess'] = 'true'
+        overview_dict['code'] = 200
+        overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
+        # .flatten()[x]
+        overview2 = list(map(
            lambda x : Lecture.objects.filter(lectureidx=x)
            .values('lectureidx', 'lecturename','thumburl', 'lecturer','level').distinct()
            , krecommend ))
-       for i in overview2:
+
+        for i in overview2:
            overview_list.append(
                dict([('lectureIdx', i[0]['lectureidx']),
                      ('lectureName', i[0]['lecturename']),
@@ -283,9 +293,11 @@ def Poprs(request, pk=None):
                      ('lecturer', i[0]['lecturer']),
                      ('level', decimal.Decimal(i[0]['level']))
                      ]))
-       overview_dict['result'] = overview_list
-       return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
-       return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        overview_dict['result'] = overview_list
+        return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
+
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
     except Exception:
         return for_exception()
@@ -320,7 +332,7 @@ def Poprslist(request, pk=None):
                  ('level', decimal.Decimal(i[0]['level']))
                  ]))
    overview_dict['result'] = overview_list
-   return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+   return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
 def generate_rating():
@@ -414,7 +426,7 @@ def KNN_IBCF(request, pk=None):
     # aws s3 파일 저장하는 곳
     # 하루에 한번에 하던지
     # 바로 가져옴
-    model_knn = pickle.load(open('knn_models/ibcf_knn_model.pkl', 'rb'))
+    model_knn = pickle.load(open('knn_models/ubcf_knn_model.pkl', 'rb'))
     lectureid = int(pk)
     item_user = pickle.load(open('knn_models/item_user_rating.pkl', 'rb'))
     print(item_user)
@@ -422,7 +434,7 @@ def KNN_IBCF(request, pk=None):
     distances, indices = model_knn.kneighbors(item_user[lectureid].values.reshape(1, -1), return_distance=True)
     # distances, indices = model_knn.kneighbors(mo.iloc[lectureid, :].values.reshape(1, -1), return_distance=True)
 
-    print(indices)
+    # print(indices)
 
     overview_list = []
     overview_dict = {}
@@ -445,7 +457,7 @@ def KNN_IBCF(request, pk=None):
                   ('level', decimal.Decimal(i[0]['level']))
                   ]))
     overview_dict['result'] = overview_list
-    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -480,6 +492,6 @@ def KNN_UBCF(request, pk=None):
                   ('level', decimal.Decimal(i[0]['level']))
                   ]))
     overview_dict['result'] = overview_list
-    return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 

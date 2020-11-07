@@ -20,41 +20,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="da958ffc-8557-4fea-b41e-32e3bf85737b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../frontend/src/assets/images/Coding_logo_Final_B.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../frontend/src/assets/images/logo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/api.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/api.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/auth/signin/signin.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/auth/signin/signin.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/auth/signin/signin.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/auth/signin/signin.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/cards/qna-card/qna-card.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/cards/qna-card/qna-card.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/cards/qna-card/qna-card.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/cards/qna-card/qna-card.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/cards/qna-card/qna-card.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/cards/qna-card/qna-card.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/cards/review-card/review-card.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/cards/review-card/review-card.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/cards/review-card/review-card.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/cards/review-card/review-card.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/cards/review-card/review-card.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/cards/review-card/review-card.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/home/home.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/home/home.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/home/home.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/home/home.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/home/lecture-rank-list/lecture-rank-list.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/home/lecture-rank-list/lecture-rank-list.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-card/lecture-card.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-detail.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-detail.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-detail.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-detail.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-qna/lecture-qna.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-qna/lecture-qna.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-qna/lecture-qna.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-qna/lecture-qna.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-qna/lecture-qna.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-detail/lecture-qna/lecture-qna.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/lecture-rank-detail/lecture-rank-detail.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/main/main.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/main/main.component.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/app/main/main.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/app/main/main.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/assets/images/Coding_logo_Final.ai" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -284,37 +251,37 @@
       <screen x="0" y="23" width="1280" height="727" />
     </state>
     <state x="427" y="148" key="FileChooserDialogImpl/0.23.1280.727@0.23.1280.727" timestamp="1603346471943" />
-    <state width="748" height="205" key="GridCell.Tab.0.bottom" timestamp="1604080719857">
+    <state width="832" height="203" key="GridCell.Tab.0.bottom" timestamp="1604410590634">
       <screen x="0" y="0" width="1707" height="680" />
     </state>
-    <state width="748" height="205" key="GridCell.Tab.0.bottom/0.0.1707.680@0.0.1707.680" timestamp="1604080719857" />
+    <state width="832" height="203" key="GridCell.Tab.0.bottom/0.0.1707.680@0.0.1707.680" timestamp="1604410590634" />
     <state width="1238" height="180" key="GridCell.Tab.0.bottom/0.23.1280.723@0.23.1280.723" timestamp="1603347718849" />
     <state width="1238" height="179" key="GridCell.Tab.0.bottom/0.23.1280.724@0.23.1280.724" timestamp="1603348049069" />
     <state width="1238" height="270" key="GridCell.Tab.0.bottom/0.23.1280.729@0.23.1280.729" timestamp="1603530163232" />
     <state width="1238" height="179" key="GridCell.Tab.0.bottom/0.23.1920.984@0.23.1920.984" timestamp="1603467177661" />
     <state width="1238" height="264" key="GridCell.Tab.0.bottom/0.23.1920.988@0.23.1920.988" timestamp="1603469139630" />
-    <state width="748" height="205" key="GridCell.Tab.0.center" timestamp="1604080719857">
+    <state width="832" height="203" key="GridCell.Tab.0.center" timestamp="1604410590633">
       <screen x="0" y="0" width="1707" height="680" />
     </state>
-    <state width="748" height="205" key="GridCell.Tab.0.center/0.0.1707.680@0.0.1707.680" timestamp="1604080719857" />
+    <state width="832" height="203" key="GridCell.Tab.0.center/0.0.1707.680@0.0.1707.680" timestamp="1604410590633" />
     <state width="1238" height="180" key="GridCell.Tab.0.center/0.23.1280.723@0.23.1280.723" timestamp="1603347718848" />
     <state width="1238" height="179" key="GridCell.Tab.0.center/0.23.1280.724@0.23.1280.724" timestamp="1603348049067" />
     <state width="1238" height="270" key="GridCell.Tab.0.center/0.23.1280.729@0.23.1280.729" timestamp="1603530163231" />
     <state width="1238" height="179" key="GridCell.Tab.0.center/0.23.1920.984@0.23.1920.984" timestamp="1603467177660" />
     <state width="1238" height="264" key="GridCell.Tab.0.center/0.23.1920.988@0.23.1920.988" timestamp="1603469139629" />
-    <state width="748" height="205" key="GridCell.Tab.0.left" timestamp="1604080719856">
+    <state width="832" height="203" key="GridCell.Tab.0.left" timestamp="1604410590632">
       <screen x="0" y="0" width="1707" height="680" />
     </state>
-    <state width="748" height="205" key="GridCell.Tab.0.left/0.0.1707.680@0.0.1707.680" timestamp="1604080719856" />
+    <state width="832" height="203" key="GridCell.Tab.0.left/0.0.1707.680@0.0.1707.680" timestamp="1604410590632" />
     <state width="1238" height="180" key="GridCell.Tab.0.left/0.23.1280.723@0.23.1280.723" timestamp="1603347718848" />
     <state width="1238" height="179" key="GridCell.Tab.0.left/0.23.1280.724@0.23.1280.724" timestamp="1603348049066" />
     <state width="1238" height="270" key="GridCell.Tab.0.left/0.23.1280.729@0.23.1280.729" timestamp="1603530163230" />
     <state width="1238" height="179" key="GridCell.Tab.0.left/0.23.1920.984@0.23.1920.984" timestamp="1603467177659" />
     <state width="1238" height="264" key="GridCell.Tab.0.left/0.23.1920.988@0.23.1920.988" timestamp="1603469139628" />
-    <state width="748" height="205" key="GridCell.Tab.0.right" timestamp="1604080719857">
+    <state width="832" height="203" key="GridCell.Tab.0.right" timestamp="1604410590634">
       <screen x="0" y="0" width="1707" height="680" />
     </state>
-    <state width="748" height="205" key="GridCell.Tab.0.right/0.0.1707.680@0.0.1707.680" timestamp="1604080719857" />
+    <state width="832" height="203" key="GridCell.Tab.0.right/0.0.1707.680@0.0.1707.680" timestamp="1604410590634" />
     <state width="1238" height="180" key="GridCell.Tab.0.right/0.23.1280.723@0.23.1280.723" timestamp="1603347718848" />
     <state width="1238" height="179" key="GridCell.Tab.0.right/0.23.1280.724@0.23.1280.724" timestamp="1603348049068" />
     <state width="1238" height="270" key="GridCell.Tab.0.right/0.23.1280.729@0.23.1280.729" timestamp="1603530163231" />
