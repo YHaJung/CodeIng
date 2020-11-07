@@ -14,15 +14,35 @@ export class LectureDetailComponent implements OnInit {
   reviews: any = [];
   avg_rating = 0;
   level = 0;
+  lectureDetail: any=[];
+
+  recommendoverview: any = [];
+  selectedLecture = null;
+
   constructor(
     private route: ActivatedRoute,
     private apiService: ApiService
   ) { }
+
+
   ngOnInit(): void {
     
-    this.avg_rating = 3;//this.reviews;
-    this.level = 3;
+    this.avg_rating = 0;
+    this.level = 0;
+
+    let thisLectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
+
+    this.apiService.getLectureDetail(thisLectureIdx).subscribe(
+      data => {
+        this.lectureDetail = data['result'];
+        console.log(this.lectureDetail);
+        this.avg_rating = this.lectureDetail.rating;
+        this.level = this.lectureDetail.level;
+      },
+      error => console.log(error)
+    );
   }
+  
 
 
   /*navigation */

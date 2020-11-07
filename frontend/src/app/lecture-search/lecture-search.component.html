@@ -37,11 +37,17 @@
     <div>
       <p>가격</p>
     </div>
+    <div>
+      <p>test</p>
+      <p>rate : {{clickedRate}}</p>
+      <p>level : {{clickedLevel}}</p>
+    </div>
   </section>
 
 
   <section class="col-sm-9">
-    <!--<app-lecture-card></app-lecture-card>-->
-    
+    <section id="searchedLectures" *ngFor="let lecture of lectures ">
+      <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
+    </section>
   </section>
 </div>

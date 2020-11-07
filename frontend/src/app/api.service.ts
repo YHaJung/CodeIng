@@ -22,8 +22,8 @@ export class ApiService {
   ) { }
 
   // tslint:disable-next-line:typedef
-  getLectures() {
-    return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
+  getLectures(keyword) {
+    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword, {headers: this.headers});
   }
 
   /*for main-page*/

@@ -25,6 +25,7 @@ import {SignupModule} from './auth/signup/signup.module';
 
 import {ReviewCardModule} from './cards/review-card/review-card.module';
 import {QnaCardModule} from './cards/qna-card/qna-card.module';
+import { AvatarModule } from 'ngx-avatar';
 
 const appRoutes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'home'},
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
     LectureCardModule,
     ReviewCardModule,
     QnaCardModule,
+    AvatarModule,
     SigninModule,
     SignupModule,
     HttpClientModule,

@@ -1,6 +1,7 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 //import {Lecture} from '../lecture/lecture';
+import {ApiService} from '../api.service';
 
 @Component({
   selector: 'app-lecture-search',
@@ -8,11 +9,18 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
   styleUrls: ['./lecture-search.component.css']
 })
 export class LectureSearchComponent implements OnInit {
-  
-  
-  constructor() { }
+  lectures:any=[];
+  keyword='';
+  constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
+    this.apiService.getLectures(this.keyword).subscribe(
+      data => {
+        this.lectures = data['result'];
+        console.log(this.lectures);
+      },
+      error => console.log(error)
+    );
   }
   /*stars */
   star = faStar;
@@ -24,6 +32,10 @@ export class LectureSearchComponent implements OnInit {
   levelHover(level){
     this.levelHovered = level;   //마우스 가져가면 별 바뀜
   }
+
+  /*test */
+  clickedRate = 0;
+  clickedLevel = 0;
 
 
   /*제품 상세로 넘어갈 때 쓰기
