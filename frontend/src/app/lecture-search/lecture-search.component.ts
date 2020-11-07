@@ -11,17 +11,11 @@ import {ApiService} from '../api.service';
 export class LectureSearchComponent implements OnInit {
   lectures:any=[];
   keyword='';
+  clickedRate = 3;
+  clickedLevel = 0; //제대로 작동x 
+
   constructor(private apiService: ApiService) { }
 
-  ngOnInit(): void {
-    this.apiService.getLectures(this.keyword).subscribe(
-      data => {
-        this.lectures = data['result'];
-        console.log(this.lectures);
-      },
-      error => console.log(error)
-    );
-  }
   /*stars */
   star = faStar;
   rateHovered = 0;
@@ -33,11 +27,15 @@ export class LectureSearchComponent implements OnInit {
     this.levelHovered = level;   //마우스 가져가면 별 바뀜
   }
 
-  /*test */
-  clickedRate = 0;
-  clickedLevel = 0;
-
-
+  ngOnInit(): void {
+    this.apiService.searchLectures(this.keyword, this.clickedRate, this.clickedLevel).subscribe(
+      data => {
+        this.lectures = data['result'];
+        console.log(this.lectures);
+      },
+      error => console.log(error)
+    );
+  }
   /*제품 상세로 넘어갈 때 쓰기
   @Output() selectPage = new EventEmitter();
   lecture = [];

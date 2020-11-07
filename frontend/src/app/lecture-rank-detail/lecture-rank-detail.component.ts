@@ -15,12 +15,10 @@ export class LectureRankDetailComponent implements OnInit {
   categoryLectures:any=[];
   selectedLecture = null;
 
-  keyword='';//for getLectures()
-
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.apiService.getLectures(this.keyword).subscribe(
+    this.apiService.getLectures().subscribe(
       data => {
         this.allLectures = data;
         console.log(this.allLectures);

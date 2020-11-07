@@ -22,8 +22,11 @@ export class ApiService {
   ) { }
 
   // tslint:disable-next-line:typedef
-  getLectures(keyword) {
-    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword, {headers: this.headers});
+  getLectures() {
+    return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
+  }
+  searchLectures(keyword, rate, level) {
+    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword+'&rating='+rate+'&level='+level, {headers: this.headers});
   }
 
   /*for main-page*/
