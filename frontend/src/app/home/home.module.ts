@@ -7,7 +7,6 @@ import {SigninComponent } from '../auth/signin/signin.component';
 // import {HomeNavBarComponent} from '../home-nav-bar/home-nav-bar.component';
 import { LectureRankListComponent } from './lecture-rank-list/lecture-rank-list.component';
 import { LectureRecommendListComponent } from './lecture-recommend-list/lecture-recommend-list.component';
-import {HomeNavBarComponent} from './home-nav-bar/home-nav-bar.component';
 import {FormsModule} from '@angular/forms';
 
 import {HttpClient, HttpClientModule} from "@angular/common/http";
@@ -23,7 +22,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     HomeComponent,
-    HomeNavBarComponent,
     // LectureRankDetailComponent,
     LectureRankListComponent,
     // LectureRecommendDetailComponent,
