@@ -21,7 +21,7 @@
       <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
         0{{lecture.ranking}}
         <div class="img-div"><img src="{{lecture?.thumbUrl}}" alt="Card image"></div>
-        <div (click)="lectureClicked(lecture)">
+        <div>
           {{lecture.siteName}}
           <p class="title">{{lecture.lectureName}}</p>
           <p *ngIf="lecture.level == 0">입문</p>

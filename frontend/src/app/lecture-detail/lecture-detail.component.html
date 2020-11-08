@@ -22,7 +22,7 @@
       </div>
     </section>
     <section class="col-sm-9" id="content">
-      <p>Flutter로 쇼핑 앱 만들기</p> <!--강의제목 연결하기-->
+      <p>{{title}}</p> <!--강의제목 연결하기-->
       <div (click)="viewReviews()" [ngClass]="{'clicked-menu':reviewChecked==1}">리뷰</div>&nbsp;
       <div (click)="viewQna()" [ngClass]="{'clicked-menu':qnaChecked==1}">QnA</div>
       <app-lecture-review *ngIf="reviewChecked==1"></app-lecture-review>

@@ -11,13 +11,15 @@ import {ApiService} from '../api.service';
 export class LectureDetailComponent implements OnInit {
   star = faStar;
 
-  reviews: any = [];
+  lectureDetail: any=[];
+  title :string;
   avg_rating = 0;
   level = 0;
-  lectureDetail: any=[];
-
+  
+  
+  reviews: any = [];
+  
   recommendoverview: any = [];
-  selectedLecture = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,12 +32,13 @@ export class LectureDetailComponent implements OnInit {
     this.avg_rating = 0;
     this.level = 0;
 
-    let thisLectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
+    let thisLectureIdx = this.route.snapshot.paramMap.get('lectureIdx');
 
     this.apiService.getLectureDetail(thisLectureIdx).subscribe(
       data => {
         this.lectureDetail = data['result'];
         console.log(this.lectureDetail);
+        this.title = this.lectureDetail.lectureName;
         this.avg_rating = this.lectureDetail.rating;
         this.level = this.lectureDetail.level;
       },

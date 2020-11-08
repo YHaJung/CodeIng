@@ -62,12 +62,18 @@ export class ApiService {
   // tslint:disable-next-line:typedef
   
   // tslint:disable-next-line:typedef
-  getLectureReviews(lectureIdx){
+  getLectureReviews(lectureIdx : number){
     return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review', {headers: this.headers});
   }
   // tslint:disable-next-line:typedef
-  getLectureQnas(lectureIdx){
+  getLectureQnas(lectureIdx : number){
     return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx+'/qna', {headers: this.headers});
+  }
+ 
+  createLectureQnas(lectureIdx : number, title : string, qnades : string, image : string[]){              //
+    const newQna = JSON.stringify({title, qnades, image})
+    console.log(newQna);
+    return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna', newQna, {headers: this.headers});
   }
 
   /*

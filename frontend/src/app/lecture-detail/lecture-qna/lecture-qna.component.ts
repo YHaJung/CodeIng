@@ -9,6 +9,7 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./lecture-qna.component.css']
 })
 export class LectureQnaComponent implements OnInit {
+  lectureIdx : number;
   /*form */
   qnaForm = new FormGroup({
     question: new FormControl(''),
@@ -16,6 +17,14 @@ export class LectureQnaComponent implements OnInit {
   });
   searchQna(){
     console.log(this.qnaForm.value);
+  }
+
+  write = false;
+  goWriteQnaPage(){
+    this.write = true;
+  }
+  writeFinished(){
+    this.write = false;
   }
 
   qnas: any = [];
@@ -27,13 +36,13 @@ export class LectureQnaComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    let thisLectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
+    this.lectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
 
-    this.apiService.getLectureQnas(thisLectureIdx).subscribe(
+    this.apiService.getLectureQnas(this.lectureIdx).subscribe(
       data => {
         this.qnas = data['result'];
-        // console.log(this.qnas);
-        console.log(thisLectureIdx,data);
+        console.log('qnas:');
+        console.log(this.qnas);
       },
       error => console.log(error)
     );

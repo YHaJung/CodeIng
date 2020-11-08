@@ -1,0 +1,11 @@
+<div>
+    <section>
+        <form [formGroup]="wirteQnaForm" (submit)="creatQna()">
+            <label> 제목 </label>
+            <input type="text" formControlName="title"/><br/>
+            <textarea type="text" formControlName="description"></textarea><br/>
+            <button (click)="cancealWriting()">취소</button>
+            <button type="submit">등록</button>
+        </form>
+    </section>
+</div>
