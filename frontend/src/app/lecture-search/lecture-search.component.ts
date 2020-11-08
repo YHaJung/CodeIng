@@ -1,7 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input} from '@angular/core';
 import { faStar, faBookmark } from '@fortawesome/free-solid-svg-icons';
 //import {Lecture} from '../lecture/lecture';
 import {ApiService} from '../api.service';
+import {ActivatedRoute} from '@angular/router';//rounter parameter
 
 @Component({
   selector: 'app-lecture-search',
@@ -9,12 +10,16 @@ import {ApiService} from '../api.service';
   styleUrls: ['./lecture-search.component.css']
 })
 export class LectureSearchComponent implements OnInit {
+
   lectures:any=[];
   keyword='';
   clickedRate = 0;
   clickedLevel = 0; //제대로 작동x 
 
-  constructor(private apiService: ApiService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private apiService: ApiService
+  ) { }
 
   /*stars */
   star = faStar;
@@ -36,7 +41,7 @@ export class LectureSearchComponent implements OnInit {
   }
 
   updateLectures(){
-    this.apiService.searchLectures(this.keyword, this.clickedRate, this.clickedLevel).subscribe(
+    this.apiService.searchLecturesFilter(this.keyword, this.clickedRate, this.clickedLevel).subscribe(
       data => {
         this.lectures = data['result'];
         console.log(this.lectures);
@@ -45,8 +50,19 @@ export class LectureSearchComponent implements OnInit {
     );
   }
   
+  param1 :string;
   ngOnInit(): void {
-    this.updateLectures();
+    //keyword
+
+    this.keyword = this.route.snapshot.params['keyword'];
+    console.log(this.keyword);
+    this.apiService.searchLecturesAll(this.keyword).subscribe(
+      data => {
+        this.lectures = data['result'];
+        console.log(this.lectures);
+      },
+      error => console.log(error)
+    );
   }
   
   /*제품 상세로 넘어갈 때 쓰기

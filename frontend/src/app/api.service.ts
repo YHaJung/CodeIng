@@ -25,7 +25,10 @@ export class ApiService {
   getLectures() {
     return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
   }
-  searchLectures(keyword, rate, level) {
+  searchLecturesAll(keyword) {
+    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword, {headers: this.headers});
+  }
+  searchLecturesFilter(keyword, rate, level) {
     return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword+'&rating='+rate+'&level='+level, {headers: this.headers});
   }
 

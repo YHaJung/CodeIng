@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 
 @Component({
@@ -16,17 +16,18 @@ export class MainComponent implements OnInit {
   });
   }
   */
-
+  
   /*form */
+  keyword='';
   searchForm = new FormGroup({
-    title: new FormControl(''),
-    //desciption: new FormControl(''),
+    keywordForm: new FormControl('')
   });
   searchLectures(){
-    console.log(this.searchForm.value);
+    this.keyword=this.searchForm.value.keywordForm;
+    window.location.reload();
   }
 
-  constructor() { }
+  
 
   ngOnInit(): void {
   }

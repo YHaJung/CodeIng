@@ -8,8 +8,8 @@
     <div id="middle">
         <div class="logo"  routerLink="/home"></div>
         <form [formGroup]="searchForm" (submit)="searchLectures()">
-            <input type="text" formControlName="title" placeholder="강의 검색하기"/>
-            <button class="btn" type="submit">검색</button>
+            <input type="text" [(ngModel)]="keyword" formControlName="keywordForm" placeholder="강의 검색하기"/>
+            <button class="btn" type="submit" routerLink="/lecturesearch/{{keyword}}">검색</button>
         </form>
     </div>
 </section>

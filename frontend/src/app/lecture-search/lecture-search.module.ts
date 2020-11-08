@@ -8,7 +8,7 @@ import {RouterModule, Routes} from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 const routes: Routes = [
-  {path: 'lecturersearch', component: LectureSearchComponent },
+  {path: 'lecturesearch/:keyword', component: LectureSearchComponent },
   // {path: 'homenavbar', component: HomeNavBarComponent},
 ];
 
