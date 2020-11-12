@@ -13,10 +13,8 @@ from django.utils import timezone
 from rest_framework import viewsets, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import action, api_view
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.response import Response
-from rest_framework.parsers import JSONParser
-#
+from scipy.sparse.linalg import svds
+from  sklearn.metrics.pairwise import cosine_similarity
 
 
 
@@ -137,16 +135,6 @@ def CBRS(request, pk=None):
         nneigh = 5
         krecommend = np.argsort(-recommend[int(pk)])[5*selectIdx-5:nneigh*selectIdx]
 
-        # print("query: {}".format(querys[int(pk)]))
-        # print("recommend: {}".format(recommend[int(pk)]))
-        #
-        # for lectureid in krecommend:
-        #     print('{}'.format(data[int(lectureid)]))
-        # for lectureid in recommend[pk]:
-        #     print('{}'.format(data[int(lectureid)]))
-
-        # response = {'hello' : 'hello'}
-        # return JsonResponse(response, safe=False)
         overview_list = []
         overview_dict = {}
         overview_dict['isSuccess'] = 'true'
@@ -176,49 +164,6 @@ def CBRS(request, pk=None):
 
 
 
-# @api_view(['GET'])
-# def CBRS(request, pk=None):
-#    data = pickle.load(open('knn_models/data.pkl', 'rb'))
-#    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
-#    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-#    nneigh = 10
-#    krecommend =np.argsort(-recommend[int(pk)])[:nneigh]
-#
-#    # print("query: {}".format(querys[int(pk)]))
-#    # print("recommend: {}".format(recommend[int(pk)]))
-#    #
-#    # for lectureid in krecommend:
-#    #     print('{}'.format(data[int(lectureid)]))
-#    # for lectureid in recommend[pk]:
-#    #     print('{}'.format(data[int(lectureid)]))
-#
-#    # response = {'hello' : 'hello'}
-#    # return JsonResponse(response, safe=False)
-#    overview_list = []
-#    overview_dict = {}
-#    overview_dict['isSuccess'] = 'true'
-#    overview_dict['code'] = 200
-#    overview_dict['message'] = '추천컨텐츠 조회 성공'
-#    # .flatten()[x]
-#    overview2 = list(map(
-#        lambda x: Lecture.objects.filter(lectureidx=x)
-#        .values('lectureidx', 'lecturename','thumburl', 'lecturer','level').distinct()
-#        , krecommend  ))
-#    for i in overview2:
-#        overview_list.append(
-#            dict([('lectureIdx', i[0]['lectureidx']),
-#                  ('lectureName', i[0]['lecturename']),
-#                  ('thumbUrl', i[0]['thumburl']),
-#                  ('lecturer', i[0]['lecturer']),
-#                  ('level', decimal.Decimal(i[0]['level']))
-#                  ]))
-#    overview_dict['result'] = overview_list
-#    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
-#    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-   # response = {'hello','hello'}
-   # return JsonResponse(response, safe=False)
-
 
 @api_view(['GET'])
 def CBRSlist(request, pk=None):
@@ -227,16 +172,7 @@ def CBRSlist(request, pk=None):
    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
    nneigh = 25
    krecommend =np.argsort(-recommend[int(pk)])[:nneigh]
-   # print("query: {}".format(querys[int(pk)]))
-   # print("recommend: {}".format(recommend[int(pk)]))
 
-   # for lectureid in krecommend:
-   #     print('{}'.format(data[int(lectureid)]))
-   # for lectureid in recommend[pk]:
-   #     print('{}'.format(data[int(lectureid)]))
-
-   # response = {'hello' : 'hello'}
-   # return JsonResponse(response, safe=False)
    overview_list = []
    overview_dict = {}
    overview_dict['isSuccess'] = 'true'
@@ -380,7 +316,7 @@ def generate_rating():
 # @periodic_task(run_every=crontab(hour=7, minute=30, day_of_week="mon"))
 # @periodic_task(run_every=crontab(hour=4, minute=30))
 @periodic_task(run_every=crontab(hour=11, minute=22))
-def CREATE_MODEL(request, pk=None):
+def create_model(request, pk=None):
     all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
     all_lecture_ids = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
     num_users = len(list(all_user_names))
@@ -429,8 +365,6 @@ def KNN_IBCF(request, pk=None):
     model_knn = pickle.load(open('knn_models/ubcf_knn_model.pkl', 'rb'))
     lectureid = int(pk)
     item_user = pickle.load(open('knn_models/item_user_rating.pkl', 'rb'))
-    print(item_user)
-    print(model_knn)
     distances, indices = model_knn.kneighbors(item_user[lectureid].values.reshape(1, -1), return_distance=True)
     # distances, indices = model_knn.kneighbors(mo.iloc[lectureid, :].values.reshape(1, -1), return_distance=True)
 
@@ -494,4 +428,198 @@ def KNN_UBCF(request, pk=None):
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def create_matrixFactorization_IBCF(request):
+    # ratings_df = pd.read_csv('C:/Users/user/Desktop/KME/codeing/backend/data/rating.csv', sep=';')
+    # movies_df = pd.read_csv('C:/Users/user/Desktop/KME/codeing/backend/data/movies.csv', sep=';', encoding='latin-1')
+    # A_df = ratings_df.pivot_table(index=['userId'], columns=['movieId'], values='rating', aggfunc=np.max)
+    # A_df.fillna(0, inplace=True)
+    # A = A_df.values
+    A_df = pickle.load(open('knn_models/user_item_rating.pkl', 'rb')).astype(float)
+    A = A_df.values
+    user_rating_mean = np.mean(A, axis=1)
+
+    A_normalized = A - user_rating_mean.reshape(-1, 1)
+    # print(A_normalized)
+    U, sigma, Vt = svds(A_normalized, k=50)
+
+    sigma = np.diag(sigma)
+
+    predicted_rating = np.dot(np.dot(U, sigma), Vt) + user_rating_mean.reshape(-1, 1)
+    predicted_rating_df = pd.DataFrame(predicted_rating, columns=A_df.columns)
+    filename = 'knn_models/predicted_rating_df.pkl'
+    pickle.dump(predicted_rating_df, open(filename, 'wb'))
+
+    preds_df = np.transpose(predicted_rating_df)
+    item_similarity = cosine_similarity(preds_df)
+    item_sim_df = pd.DataFrame(item_similarity, index=preds_df.index, columns=preds_df.index)
+    filename = 'knn_models/item_sim_df.pkl'
+    pickle.dump(item_sim_df, open(filename, 'wb'))
+
+    all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
+    all_category_ids = list(map(lambda x: x.categoryidx, Category.objects.all()))
+    all_subcategory_ids = list(map(lambda x: x.subcategoryidx, Subcategory.objects.all()))
+    all_lectures = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
+    all_reviews = list(map(lambda x: x.reviewidx, Review.objects.all()))
+    all_categorys = len(all_category_ids) + len(all_subcategory_ids)
+    # print(all_categorys)
+    num_users = len(list(all_user_names))
+    num_lectures = len(list(all_lectures))
+    num_reviews = len(list(all_reviews))
+    # userInterest = np.zeros([num_users, all_categorys])
+    userInterest = -np.ones([num_users, all_categorys])
+    # lectureData = np.zeros([num_lectures, 1])
+    # reviewData = np.zeros([num_reviews, 6])
+    lectureData = pd.DataFrame(columns=['lectureidx','lecturename'], index=range(num_lectures))
+    reviewData = pd.DataFrame(columns=['reviewidx','useridx','lectureidx', 'totalrating', 'pricerating', 'teachrating', 'recommend'], index=range(num_reviews))
+    # Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('lectureidx', 'lecturename',
+    #                                                                'thumburl', 'lecturer',
+    #                                                                'level')
+    # print(Lecture.objects.all().values('lectureidx', 'lecturename','thumburl', 'lecturer','level'))
+    # print(1)
+    for i in Lecture.objects.all().values('lectureidx', 'lecturename','thumburl', 'lecturer','level'):
+        # all_lecturecategory_ids = Lecture.objects.filter(lecture=all_lectures[i])
+        # for lecturecategory in all_lecturecategory_ids:
+        # print(i[0]['lecturename'])
+        # print(i['lecturename'], i['lectureidx'])
+        lectureData.loc[i['lectureidx'], 'lectureidx'] = i['lectureidx']
+        lectureData.loc[i['lectureidx'], 'lecturename'] = i['lecturename']
+        # lectureData[i['lectureidx'], 'rating'] = i['lecturename']
+            # lectureData[i, 11 + lecturecategory.subcategory.subcategoryidx] = 2
+    # print(2)
+    filename = 'knn_models/lecture_df.pkl'
+    pickle.dump(lectureData, open(filename, 'wb'))
+
+    for i in Review.objects.all().values('reviewidx', 'profile','lectureidx', 'totalrating', 'pricerating', 'teachingpowerrating', 'recommend'):
+        # print(i)
+        reviewData.loc[i['reviewidx'], 'reviewidx'] = i['reviewidx']
+        reviewData.loc[i['reviewidx'], 'useridx'] = i['profile']
+        reviewData.loc[i['reviewidx'], 'lectureidx'] = i['lectureidx']
+        reviewData.loc[i['reviewidx'], 'totalrating'] = i['totalrating']
+        reviewData.loc[i['reviewidx'], 'pricerating'] = i['pricerating']
+        reviewData.loc[i['reviewidx'], 'teachrating'] = i['teachingpowerrating']
+        reviewData.loc[i['reviewidx'], 'recommend'] = i['recommend']
+    # print(3)
+    # print(reviewData)
+    filename = 'knn_models/review_df.pkl'
+    pickle.dump(reviewData, open(filename, 'wb'))
+
+    response = {'message': 'success'}
+    return JsonResponse(response, safe=False)
+    # item_sim_df.columns=item_sim_df.columns.str.strip()
+    # print(item_sim_df)
+    # item_sim_df.columns = [col.strip() for col in list(item_sim_df.columns)]
+
+@api_view(['GET'])
+def sim_movies_to(request, pk=None):
+    item_sim_df = pickle.load(open('knn_models/item_sim_df.pkl', 'rb'))
+    # count = 1
+    # movieIndex = movies_df.index[movies_df['movieId'] == pk] + 1
+    # print('Similar movies to {} are :'.format(movies_df.loc[pk].title))
+    # overview2 = list(map(
+    #     lambda x: Lecture.objects.filter(lectureidx=x)
+    #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level').distinct()
+    #     , krecommend))
+    # item_id = Lecture.objects.filter(lectureidx=pk).values('lectureidx')
+    #                                                     # , 'lecturename', 'thumburl', 'lecturer', 'level').distinct()
+    # print(item_id)
+    # print(item_sim_df.sort_values(by=movieId, ascending=False))
+    # for item in item_sim_df.sort_values(by=pk, ascending=False).index[1:11]:
+    #     # itemIndex = movies_df.index[movies_df['movieId'] == item]
+    #     item = Lecture.objects.filter(lectureidx=item).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level').distinct()
+        # print(item)
+        # print('No. {} : {}'.format(count, movies_df.loc[itemIndex].title))
+        # count += 1
+    overview_list = []
+    overview_dict = {}
+    overview_dict['isSuccess'] = 'true'
+    overview_dict['code'] = 200
+    overview_dict['message'] = '추천컨텐츠 조회 성공'
+    # print('ok2')
+    overview2 = list(map(
+        lambda x: Lecture.objects.filter(lectureidx=item_sim_df.sort_values(by=pk, ascending=False).index[x]).values('lectureidx', 'lecturename',
+                                                                                 'thumburl', 'lecturer',
+                                                                                 'level')
+        , range(1, 11)
+        ))
+    # , range(0, 10)
+    # .distinct().order_by('lectureidx')
+    for i in overview2:
+        overview_list.append(
+            dict([('lectureIdx', i[0]['lectureidx']),
+                  ('lectureName', i[0]['lecturename']),
+                  ('thumbUrl', i[0]['thumburl']),
+                  ('lecturer', i[0]['lecturer']),
+                  ('level', decimal.Decimal(i[0]['level']))
+                  ]))
+    overview_dict['result'] = overview_list
+    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
+    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+    # response = {'message': 'success'}
+    # return JsonResponse(response, safe=False)
+
+
+@api_view(['GET'])
+def recommend_movies_to(request, pk=None):
+    predicted_rating_df = pickle.load(open('knn_models/predicted_rating_df.pkl', 'rb'))
+    movies_df = pickle.load(open('knn_models/lecture_df.pkl', 'rb'))
+    original_ratings_df = pickle.load(open('knn_models/review_df.pkl', 'rb'))
+    num_recommedations = 10
+
+    user_row_number = pk - 1
+    sorted_user_predictions = predicted_rating_df.iloc[user_row_number].sort_values(ascending=False)
+    print(1)
+    user_data = original_ratings_df[original_ratings_df.useridx == (pk)]
+    user_full = (user_data.merge(movies_df, how='left', left_on='lectureidx', right_on='lectureidx').
+                 sort_values(['totalrating'], ascending=False))
+    # , 'pricerating', 'teachrating', 'recommend'
+    print(2)
+    # print('user {0} has already rated {1} movies.'.format(pk, user_full.shape[0]))
+    # print('Recommending hightest {0} precdicted ratings movies not already rated.'.format(num_recommedations))
+    # print(1,movies_df[~movies_df['lectureidx'].isin(user_full['lectureidx'])])
+    # print(pd.DataFrame(sorted_user_predictions).reset_index())
+    recommendations = (movies_df[~movies_df['lectureidx'].isin(user_full['lectureidx'])].
+                           merge(pd.DataFrame(sorted_user_predictions).reset_index(), how='left',
+                                 left_on='lectureidx', right_on='lectureidx').
+                           rename(columns={user_row_number: 'Predictions'}).
+                           sort_values('Predictions', ascending=False).
+                           iloc[:num_recommedations, :-1])
+    print(3)
+    # print(recommendations)
+        # return user_full, recommendations
+
+    # already_rated, predictions = recommend_movies(predicted_rating_df, 2, movies_df, ratings_df, 10)
+
+    # already_rated = already_rated.head(10)
+    # predictions = predictions
+
+    overview_list = []
+    overview_dict = {}
+    overview_dict['isSuccess'] = 'true'
+    overview_dict['code'] = 200
+    overview_dict['message'] = '추천컨텐츠 조회 성공'
+    # print('ok2')
+    # overview2 = list(map(
+    #     lambda x: Lecture.objects.filter(lectureidx=predicted_rating_df.sort_values(by=pk, ascending=False).index[x]).values('lectureidx', 'lecturename',
+    #                                                                              'thumburl', 'lecturer',
+    #                                                                              'level')
+    #     , range(1, 11)
+    #     ))
+    # # , range(0, 10)
+    # # .distinct().order_by('lectureidx')
+    # for i in overview2:
+    #     overview_list.append(
+    #         dict([('lectureIdx', i[0]['lectureidx']),
+    #               ('lectureName', i[0]['lecturename']),
+    #               ('thumbUrl', i[0]['thumburl']),
+    #               ('lecturer', i[0]['lecturer']),
+    #               ('level', decimal.Decimal(i[0]['level']))
+    #               ]))
+    overview_dict['result'] = overview_list
+    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
+    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+    # response = {'message': 'success'}
+    # return JsonResponse(response, safe=False)
+
 
