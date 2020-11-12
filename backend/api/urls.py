@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^api/recommend/$', views.Poprs),
     url(r'^api/recommendlist', views.Poprslist),
     url(r'^api/CREATE_MODEL/$', views.CREATE_MODEL),
-    # url(r'^api/get_con$', views.get_con)ß
-    # path('reviews/<int:pk>', views.review_detail, name='review_detail'),
+    url(r'^api/matrixfactorization_model', views.create_matrixFactorization_IBCF),
+    path('api/<int:pk>/matrixfactorization_IBCF', views.sim_movies_to),
+    path('api/<int:pk>/matrixfactorization_UBCF', views.recommend_movies_to),
 ]
