@@ -102,18 +102,15 @@ def check_email(request):
         return for_exception(code, message, status_)
 
 
-
-
-#수정된 회원가입
-@api_view(['GET','POST'])
-def sign_up(request):
+@api_view(['POST'])
+def login(request):
     code = 400
-    message ='파라미터 입력 오류'
+    message = '파라미터 입력 오류'
     status_ = status.HTTP_400_BAD_REQUEST
 
     try:
         # 로그인 로직 -> jwt 발행
-        if request.method =='GET':
+        if request.method == 'POST':
             sign_in_dict = QueryDict.dict(request.data)
 
             # db에 해당 이메일로 가입된 계정이 있는지 확인
@@ -123,11 +120,12 @@ def sign_up(request):
                 raise ValueError('정보없음')
 
             try:
-                #비밀번호가 일치하면 토큰 발행
+                # 비밀번호가 일치하면 토큰 발행
                 if bcrypt.checkpw(sign_in_dict['userpwd'].encode('utf-8'), user.userpwd.encode('utf-8')):
                     # 토큰은 한 달 동안만 유효
-                    expire_ts = int(time.time()) + 3600*24*30
-                    token = jwt.encode({'email': sign_in_dict['email'],'expire':expire_ts}, SECRET_KEY, algorithm="HS256")
+                    expire_ts = int(time.time()) + 3600 * 24 * 30
+                    token = jwt.encode({'email': sign_in_dict['email'], 'expire': expire_ts}, SECRET_KEY,
+                                       algorithm="HS256")
                     token = token.decode('utf-8')  # 유니코드 문자열로 디코딩
                 else:
                     raise ValueError('비번불일치')
@@ -141,8 +139,34 @@ def sign_up(request):
             return_value = json.dumps(token_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
+    except ValueError as e:
+        print(type(e))
+        if str(e) == '생일':
+            return for_exception(407, "올바른 날짜 형식을 기입해야 합니다", status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+        elif str(e) == '정보없음':
+            return for_exception(404, "해당 이메일로 가입된 정보가 없습니다", status.HTTP_404_NOT_FOUND)
+        elif str(e) == '비번불일치':
+            return for_exception(409, "비밀번호가 틀렸습니다", status.HTTP_409_CONFLICT)
+        elif str(e) == '비번설정':
+            return for_exception(406, "비밀번호는 8자리 이상의 숫자/문자/특수문자의 조합으로 이루어져야 합니다", status.HTTP_406_NOT_ACCEPTABLE)
 
-        elif request.method =='POST':
+
+
+    except Exception:
+
+        return for_exception(code, message, status_)
+
+
+#수정된 회원가입
+@api_view(['POST'])
+def sign_up(request):
+    code = 400
+    message ='파라미터 입력 오류'
+    status_ = status.HTTP_400_BAD_REQUEST
+
+    try:
+
+        if request.method =='POST':
             sign_up_dict = QueryDict.dict(request.data)
 
             # 이메일 형식 확인
