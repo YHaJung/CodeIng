@@ -262,7 +262,6 @@ def lectures_ranking(request):
             rank = []
 
             for c in category_ranking_all:
-
                 price_sql = c['lecture__price']
                 if price_sql == 0:
                     price_sql = 'free'
