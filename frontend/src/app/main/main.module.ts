@@ -4,10 +4,10 @@ import {MainComponent} from './main.component';
 
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from '../home/home.component'
+import {HomeComponent} from '../home/home.component';
 
 const routes: Routes = [
-  {path: 'home', component: HomeComponent},
+  {path: 'home/:auth', pathMatch: 'full', redirectTo: 'home'} 
 ];
 
 @NgModule({

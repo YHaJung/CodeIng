@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
+import {CookieService} from 'ngx-cookie-service';
+import {Router} from '@angular/router';
+import {ApiService} from '../api.service';
 
 @Component({
   selector: 'app-main',
@@ -7,6 +10,17 @@ import {FormGroup, FormControl} from '@angular/forms';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit {
+  constructor( 
+    private cookieService: CookieService,
+    private router : Router,
+    private apiService : ApiService
+     ) { }
+  token : string;
+    
+  auth : number;
+  ngOnInit(): void {
+    this.token = this.cookieService.get('token');
+  }
   /* input에서 불러온 값이 기본값으로 들어가 있게(수정에서 사용)
   searchForm;
 
@@ -27,9 +41,11 @@ export class MainComponent implements OnInit {
     window.location.reload();
   }
 
-  
-
-  ngOnInit(): void {
+  //log out
+  logout(){
+    this.cookieService.deleteAll();
+    this.router.navigate(['/']);
+    window.location.reload();
   }
 
 }

@@ -78,13 +78,6 @@ export class ApiService {
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna', newQna, {headers: this.headers});
   }
 
-/*token cookie 적용할 때
-  loginUser(authData){
-    const body = JSON.stringify(authData);
-    return this.httpClient.post(this.baseUrl+'auth/', body, {headers:this.headers});
-  }
-  */
-
   /*
   getLectureDetail(){
     return this.httpClient.get(this.baseUrl + 'lectures/:lectureIdx', {headers: this.headers});
@@ -102,4 +95,17 @@ export class ApiService {
     return this.httpClient.post(this.baseUrl + 'user', body, {headers: this.headers});
     //return this.httpClient.get(this.baseUrl + 'user', {params: new HttpParams([email, userpwd])};
   }
+
+  //개인정보조회
+  /*
+  getPersonalInfo(){
+    return this.httpClient.get(this.baseUrl+'personalInfo', {headers: this.headers});
+  }
+  */
+
+  //home 자동 새로고침용
+  getToken(){
+    return this.token;
+  }
+
 }

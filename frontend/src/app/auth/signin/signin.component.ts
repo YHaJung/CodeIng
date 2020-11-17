@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ApiService} from '../../api.service';
 import { CookieService } from 'ngx-cookie-service';
+import {Router} from '@angular/router';
 
 interface SigninResults {
   token : string;
@@ -14,6 +15,7 @@ interface SigninResults {
 })
 export class SigninComponent implements OnInit {
   constructor(
+    private router : Router,
     private apiService:ApiService,
     private cookieService: CookieService
     ) { }
@@ -28,9 +30,11 @@ export class SigninComponent implements OnInit {
       (result:SigninResults) => {
         console.log(result);
         this.cookieService.set('token', result.token);
+        this.router.navigate(['/home/1']);
       },
       error => console.log(error)
     );
+    
   }
 
 
