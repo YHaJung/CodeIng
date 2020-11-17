@@ -147,7 +147,7 @@ def lecture_list(request):
             if input_keyword =='':
                 # 쿼리문
                 lectures = Lecture.objects.filter(
-                    level__gte=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
+                    level=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
                     'siteinfo')[page * 6 - 6:page * 6]
             else:
                 lectures = Lecture.objects.filter(lecturename__contains=input_keyword,
@@ -262,7 +262,6 @@ def lectures_ranking(request):
             rank = []
 
             for c in category_ranking_all:
-
                 price_sql = c['lecture__price']
                 if price_sql == 0:
                     price_sql = 'free'
