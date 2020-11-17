@@ -23,6 +23,7 @@ import {LectureCardModule} from './lecture-card/lecture-card.module';
 
 import {SigninModule} from './auth/signin/signin.module';
 import {SignupModule} from './auth/signup/signup.module';
+import { CookieService } from 'ngx-cookie-service';
 
 import {ReviewCardModule} from './cards/review-card/review-card.module';
 import {QnaCardModule} from './cards/qna-card/qna-card.module';
@@ -71,7 +72,7 @@ const appRoutes: Routes = [
     HttpClientModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [RouterModule],
+  providers: [RouterModule, CookieService ],
   exports: [
   ],
   bootstrap: [AppComponent]

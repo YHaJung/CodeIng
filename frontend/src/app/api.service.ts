@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {CookieService} from 'ngx-cookie-service';
 
 // api명세서
 /*https://docs.google.com/spreadsheets/d/1nkWZT2nQCqGKkkvK8B28_yZliRay6ngx6i9yA_YdLZU/edit#gid=0 */
@@ -8,17 +9,18 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
   providedIn: 'root'
 })
 export class ApiService {
-
+  token = this.cookieService.get('token');
   baseUrl = 'http://3.34.74.250/'; // 'http://127.0.0.1:8000/';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
-    //Authorization: 'Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6I…zc0fQ.BNB0DfYqMvNsswPmme4hXkaafRyZcskibMwVob25Qk8'
+    Authorization: this.token
   });
 
   private lectures = ['자료구조와 알고리즘', 'python 배우기'];
 
   constructor(
-    private httpClient: HttpClient
+    private httpClient: HttpClient,
+    private cookieService: CookieService
   ) { }
 
   // tslint:disable-next-line:typedef
@@ -70,13 +72,11 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx+'/qna', {headers: this.headers});
   }
  
-  /*qna작성 - token문제로 작동x
   createLectureQnas(lectureIdx : number, title : string, qnades : string, image : string[]){              //
     const newQna = JSON.stringify({title, qnades, image})
     console.log(newQna);
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna', newQna, {headers: this.headers});
   }
-  */
 
 /*token cookie 적용할 때
   loginUser(authData){
