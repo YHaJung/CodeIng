@@ -127,7 +127,7 @@ def recommend_save(request):
 @api_view(['GET'])
 def CBRS(request):
     try:
-        pk = request.user.userinfo.useridxuserIdx = request.user.userinfo.useridx
+        pk = request.user.userinfo.useridx
         data = pickle.load(open('knn_models/data.pkl', 'rb'))
         querys = pickle.load(open('knn_models/query.pkl', 'rb'))
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
@@ -195,7 +195,7 @@ def CBRS(request):
 
 @api_view(['GET'])
 def CBRSlist(request):
-    pk = request.user.userinfo.useridxuserIdx = request.user.userinfo.useridx
+    pk = request.user.userinfo.useridx
     data = pickle.load(open('knn_models/data.pkl', 'rb'))
     querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
