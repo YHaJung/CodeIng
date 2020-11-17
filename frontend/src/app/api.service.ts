@@ -96,16 +96,22 @@ export class ApiService {
     //return this.httpClient.get(this.baseUrl + 'user', {params: new HttpParams([email, userpwd])};
   }
 
+  //mypage
+  getFavoriteLectures(){
+    return this.httpClient.get(this.baseUrl+'favorite-lectures', {headers: this.headers});
+  }
+  /*patch parameter 물어보고 다시
+  patchFavoriteLectures(lectureIdx:number){
+    const body = JSON.stringify({lectureIdx});
+    return this.httpClient.patch(this.baseUrl+'favorite-lectures', body, {headers: this.headers});
+  }
+  */
+
   //개인정보조회
   /*
   getPersonalInfo(){
     return this.httpClient.get(this.baseUrl+'personalInfo', {headers: this.headers});
   }
   */
-
-  //home 자동 새로고침용
-  getToken(){
-    return this.token;
-  }
 
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faBookmark  } from '@fortawesome/free-solid-svg-icons';
 import {ActivatedRoute} from '@angular/router';
 import {ApiService} from '../api.service';
 
@@ -10,16 +10,36 @@ import {ApiService} from '../api.service';
 })
 export class LectureDetailComponent implements OnInit {
   star = faStar;
+  bookmark = faBookmark;
+  favoriteLecture = false;
+  lectureIdx : string;
+
+  setFavoriteLecture(){
+    /* patch parameter 물어보고 다시
+    this.apiService.patchFavoriteLectures(Number(this.lectureIdx)).subscribe(
+      result => {
+        console.log(result)
+      },
+      error => console.log(error)
+    );
+    */
+    if(this.favoriteLecture == false){
+      this.favoriteLecture = true;
+    }else{
+      this.favoriteLecture = false;
+    }
+  }
+
 
   lectureDetail: any=[];
   title :string;
   avg_rating = 0;
   level = 0;
   
-  
   reviews: any = [];
-  
   recommendoverview: any = [];
+
+  
 
   constructor(
     private route: ActivatedRoute,
@@ -32,9 +52,10 @@ export class LectureDetailComponent implements OnInit {
     this.avg_rating = 0;
     this.level = 0;
 
-    let thisLectureIdx = this.route.snapshot.paramMap.get('lectureIdx');
+    this.lectureIdx = this.route.snapshot.paramMap.get('lectureIdx');
 
-    this.apiService.getLectureDetail(thisLectureIdx).subscribe(
+    //call lecture info
+    this.apiService.getLectureDetail(this.lectureIdx).subscribe(
       data => {
         this.lectureDetail = data['result'];
         console.log(this.lectureDetail);
@@ -44,6 +65,8 @@ export class LectureDetailComponent implements OnInit {
       },
       error => console.log(error)
     );
+    //patchFavoriteLectures(lectureIdx:number)
+
   }
   
 

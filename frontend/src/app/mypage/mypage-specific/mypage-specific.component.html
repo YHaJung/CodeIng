@@ -1,5 +1,7 @@
 <app-main></app-main>
 <div class="grid-layout">
     <app-mypage-nav id="left" [key]="mypagekey"></app-mypage-nav>
-    <div id="center"></div>
+    <div id="center">
+        <app-favorite-lectures *ngIf="mypagekey==1"></app-favorite-lectures>
+    </div>
 </div>
