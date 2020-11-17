@@ -12,7 +12,7 @@ export class ApiService {
   baseUrl = 'http://3.34.74.250/'; // 'http://127.0.0.1:8000/';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
-   // Authorization: 'Token 8529e34d1eb5c264103bc0a2b696bae243f509bf'
+    //Authorization: 'Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6I…zc0fQ.BNB0DfYqMvNsswPmme4hXkaafRyZcskibMwVob25Qk8'
   });
 
   private lectures = ['자료구조와 알고리즘', 'python 배우기'];
@@ -102,15 +102,4 @@ export class ApiService {
     return this.httpClient.post(this.baseUrl + 'user', body, {headers: this.headers});
     //return this.httpClient.get(this.baseUrl + 'user', {params: new HttpParams([email, userpwd])};
   }
-
-
-
-
-  // post example
-  /*
-  postLectureRate(rate:number, lectureId: number){
-    const body =JSON.stringify({stars: rate});
-    return this.httpClient.post('${this.baseUrl+""}${lectureId}/rate-/', body, {headers: this.headers});
-  }
-  */
 }

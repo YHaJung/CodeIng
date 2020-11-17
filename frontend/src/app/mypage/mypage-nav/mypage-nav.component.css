@@ -1,0 +1,10 @@
+section{
+    text-align: center;
+}
+button{
+    width: 75%;
+}
+
+.pointColor{
+    background-color: var(--main-yellow);
+}

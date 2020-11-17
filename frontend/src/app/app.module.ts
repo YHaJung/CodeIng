@@ -12,6 +12,7 @@ import {MypageModule} from './mypage/mypage.module';
 import {ReviseUserinfoModule} from './revise-userinfo/revise-userinfo.module';
 import {BasketModule} from './basket/basket.module';
 import {MypageNavModule} from './mypage/mypage-nav/mypage-nav.module';
+import {MypageSpecificModule} from './mypage/mypage-specific/mypage-specific.module';
 
 import {MainModule} from './main/main.module';
 import {LectureRecommendDetailModule} from './lecture-recommend-detail/lecture-recommend-detail.module';
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
     BasketModule,
     ReviseUserinfoModule,
     MypageNavModule,
+    MypageSpecificModule,
     MainModule,
     LectureRecommendDetailModule,
     LectureRankDetailModule,

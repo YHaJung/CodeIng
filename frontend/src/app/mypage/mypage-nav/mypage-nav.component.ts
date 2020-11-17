@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-mypage-nav',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./mypage-nav.component.css']
 })
 export class MypageNavComponent implements OnInit {
-
-  constructor() { }
-
+  @Input() key: number;
+  
+  mypagekey = 0;
+  constructor(private route: ActivatedRoute ) { }
+  
   ngOnInit(): void {
+    this.mypagekey = this.key;
   }
 
 }

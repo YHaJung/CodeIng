@@ -28,13 +28,7 @@ body{margin: 0; padding: 0;}
   border: 0.5px solid #7F8080;
   box-sizing: border-box;
 }
-.row {
-  margin-top: 10px;
-  font-family: Noto Sans;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 11px;
-  line-height: 15px;
-  /* identical to box height */
+
+a{
   color: #FFFFFF;
 }

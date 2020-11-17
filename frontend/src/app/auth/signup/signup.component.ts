@@ -55,7 +55,7 @@ export class SignupComponent implements OnInit {
         this.signupForm.value.pw,
         this.signupForm.value.pwCheck,
         this.signupForm.value.name,
-        "010-1234-5678",
+        this.signupForm.value.phoneNum,
         this.signupForm.value.nickname
       ).subscribe(
       result => {
@@ -64,8 +64,6 @@ export class SignupComponent implements OnInit {
       error => console.log(error)
     );
   }
-
-  
 
   ngOnInit(): void {
   }
