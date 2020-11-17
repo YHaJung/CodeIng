@@ -30,8 +30,8 @@ export class WriteLectureQnaComponent implements OnInit {
   }
 
   creatQna(){                                         //
-    //console.log(this.lectureIdx, this.wirteQnaForm.value.title, this.wirteQnaForm.value.description, this.images)
-    
+    console.log(this.lectureIdx, this.wirteQnaForm.value.title, this.wirteQnaForm.value.description, this.images)
+    /*token문제로 아직 작동x
     this.apiService.createLectureQnas(
       this.lectureIdx,
       this.wirteQnaForm.value.title,
@@ -41,6 +41,7 @@ export class WriteLectureQnaComponent implements OnInit {
       result => console.log(result),
       error => console.log(error)
     );
+    */
     
   }
 

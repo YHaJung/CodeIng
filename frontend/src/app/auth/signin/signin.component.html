@@ -3,12 +3,12 @@
   <div class="middle">
     <!--<form action="/action_page.php">-->
 
-    <form [formGroup]="signinForm" (submit)="saveForm()">
-      <input type="email" formControlName="id" placeholder="아이디">
+    <form [formGroup]="signinForm" (submit)="login()">
+      <input type="email" formControlName="id" placeholder="아이디(이메일)">
       <br/>
       <input type="password " formControlName="pw" placeholder="비밀번호">
       <h3>OR</h3>
-      <button type="submit" routerLink="/">Google 로그인</button>
+      <button>Google 로그인</button>
       <br/>
       <button type="submit">로그인</button>
     </form>

@@ -1,0 +1,11 @@
+body{margin: 0; padding: 0;}
+
+#center{
+    background-color: aqua;
+}
+#whole-page{
+    background-color: var(--main-blue);
+    padding: 10vw 25vw 10vw 25vw;
+    color: white;
+    height: auto;
+}

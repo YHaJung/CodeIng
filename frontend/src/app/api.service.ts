@@ -12,7 +12,7 @@ export class ApiService {
   baseUrl = 'http://3.34.74.250/'; // 'http://127.0.0.1:8000/';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
-    Authorization: 'Token 8529e34d1eb5c264103bc0a2b696bae243f509bf'
+   // Authorization: 'Token 8529e34d1eb5c264103bc0a2b696bae243f509bf'
   });
 
   private lectures = ['자료구조와 알고리즘', 'python 배우기'];
@@ -70,17 +70,38 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx+'/qna', {headers: this.headers});
   }
  
+  /*qna작성 - token문제로 작동x
   createLectureQnas(lectureIdx : number, title : string, qnades : string, image : string[]){              //
     const newQna = JSON.stringify({title, qnades, image})
     console.log(newQna);
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna', newQna, {headers: this.headers});
   }
+  */
+
+/*token cookie 적용할 때
+  loginUser(authData){
+    const body = JSON.stringify(authData);
+    return this.httpClient.post(this.baseUrl+'auth/', body, {headers:this.headers});
+  }
+  */
 
   /*
   getLectureDetail(){
     return this.httpClient.get(this.baseUrl + 'lectures/:lectureIdx', {headers: this.headers});
   }
   */
+  signin(email:string, userpwd:string){
+    const body = JSON.stringify({email, userpwd});
+    console.log(body);
+    return this.httpClient.post(this.baseUrl + 'login', body, {headers: this.headers});
+    //return this.httpClient.get(this.baseUrl + 'user', {params: new HttpParams([email, userpwd])};
+  }
+  signup(email:string, userpwd:string, userpwdConfirm:string, name:string, phonenumber:string, nickname:string){
+    const body = JSON.stringify({email, userpwd, userpwdConfirm, name, phonenumber, nickname});
+    console.log(body);
+    return this.httpClient.post(this.baseUrl + 'user', body, {headers: this.headers});
+    //return this.httpClient.get(this.baseUrl + 'user', {params: new HttpParams([email, userpwd])};
+  }
 
 
 
