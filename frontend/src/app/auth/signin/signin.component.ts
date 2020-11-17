@@ -16,11 +16,9 @@ export class SigninComponent implements OnInit {
   user:[];
   login(){
     console.log(this.signinForm.value);
-    this.apiService.signin('suyeon7979@gmail.com','afsasag123!').subscribe(
-      data => {
-        this.user = data['token'];
-        console.log('token:');
-        console.log(this.user);
+    this.apiService.signin(this.signinForm.value.id, this.signinForm.value.pw).subscribe(
+      result => {
+        console.log(result);
       },
       error => console.log(error)
     );

@@ -55,7 +55,7 @@ export class SignupComponent implements OnInit {
         this.signupForm.value.pw,
         this.signupForm.value.pwCheck,
         this.signupForm.value.name,
-        this.signupForm.value.phoneNum,
+        "010-1234-5678",
         this.signupForm.value.nickname
       ).subscribe(
       result => {
