@@ -1280,7 +1280,7 @@ def my_reviews(request):
 
 
         my_review_list=[]
-        my_review = Review.objects.filter(profile__userinfo__useridx=650, isdeleted='N')[page * 5 - 5:page * 5]
+        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N')[page * 5 - 5:page * 5]
 
         pros = Reviewpros.objects.filter(review__profile__userinfo__useridx=userIdx, isdeleted='N')
 
