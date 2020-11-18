@@ -37,12 +37,12 @@ export class ApiService {
 
   /*for main-page*/
   // tslint:disable-next-line:typedef
-  getRankingOverview() {
-    return this.httpClient.get(this.baseUrl + 'ranking-overview', {headers: this.headers});
+  getRankingOverview(categoryIdx) {
+    return this.httpClient.get(this.baseUrl + 'ranking-overview?categoryIdx='+categoryIdx, {headers: this.headers});
   }
   // tslint:disable-next-line:typedef
-  getRecommendOverview() {  // 나중에 api 바꾸기
-    return this.httpClient.get(this.baseUrl + 'ranking-overview', {headers: this.headers});
+  getRecommendOverview(categoryIdx) {  // 나중에 api 바꾸기
+    return this.httpClient.get(this.baseUrl + 'ranking-overview?categoryIdx='+categoryIdx, {headers: this.headers});
   }
 
   // 프로그램 주제별 랭킹

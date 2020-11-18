@@ -10,7 +10,7 @@
         <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
     </nav>
     <div id="middle">
-        <div class="logo"  routerLink="/home"></div>
+        <div class="logo"  routerLink="/home" type="button" (click)="gohome()"></div>
         <form [formGroup]="searchForm" (submit)="searchLectures()">
             <input type="text" [(ngModel)]="keyword" formControlName="keywordForm" placeholder="강의 제목 검색하기"/>
             <button class="btn" type="submit" routerLink="/lecturesearch/{{keyword}}">검색</button>

@@ -15,19 +15,19 @@ export class LectureDetailComponent implements OnInit {
   lectureIdx : string;
 
   setFavoriteLecture(){
-    /* patch parameter 물어보고 다시
+    /*
     this.apiService.patchFavoriteLectures(Number(this.lectureIdx)).subscribe(
       result => {
         console.log(result)
       },
       error => console.log(error)
     );
-    */
     if(this.favoriteLecture == false){
       this.favoriteLecture = true;
     }else{
       this.favoriteLecture = false;
     }
+    */
   }
 
 
