@@ -35,7 +35,6 @@ class Profile(models.Model):
     phonenumber = models.CharField(db_column='phoneNumber', max_length=20)  # Field name made lowercase.
     school = models.CharField(max_length=30, blank=True, null=True)
     job = models.CharField(max_length=1, blank=True, null=True)
-    major = models.CharField(max_length=1, blank=True, null=True)
     isblocked = models.CharField(db_column='isBlocked', max_length=1)  # Field name made lowercase.
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.

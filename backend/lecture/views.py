@@ -240,9 +240,9 @@ def lectures_ranking(request):
 
             if subcategoryIdx != 0:
                 # 서브카테고리까지 골랐을 경우,
+
                 category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx,
-                                                                  subcategoryidx=subcategoryIdx).select_related(
-                    'lecture').order_by('-lecture__rating')
+                                                                  subcategory=subcategoryIdx).select_related('lecture').order_by('-lecture__rating')
             else:
                 # 카테고리만 골랐을 경우,
                 category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx).select_related(
@@ -252,6 +252,7 @@ def lectures_ranking(request):
                                                            'lecture__lecturer', 'lecture__thumburl', 'lecture__price',
                                                            'lecture__level', 'lecture__siteinfo__sitename').distinct()[
                                    page * 5 - 5:page * 5]
+
 
             lec_rank_dict = {}
             lec_rank_dict['isSuccess'] = 'true'
@@ -337,7 +338,7 @@ def lecture_detail(request, pk):
 
         detail_dict['result'] = dict([('lectureIdx', lecture.lectureidx), ('lectureName', lecture.lecturename),
                                       ('lectureLink', lecture.lecturelink),
-                                      ('price', price_sql), ('level', lecture.level), ('rating', lecture.rating)])
+                                      ('price', price_sql), ('level', lecture.level), ('rating', lecture.rating), ('thumbUrl', lecture.thumburl)])
 
         return_value = json.dumps(detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
@@ -1524,5 +1525,18 @@ def my_comments(request):
         return Response(status=status.HTTP_404_NOT_FOUND)
     except Exception:
         return for_exception()
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

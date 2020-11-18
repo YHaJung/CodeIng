@@ -9,13 +9,44 @@ from django.http import HttpResponse, QueryDict, JsonResponse
 from rest_framework import status
 from rest_framework.decorators import api_view
 
-from .models import Profile, Userinfo
+from .models import Profile, Userinfo, Categoryinterest, Subcategoryinterest
 
 #생년월일에 대한 validation
 from .serializers import ProfileSerializer, UserinfoSerializer, CategoryinterestSerializer, \
     SubcategoryinterestSerializer
 
 
+def login_decorator(func):
+    def wrapper(request, *args, **kwargs):
+        try:
+            access_token = request.headers.get('Authorization', None)
+            payload = jwt.decode(access_token, SECRET_KEY, algorithm='HS256')
+            #만료 확인
+            expire = payload['expire']
+
+            if int(time.time()) > expire:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '유효기간이 만료된 토큰'}, status=400)
+
+
+            #유저 확인
+            user = Profile.objects.get(email=payload['email'])
+            request.user = user
+
+        except jwt.exceptions.DecodeError:
+            return JsonResponse({'isSuccess' : 'false',
+                                 'code' : 400,
+                                 'message' : 'INVALID_TOKEN' }, status=400)
+
+        except Profile.DoesNotExist:
+            return JsonResponse({'isSuccess' : 'false',
+                                 'code' : 400,
+                                 'message' : 'INVALID_USER' }, status=400)
+
+        return func( request, *args, **kwargs)
+
+    return wrapper
 
 
 
@@ -185,6 +216,14 @@ def sign_up(request):
                 raise Exception
                 # 에러 일으키기
 
+            # 휴대폰 번호 넣었는지 여부
+            if(len(sign_up_dict['phonenumber']) == 0):
+                code = 402
+                message = '휴대폰 번호를 입력하세요'
+                status_ = status.HTTP_402_PAYMENT_REQUIRED
+                raise Exception
+
+
             # 비밀번호 일치 여부 확인
             if sign_up_dict['userpwd'] != sign_up_dict['userpwdConfirm']:
                 code = 403
@@ -200,7 +239,7 @@ def sign_up(request):
             password_crypt = bcrypt.hashpw(password, bcrypt.gensalt())  # 암호화된 비밀번호 생성
             password_crypt = password_crypt.decode('utf-8')  # DB에 저장할 수 있는 유니코드 문자열 형태로 디코딩
             sign_up_dict['userpwd'] = password_crypt
-            print(sign_up_dict['userpwd'])
+            # print(sign_up_dict['userpwd'])
 
 
             # userinfo( 닉네임, 프로필사진)
@@ -422,12 +461,214 @@ def sign_up_test(request):
         return for_exception(code, message, status_)
 
 
-
-
 @api_view(['GET'])
 def google_login(request):
     print('hi')
     return JsonResponse({}, status=200)
+
+
+#회원 정보 조회
+@api_view(['GET', 'PATCH'])
+@login_decorator
+def personal_info(request):
+    try:
+        code = 400
+        message = '파라미터 입력 오류'
+        status_ = status.HTTP_400_BAD_REQUEST
+
+        if request.method == 'GET':
+            userIdx = request.user.userinfo.useridx
+
+            personal_dict={}
+            personal_dict['isSuccess'] = 'true'
+            personal_dict['code'] = 200
+            personal_dict['message'] = '회원정보 조회 성공'
+
+            personal_dict['result'] = dict([('name', request.user.name), ('nickname', request.user.userinfo.nickname),
+                              ('phonenumber', request.user.phonenumber),('email', request.user.email)])
+
+            return_value = json.dumps(personal_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        elif request.method == 'PATCH':
+            p_dict = QueryDict.dict(request.data)
+          
+
+            
+            #비밀번호 변경
+            if "userpwd" in p_dict and "userpwdConfirm" in p_dict:
+                
+                # 비번 안 바꿀 경우 
+                if len(p_dict['userpwd']) == 0 and len(p_dict['userpwdConfirm'] == 0):
+                    data = request.user
+                    data.email = p_dict['email']
+                    data.phonenumber = p_dict['phonenumber']
+                    data.name = p_dict['name']
+                    data.nickname = p_dict['nickname']
+                    data.save()
+                    
+                    
+                     
+
+                if(p_dict['userpwd'] != p_dict['userpwdConfirm']):
+                    raise ValueError("비번불일치")
+
+                # 비밀번호 validation
+                validatePasswd(p_dict['userpwd'])
+
+                # 비밀번호 암호화
+                password = p_dict['userpwd'].encode('utf-8')  # 입력된 패스워드를 바이트 형태로 인코딩
+                password_crypt = bcrypt.hashpw(password, bcrypt.gensalt())  # 암호화된 비밀번호 생성
+                password_crypt = password_crypt.decode('utf-8')  # DB에 저장할 수 있는 유니코드 문자열 형태로 디코딩
+                p_dict['userpwd'] = password_crypt
+
+
+                data = request.user
+                data.email = p_dict['email']
+                data.phonenumber = p_dict['phonenumber']
+                data.name = p_dict['name']
+                data.nickname = p_dict['nickname']
+                data.userPwd = p_dict['userpwd']
+                data.save()
+            #비번 안 바꿀 경우 -> Key 줄 때
+            elif "userpwd" not in p_dict and "userpwdConfirm" not in p_dict:
+                data = request.user
+                data.email = p_dict['email']
+                data.phonenumber = p_dict['phonenumber']
+                data.name = p_dict['name']
+                data.nickname = p_dict['nickname']
+                data.save()
+
+            else:
+                raise Exception
+
+
+
+
+            return JsonResponse({'isSuccess': 'true',
+                                 'code': 200,
+                                 'message': '회원정보 수정 성공'}, status=200)
+
+
+
+    except ValueError as e:
+
+        if str(e) == '생일':
+
+            return for_exception(407, "올바른 날짜 형식을 기입해야 합니다", status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
+        elif str(e) == '정보없음':
+
+            return for_exception(404, "해당 이메일로 가입된 정보가 없습니다", status.HTTP_404_NOT_FOUND)
+
+        elif str(e) == '비번불일치':
+
+            return for_exception(409, "비밀번호가 일치하지 않습니다", status.HTTP_409_CONFLICT)
+
+        elif str(e) == '비번설정':
+
+            return for_exception(406, "비밀번호는 8자리 이상의 숫자/문자/특수문자의 조합으로 이루어져야 합니다", status.HTTP_406_NOT_ACCEPTABLE)
+
+
+
+
+    except Exception:
+
+        return for_exception(code, message, status_)
+
+
+# 프로필 정보 조회
+@api_view(['GET', 'PATCH'])
+@login_decorator
+def profile(request):
+    try:
+        code = 400
+        message = '파라미터 입력 오류'
+        status_ = status.HTTP_400_BAD_REQUEST
+
+        if request.method == 'GET':
+            userIdx = request.user.userinfo.useridx
+
+            category_interest = Categoryinterest.objects.filter(useridx=userIdx)
+            subcategory_interest = Subcategoryinterest.objects.filter(useridx=userIdx)
+            cate_list=[]
+            subcate_list=[]
+            for i in category_interest:
+                cate_list.append(
+                    dict([('categoryIdx', i.categoryidx.categoryidx), ('categoryName', i.categoryidx.categoryname)]))
+
+
+            for i in subcategory_interest:
+                subcate_list.append(
+                    dict([('subcategoryIdx', i.subcategoryidx.subcategoryidx), ('subcategoryName', i.subcategoryidx.subcategoryname)]))
+
+
+            personal_dict = {}
+            personal_dict['isSuccess'] = 'true'
+            personal_dict['code'] = 200
+            personal_dict['message'] = '프로필 조회 성공'
+
+
+            personal_dict['result'] = dict([('school', request.user.school), ('gender', request.user.gender),
+                                            ('birthday', str(request.user.birthday)), ('level', request.user.level),
+                                            ('job', request.user.job), ('category', cate_list), ('subcategory', subcate_list)
+                                            ])
+
+
+            return_value = json.dumps(personal_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        elif request.method == 'PATCH':
+            p_dict = QueryDict.dict(request.data)
+
+
+            
+            #profile
+            data = request.user
+            data.school = p_dict['school']
+            data.birthday = p_dict['phonenumber']
+            data.level = p_dict['name']
+            data.job = p_dict['nickname']
+            data.gender = p_dict['gender']
+            data.save()
+
+           
+            return JsonResponse({'isSuccess': 'true',
+                                 'code': 200,
+                                 'message': '프로필 수정 성공'}, status=200)
+
+
+
+    except ValueError as e:
+
+        if str(e) == '생일':
+
+            return for_exception(407, "올바른 날짜 형식을 기입해야 합니다", status.HTTP_407_PROXY_AUTHENTICATION_REQUIRED)
+
+        elif str(e) == '정보없음':
+
+            return for_exception(404, "해당 이메일로 가입된 정보가 없습니다", status.HTTP_404_NOT_FOUND)
+
+        elif str(e) == '비번불일치':
+
+            return for_exception(409, "비밀번호가 일치하지 않습니다", status.HTTP_409_CONFLICT)
+
+        elif str(e) == '비번설정':
+
+            return for_exception(406, "비밀번호는 8자리 이상의 숫자/문자/특수문자의 조합으로 이루어져야 합니다", status.HTTP_406_NOT_ACCEPTABLE)
+
+
+
+
+    except Exception:
+
+        return for_exception(code, message, status_)
+
+
+
+
+
+
 
 
 
