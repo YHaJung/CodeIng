@@ -373,8 +373,8 @@ def review_list(request, pk):
             for i in likes:
                 likes_dict[i['review']] = i['count']
 
-            major = {'Y': '전공자', 'N': '비전공자'}
-            job = {'S': '학생', 'D': '개발자', 'N': '비개발 직군'}
+
+            job = {'S': '초등학생', 'D': '전공자/비전공자', 'N': '비전공자/비개발 직군', 'T':'중/고등학생' }
 
             print(len(review_userinfo))
             for r in review_userinfo:
@@ -402,7 +402,7 @@ def review_list(request, pk):
                 review_list.append(dict(
                     [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
                      ('profileImage', r.profile.userinfo.profileimg),
-                     ('job', job[r.profile.job]), ('major', major[r.profile.major]), ('reviewidx', r.reviewidx),
+                     ('job', job[r.profile.job]), ('reviewidx', r.reviewidx),
                      ('totalRating', r.totalrating),
                      ('priceRating', r.pricerating), ('teachingpowerRating', r.teachingpowerrating),
                      ('recommend', r.recommend), ('improvement', r.improvement),
