@@ -16,6 +16,25 @@ from .serializers import ProfileSerializer, UserinfoSerializer, Categoryinterest
     SubcategoryinterestSerializer
 
 
+
+# 삭제 함수(comment or qna or review)
+def delete(list_value, serializer_type):
+    for ele in list_value:
+        item = {}
+        item['isdeleted'] = 'Y'
+        itemQuery = QueryDict('', mutable=True)
+        itemQuery.update(item)
+        print(itemQuery)
+        serializer = serializer_type(ele, data=itemQuery, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            print('성공')
+
+
+
+
+
 def login_decorator(func):
     def wrapper(request, *args, **kwargs):
         try:
@@ -589,19 +608,17 @@ def profile(request):
         if request.method == 'GET':
             userIdx = request.user.userinfo.useridx
 
-            category_interest = Categoryinterest.objects.filter(useridx=userIdx)
-            subcategory_interest = Subcategoryinterest.objects.filter(useridx=userIdx)
+            category_interest = Categoryinterest.objects.filter(useridx=userIdx, isdeleted='N')
+            subcategory_interest = Subcategoryinterest.objects.filter(useridx=userIdx, isdeleted='N')
             cate_list=[]
             subcate_list=[]
             for i in category_interest:
                 cate_list.append(
                     dict([('categoryIdx', i.categoryidx.categoryidx), ('categoryName', i.categoryidx.categoryname)]))
 
-
             for i in subcategory_interest:
                 subcate_list.append(
                     dict([('subcategoryIdx', i.subcategoryidx.subcategoryidx), ('subcategoryName', i.subcategoryidx.subcategoryname)]))
-
 
             personal_dict = {}
             personal_dict['isSuccess'] = 'true'
@@ -610,7 +627,7 @@ def profile(request):
 
 
             personal_dict['result'] = dict([('school', request.user.school), ('gender', request.user.gender),
-                                            ('birthday', str(request.user.birthday)), ('level', request.user.level),
+                                            ('birthday', str(request.user.birthday)), ('level', request.user.level.levelname),
                                             ('job', request.user.job), ('category', cate_list), ('subcategory', subcate_list)
                                             ])
 
@@ -618,21 +635,62 @@ def profile(request):
             return_value = json.dumps(personal_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
+
+        #프로필 수정 ->
         elif request.method == 'PATCH':
             p_dict = QueryDict.dict(request.data)
 
-
+            print(p_dict)
             
-            #profile
+            #profile -> 받아온 데이터 넣기
             data = request.user
+
             data.school = p_dict['school']
-            data.birthday = p_dict['phonenumber']
-            data.level = p_dict['name']
-            data.job = p_dict['nickname']
+            data.birthday = p_dict['birthday']
             data.gender = p_dict['gender']
+            data.level.levelidx = int(p_dict['level'])
+            data.job = p_dict['job']
             data.save()
 
-           
+            # 원래 있던거 삭제하고 다시 넣기
+            category_interest = Categoryinterest.objects.filter(useridx=request.user.userinfo.useridx, isdeleted='N')
+            subcategory_interest = Subcategoryinterest.objects.filter(useridx=request.user.userinfo.useridx, isdeleted='N')
+
+            # category_interst 값 차례로 삭제
+            delete(category_interest, CategoryinterestSerializer)
+            delete(subcategory_interest, SubcategoryinterestSerializer)
+
+            # 새로 받아온 값 생성
+
+            for i in range(len(p_dict['category'])):
+                category_interest = {}
+                category_interest['categoryidx'] = p_dict['category'][i]
+                category_interest['useridx'] = request.user.userinfo.useridx
+                category_interest['isdeleted'] = 'N'
+                print('너 뭐야')
+                # 새로운 값 차례로 넣기
+                query_dict = QueryDict('', mutable=True)
+                query_dict.update(category_interest)
+                serializer = CategoryinterestSerializer(data=query_dict)
+                if serializer.is_valid():
+                    serializer.save()
+
+
+            for i in range(len(p_dict['subcategory'])):
+                subcategory_interest = {}
+                subcategory_interest['subcategoryidx'] = p_dict['subcategory'][i]
+                subcategory_interest['useridx'] = request.user.userinfo.useridx
+                subcategory_interest['isdeleted'] = 'N'
+
+                # 새로운 값 차례로 넣기
+                query_dict = QueryDict('', mutable=True)
+                query_dict.update(subcategory_interest)
+                serializer = SubcategoryinterestSerializer(data=query_dict)
+                if serializer.is_valid():
+                    serializer.save()
+                    print('성공')
+
+
             return JsonResponse({'isSuccess': 'true',
                                  'code': 200,
                                  'message': '프로필 수정 성공'}, status=200)

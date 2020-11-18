@@ -38,3 +38,8 @@ class SubcategoryinterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subcategoryinterest
         fields = ['useridx', 'subcategoryidx', 'isdeleted']
+
+class CategoryinterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Categoryinterest
+        fields = ['useridx', 'categoryidx', 'isdeleted']
