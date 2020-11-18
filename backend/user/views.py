@@ -186,6 +186,7 @@ def login(request):
             token_dict['isSuccess'] = 'true'
             token_dict['code'] = 200
             token_dict['token'] = token
+            token_dict['nickname'] = user.userinfo.nickname
             return_value = json.dumps(token_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
@@ -267,6 +268,9 @@ def sign_up(request):
             userinfo_dict['nickname'] = sign_up_dict['nickname']
             userinfo_dict['isdeleted'] = 'N'
 
+            #닉네임
+            nickname_response = sign_up_dict['nickname']
+
             query_dict = QueryDict('', mutable=True)
             query_dict.update(userinfo_dict)
             print(query_dict)
@@ -296,6 +300,7 @@ def sign_up(request):
             email_dict['isSuccess'] = 'true'
             email_dict['code'] = 200
             email_dict['message'] = '회원가입 성공'
+            email_dict['nickname'] = nickname_response
             return_value = json.dumps(email_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
@@ -510,8 +515,32 @@ def personal_info(request):
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
         elif request.method == 'PATCH':
+            userIdx = request.user.userinfo.useridx
             p_dict = QueryDict.dict(request.data)
-          
+
+            # 이메일 형식 확인
+
+            if not validateEmail(p_dict['email']):  # 이메일에 대한 validation
+                code = 401
+                message = '이메일 형식 오류'
+                status_ = status.HTTP_401_UNAUTHORIZED
+                raise Exception
+
+            # 이메일 존재 확인(나의 이메일 제외 겹치는 이메일 있을 시)
+            exist = Profile.objects.filter(email=p_dict['email'])
+            if exist.userinfo.useridx != userIdx:
+                code = 402
+                message = '이미 존재하는 이메일입니다'
+                status_ = status.HTTP_402_PAYMENT_REQUIRED
+                raise Exception
+                # 에러 일으키기
+
+            if(len(p_dict['name'] == 0) or len(p_dict['nickname'] ==0) or len(p_dict['phonenumber']) == 0):
+                code = 402
+                message = '입력하지 않은 값을 넣어주세요'
+                status_ = status.HTTP_402_PAYMENT_REQUIRED
+                raise Exception
+                # 에러 일으키기
 
             
             #비밀번호 변경
@@ -587,8 +616,6 @@ def personal_info(request):
         elif str(e) == '비번설정':
 
             return for_exception(406, "비밀번호는 8자리 이상의 숫자/문자/특수문자의 조합으로 이루어져야 합니다", status.HTTP_406_NOT_ACCEPTABLE)
-
-
 
 
     except Exception:

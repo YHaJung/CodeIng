@@ -151,7 +151,7 @@ def lecture_list(request):
                     'siteinfo')[page * 6 - 6:page * 6]
             else:
                 lectures = Lecture.objects.filter(lecturename__contains=input_keyword,
-                    level__gte=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
+                    level=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
                     'siteinfo')[page * 6 - 6:page * 6]
 
 
@@ -376,7 +376,7 @@ def review_list(request, pk):
 
             job = {'S': '초등학생', 'D': '전공자/비전공자', 'N': '비전공자/비개발 직군', 'T':'중/고등학생' }
 
-            print(len(review_userinfo))
+            print(len(review_userinfo),"이다")
             for r in review_userinfo:
 
                 if r.isblocked == 'Y':
@@ -393,16 +393,18 @@ def review_list(request, pk):
                 cons2 = cons.filter(review=r.reviewidx)
                 cons_list = []
 
+
                 for p in pros2:
                     pros_list.append(p.pros.prostype)
 
                 for c in cons2:
                     cons_list.append(c.cons.constype)
 
+
                 review_list.append(dict(
                     [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
                      ('profileImage', r.profile.userinfo.profileimg),
-                     ('job', job[r.profile.job]), ('reviewidx', r.reviewidx),
+                     ('job', r.profile.job), ('reviewidx', r.reviewidx),
                      ('totalRating', r.totalrating),
                      ('priceRating', r.pricerating), ('teachingpowerRating', r.teachingpowerrating),
                      ('recommend', r.recommend), ('improvement', r.improvement),
@@ -467,7 +469,11 @@ def review_list(request, pk):
             if serializer.is_valid():
                 serializer.save()
 
-            for pros in pros_list_dict['pros']:
+            # 문자열 ->
+            tmp = pros_list_dict['pros'][1:-1]
+            new_list = tmp.split(',')
+
+            for pros in new_list:
                 temp_pros_dict = {}
                 temp_pros_dict['pros'] = pros
                 temp_pros_dict['review'] = reviewIdx
@@ -480,8 +486,12 @@ def review_list(request, pk):
                 serializer = ReviewprosSerializer(data=query_dict)
                 if serializer.is_valid():
                     serializer.save()
+            # 문자열 ->
+            tmp = cons_list_dict['cons'][1:-1]
+            new_list = tmp.split(',')
 
-            for cons in cons_list_dict['cons']:
+            for cons in new_list:
+
                 temp_cons_dict = {}
                 temp_cons_dict['cons'] = cons
                 temp_cons_dict['review'] = reviewIdx
@@ -489,7 +499,7 @@ def review_list(request, pk):
 
                 query_dict = QueryDict('', mutable=True)
                 query_dict.update(temp_cons_dict)
-                print(temp_cons_dict)
+
 
                 serializer = ReviewconsSerializer(data=query_dict)
                 if serializer.is_valid():
@@ -1263,36 +1273,39 @@ def favorite_lectures(request):
 def my_reviews(request):
     try:
         userIdx = request.user.userinfo.useridx
+
         page = int(request.GET.get('page', '1'))
         if page <= 0:
             page = 1
 
 
         my_review_list=[]
-        my_review = Review.objects.filter(profile=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N')[page * 5 - 5:page * 5]
 
-        pros = Reviewpros.objects.filter(review__profile=userIdx, isdeleted='N')
+        pros = Reviewpros.objects.filter(review__profile__userinfo__useridx=userIdx, isdeleted='N')
 
-        cons = Reviewcons.objects.filter(review__profile=userIdx, isdeleted='N')
+        cons = Reviewcons.objects.filter(review__profile__userinfo__useridx=userIdx, isdeleted='N')
 
-        likes = Likesforreview.objects.filter(review__profile=userIdx).values('review').annotate(count=Count('review'))
+        likes = Likesforreview.objects.filter(review__profile__userinfo__useridx=userIdx).values('review').annotate(count=Count('review'))
 
         for i in my_review:
 
             likes_dict = {}
 
+            #내가 쓴 리뷰 중 하나의 리뷰라도 좋아요를 받았을 경우
             for k in likes:
                 likes_dict[k['review']] = k['count']
 
-                try:
-                    likes_count = likes_dict[i.reviewidx]
-                except Exception:
-                    likes_count = 0
-                    pass
 
-            pros2 = pros.filter(review=i.reviewidx)
+            try:
+                likes_count = likes_dict[i.reviewidx]
+            except Exception:
+                likes_count = 0
+
+
+            pros2 = pros.filter(review__reviewidx=i.reviewidx)
             pros_list = []
-            cons2 = cons.filter(review=i.reviewidx)
+            cons2 = cons.filter(review__reviewidx=i.reviewidx)
             cons_list = []
 
             for p in pros2:
@@ -1300,6 +1313,7 @@ def my_reviews(request):
 
             for c in cons2:
                 cons_list.append(c.cons.constype)
+
 
             my_review_list.append(
                 dict([('reviewIdx', i.reviewidx),('lectureIdx',i.lectureidx.lectureidx),('lectureName',i.lectureidx.lecturename), ('totalRating', i.totalrating), ('priceRating', i.pricerating),
