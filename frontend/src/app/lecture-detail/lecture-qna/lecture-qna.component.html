@@ -1,11 +1,5 @@
 <div *ngIf = "write==false">
-    <section id="search">
-        <form [formGroup]="qnaForm" (submit)="searchQna()">
-            <input type="text" formControlName="question" placeholder="QnA 검색하기"/>
-            <button type="submit">검색</button>
-        </form>
-        <button (click)="goWriteQnaPage()">ADD</button>
-    </section>
+    <button id="addbutton" (click)="goWriteQnaPage()">ADD</button>
     <br/>
     <section id="content">
         <app-qna-card

@@ -47,8 +47,11 @@ export class ApiService {
 
   // 프로그램 주제별 랭킹
   // tslint:disable-next-line:typedef
-  getLecturesRanking() {
+  getALLLecturesRanking() {
     return this.httpClient.get(this.baseUrl + 'lectures-ranking', {headers: this.headers});
+  }
+  getCategoryLecturesRanking(categoryIdx, subcategoryIdx) {
+    return this.httpClient.get(this.baseUrl + 'lectures-ranking?subCategoryIdx='+subcategoryIdx, {headers: this.headers});
   }
   // today's recommend
   // tslint:disable-next-line:typedef
@@ -108,8 +111,8 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl +'my-reviews', {headers: this.headers});
   }
   
-  patchFavoriteLectures(lectureIdx:number){
-    return this.httpClient.patch(this.baseUrl+'favorite-lectures?lectureIdx='+lectureIdx, {headers: this.headers});
+  patchFavoriteLectures(lectureIdx){
+    return this.httpClient.patch(this.baseUrl+'favorite-sites?lectureIdx='+lectureIdx, {headers: this.headers});
   }
   
 

@@ -40,8 +40,7 @@ export class MainComponent implements OnInit {
   //log out
   logout(){
     this.cookieService.deleteAll();
-    this.router.navigate(['/']);
-    window.location.reload();
+    this.router.navigate(['/home/1']);
   }
 
 }

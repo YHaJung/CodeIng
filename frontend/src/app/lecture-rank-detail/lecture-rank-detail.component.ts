@@ -31,27 +31,31 @@ export class LectureRankDetailComponent implements OnInit {
       },
       error => console.log(error)
     );
-    this.apiService.getLecturesRanking().subscribe(
+    this.apiService.getALLLecturesRanking().subscribe(
       data => {
         this.subcategories = data['subcategory'];
         console.log(data);
       },
       error => console.log(error)
     );
-    this.apiService.getLecturesRanking().subscribe(
+    this.apiService.getALLLecturesRanking().subscribe(
       data => {
         this.categories = data['category'];
-        console.log(data);
+        console.log(+data);
       },
       error => console.log(error)
     );
-    this.apiService.getLecturesRanking().subscribe(
+    this.apiService.getCategoryLecturesRanking(1, 1).subscribe(
       data => {
         this.categoryLectures = data['result'];
         console.log(this.categoryLectures);
       },
       error => console.log(error)
     );
+  }
+
+  reloadLectures(){
+
   }
 
   // tslint:disable-next-line:typedef

@@ -15,9 +15,9 @@ export class LectureDetailComponent implements OnInit {
   lectureIdx : string;
 
   setFavoriteLecture(){
-    this.apiService.patchFavoriteLectures(Number(this.lectureIdx)).subscribe(
+    this.apiService.patchFavoriteLectures(2).subscribe(
       result => {
-        console.log(result)
+        console.log(result);
       },
       error => console.log(error)
     );
