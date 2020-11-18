@@ -7,6 +7,10 @@ button{
   border: 0px;
 }
 
+.pagebutton{
+  float: right;
+}
+
 article{
   width: 13vw;
   height: 30vw;

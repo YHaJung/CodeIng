@@ -14,12 +14,16 @@
     <div>
       <h3>프로그램 주제별 랭킹</h3>
     </div>
-    <a href="/lecturerankdetail">
-      <button>전체보기</button>
-    </a>
+    <div>
+      <a href="/lecturerankdetail"> <button>전체보기</button></a>
+      <div class='pagebutton'>
+        <button (click)="rankingPageMinus()"> < </button>
+        <button (click)="rankingPagePuls()"> > </button>
+      </div>
+    </div>
     <div id="wrapper">
       <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
-        0{{lecture.ranking}}
+        {{lecture.ranking + (rankingPage-1)*5}}
         <div class="img-div"><img src="{{lecture?.thumbUrl}}" alt="Card image"></div>
         <div>
           {{lecture.siteName}}
@@ -41,13 +45,17 @@
     <div>
       <h3>오늘의 추천 콘텐츠</h3>
     </div>
-    <a href="/lecturerecommenddetail">
-      <button>전체보기</button>
-    </a>
+    <div>
+      <a href="/lecturerecommenddetail"> <button>전체보기</button></a>
+      <div class='pagebutton'>
+        <button (click)="recommendPageMinus()"> < </button>
+        <button (click)="recommendPagePuls()"> > </button>
+      </div>
+    </div>
     <div id="wrapper">
       <!--recommendoverview 이어야 하지만 안되므로 임시-->
-      <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
-        0{{lecture.ranking}}
+      <article *ngFor="let lecture of recommendoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
+        {{lecture.ranking + (recommendPage-1)*5}}
         <div class="img-div"><img src="{{lecture.thumbUrl}}" alt="Card image"></div>
         <div (click)="lectureClicked(lecture)">
           {{lecture.siteName}}

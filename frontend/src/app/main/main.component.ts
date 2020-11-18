@@ -21,15 +21,11 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.token = this.cookieService.get('token');
   }
-  /* input에서 불러온 값이 기본값으로 들어가 있게(수정에서 사용)
-  searchForm;
-
-  @Input() set text(val){
-    this.searchForm = new FormGroup({
-      title: new FormControl(val.title)
-  });
+  gohome(){
+    if(this.router.url.split('/')[1]=='home'){
+      window.location.reload();
+    }
   }
-  */
   
   /*form */
   keyword='';
