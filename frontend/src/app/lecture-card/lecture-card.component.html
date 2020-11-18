@@ -18,12 +18,8 @@
 
       </section>
     <div id="downer">
-      <button class="btn-cart"> 장바구니</button>
-<!--      <h3>₩{{lecture.price}}</h3>-->
       <h3 class="price" *ngIf="lecture.price == 'free'">무료</h3>
-
       <h3 class="price" *ngIf="lecture.price != 'free'">{{lecture.price}} 원</h3>
-
     </div>
   </div>
 </article>

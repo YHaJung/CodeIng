@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Input} from '@angular/core';
-import { faStar, faBookmark } from '@fortawesome/free-solid-svg-icons';
+import { faStar} from '@fortawesome/free-solid-svg-icons';
 //import {Lecture} from '../lecture/lecture';
 import {ApiService} from '../api.service';
 import {ActivatedRoute} from '@angular/router';//rounter parameter

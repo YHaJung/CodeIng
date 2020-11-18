@@ -1,8 +1,12 @@
 <section id="top-bar">
-    <nav id="nav-auth">
+    <nav class="nav-auth" *ngIf="!token">
         <a href="/signin">로그인</a>&nbsp;
         <a href="/signup">회원가입</a>&nbsp;
-        <a href="/mypage">mypage</a>&nbsp;
+        <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
+    </nav>
+    <nav class="nav-auth" *ngIf="token">
+        <a href="/mypage">마이페이지</a>&nbsp;
+        <a type="button" (click)="logout()">로그아웃</a>
         <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
     </nav>
     <div id="middle">

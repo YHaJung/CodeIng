@@ -2,11 +2,11 @@
 #top-bar{
   margin : var(--main-body-margin);
 }
-#top-bar #nav-auth{
+#top-bar .nav-auth{
   text-align: right;
   font-size: 12px;
 }
-#top-bar #nav-auth a{
+#top-bar .nav-auth a{
   color:var(--main-gray);
 }
 #top-bar #middle{

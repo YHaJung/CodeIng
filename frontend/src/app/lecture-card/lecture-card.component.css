@@ -58,32 +58,23 @@ img{
   color: #FFFFFF;
 }
 
-#upper .lecture-level{
-  /*float: top;*/
-}
-
 #downer{
   padding: 10px;
-}
-
-#downer .btn-cart {
-  width: 80px;
-  height: 22px;
-  left: 978px;
-  margin-bottom: 15px;
-  /*margin: auto;*/
-  font-size: 10px;
-  color: white;
-  float: right;
-  background: #0155FB;
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
-  border-radius: 10px;
 }
 #downer .price {
   margin-bottom: 2px;
   /*margin: auto;*/
   font-size: 12px;
+  float: left;
 }
+#downer .favorite-lecture {
+  margin-bottom: 15px;
+  /*margin: auto;*/
+  font-size: 10px;
+  color :var(--main-blue);
+  float: right;
+}
+
 h1{
     font-size: 1.5vw;
 }
