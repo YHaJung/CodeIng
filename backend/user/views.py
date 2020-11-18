@@ -186,6 +186,7 @@ def login(request):
             token_dict['isSuccess'] = 'true'
             token_dict['code'] = 200
             token_dict['token'] = token
+            token_dict['nickname'] = user.userinfo.nickname
             return_value = json.dumps(token_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
@@ -267,6 +268,9 @@ def sign_up(request):
             userinfo_dict['nickname'] = sign_up_dict['nickname']
             userinfo_dict['isdeleted'] = 'N'
 
+            #닉네임
+            nickname_response = sign_up_dict['nickname']
+
             query_dict = QueryDict('', mutable=True)
             query_dict.update(userinfo_dict)
             print(query_dict)
@@ -296,6 +300,7 @@ def sign_up(request):
             email_dict['isSuccess'] = 'true'
             email_dict['code'] = 200
             email_dict['message'] = '회원가입 성공'
+            email_dict['nickname'] = nickname_response
             return_value = json.dumps(email_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
