@@ -9,7 +9,10 @@
     <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
   </nav>
 </section>
-<section id="main-recommend" *ngFor="let lecture of lectures">
-  <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
+
+<section id="main-recommend">
+  <div class="lecturecard" *ngFor="let lecture of lectures">
+    <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
+  </div>
 </section>
 

@@ -12,6 +12,7 @@ import {QnaCardModule} from "../cards/qna-card/qna-card.module";
 import {RouterModule, Routes} from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {ReactiveFormsModule} from '@angular/forms';
+import { WriteReviewComponent } from './write-review/write-review.component';
 
 
 const routes: Routes = [
@@ -25,6 +26,7 @@ const routes: Routes = [
     LectureReviewComponent,
     LectureQnaComponent,
     WriteLectureQnaComponent,
+    WriteReviewComponent
   ],
   imports: [
     CommonModule,

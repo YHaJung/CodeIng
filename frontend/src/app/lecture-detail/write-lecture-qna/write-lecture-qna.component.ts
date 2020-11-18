@@ -40,7 +40,7 @@ export class WriteLectureQnaComponent implements OnInit {
       result => console.log(result),
       error => console.log(error)
     );
-    
+    this.finish.emit();
   }
 
   ngOnInit(): void {

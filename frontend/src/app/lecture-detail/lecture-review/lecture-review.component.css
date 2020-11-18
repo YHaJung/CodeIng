@@ -6,3 +6,7 @@ section .card{
     margin: 10px 0px 10px 0px;
     padding: 10px;
 }
+
+section p #write-review{
+    text-align: right;
+}

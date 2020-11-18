@@ -15,6 +15,12 @@ export class LectureRankDetailComponent implements OnInit {
   categoryLectures:any=[];
   selectedLecture = null;
 
+  subcategoryNum = 10;
+
+  getMoreSubcategory(){
+    this.subcategoryNum += 10;
+  }
+
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {

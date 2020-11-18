@@ -7,7 +7,6 @@ import {ApiService} from '../api.service';
   styleUrls: ['./lecture-recommend-detail.component.css']
 })
 export class LectureRecommendDetailComponent implements OnInit {
-
   lectures: any = [];
   selectedLecture = null;
 

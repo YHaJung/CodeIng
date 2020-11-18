@@ -30,8 +30,8 @@ export class ApiService {
   searchLecturesAll(keyword) {
     return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword, {headers: this.headers});
   }
-  searchLecturesFilter(keyword, rate, level) {
-    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword+'&rating='+rate+'&level='+level, {headers: this.headers});
+  searchLecturesFilter(keyword, rate, level, price) {
+    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword+'&rating='+rate+'&level='+level+'&price='+price, {headers: this.headers});
   }
 
 
@@ -53,7 +53,7 @@ export class ApiService {
   // today's recommend
   // tslint:disable-next-line:typedef
   getLecturesRecommend() {  // 나중에 api 바꾸기
-    return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'api/recommendlist', {headers: this.headers});
   }
 
  //강의 상세
@@ -71,11 +71,15 @@ export class ApiService {
   getLectureQnas(lectureIdx : number){
     return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx+'/qna', {headers: this.headers});
   }
- 
   createLectureQnas(lectureIdx : number, title : string, qnades : string, image : string[]){              //
-    const newQna = JSON.stringify({title, qnades, image})
-    console.log(newQna);
-    return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna', newQna, {headers: this.headers});
+    const body = JSON.stringify({title, qnades, image})
+    console.log(body);
+    return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna', body, {headers: this.headers});
+  }
+  createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:[], cons:[]){              //
+    const body = JSON.stringify({totalrating, teachingpowerrating, pricerating, recommend, improvement, pros, cons});
+    console.log(body);
+    return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/review', body, {headers: this.headers});
   }
 
   /*
@@ -100,12 +104,14 @@ export class ApiService {
   getFavoriteLectures(){
     return this.httpClient.get(this.baseUrl+'favorite-lectures', {headers: this.headers});
   }
-  /*patch parameter 물어보고 다시
-  patchFavoriteLectures(lectureIdx:number){
-    const body = JSON.stringify({lectureIdx});
-    return this.httpClient.patch(this.baseUrl+'favorite-lectures', body, {headers: this.headers});
+  getMyReviews(){
+    return this.httpClient.get(this.baseUrl +'my-reviews', {headers: this.headers});
   }
-  */
+  
+  patchFavoriteLectures(lectureIdx:number){
+    return this.httpClient.patch(this.baseUrl+'favorite-lectures?lectureIdx='+lectureIdx, {headers: this.headers});
+  }
+  
 
   //개인정보조회
   /*

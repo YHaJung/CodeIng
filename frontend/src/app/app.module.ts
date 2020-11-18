@@ -14,6 +14,8 @@ import {BasketModule} from './basket/basket.module';
 import {MypageNavModule} from './mypage/mypage-nav/mypage-nav.module';
 import {MypageSpecificModule} from './mypage/mypage-specific/mypage-specific.module';
 import {FavoriteLecturesModule} from './mypage/favorite-lectures/favorite-lectures.module';
+import {FavoriteSitesModule} from './mypage/favorite-sites/favorite-sites.module';
+import {MyreviewsModule} from './mypage/myreviews/myreviews.module';
 
 import {MainModule} from './main/main.module';
 import {LectureRecommendDetailModule} from './lecture-recommend-detail/lecture-recommend-detail.module';
@@ -21,6 +23,7 @@ import {LectureRankDetailModule} from './lecture-rank-detail/lecture-rank-detail
 import {LectureSearchModule} from './lecture-search/lecture-search.module';
 import {LectureDetailModule} from './lecture-detail/lecture-detail.module';
 import {LectureCardModule} from './lecture-card/lecture-card.module';
+
 
 import {SigninModule} from './auth/signin/signin.module';
 import {SignupModule} from './auth/signup/signup.module';
@@ -60,6 +63,8 @@ const appRoutes: Routes = [
     MypageNavModule,
     MypageSpecificModule,
     FavoriteLecturesModule,
+    FavoriteSitesModule,
+    MyreviewsModule,
     MainModule,
     LectureRecommendDetailModule,
     LectureRankDetailModule,

@@ -24,15 +24,20 @@
     </div>
     <div class="col-sm-9">
       <h1 id="ranking">웹 프론트엔드 랭킹</h1>
-      <button class="btn-cat" *ngFor = "let subcategory of subcategories | slice:0:10; let i=index">
-        {{subcategory.subcategoryName}}
-      </button>
-      <button class="btn-cat">
-      ...
-      </button>
+      <div>
+        <button class="btn-cat" *ngFor = "let subcategory of subcategories | slice:0:subcategoryNum; let i=index">
+          {{subcategory.subcategoryName}}
+        </button>
+        <button class="btn-cat" (click)='getMoreSubcategory()'>...</button>
+      </div>
       <section id="main-ranking" *ngFor="let lecture of categoryLectures ">
         <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
       </section>
+      <div id="page-button-div">
+        <button> < </button>
+        <button> 1 </button>
+        <button> < </button>
+      </div>
     </div>
   </div>
 </div>
