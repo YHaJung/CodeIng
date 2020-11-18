@@ -151,7 +151,7 @@ def lecture_list(request):
                     'siteinfo')[page * 6 - 6:page * 6]
             else:
                 lectures = Lecture.objects.filter(lecturename__contains=input_keyword,
-                    level__gte=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
+                    level=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
                     'siteinfo')[page * 6 - 6:page * 6]
 
 
@@ -393,6 +393,7 @@ def review_list(request, pk):
                 cons2 = cons.filter(review=r.reviewidx)
                 cons_list = []
 
+
                 for p in pros2:
                     pros_list.append(p.pros.prostype)
 
@@ -402,7 +403,7 @@ def review_list(request, pk):
                 review_list.append(dict(
                     [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
                      ('profileImage', r.profile.userinfo.profileimg),
-                     ('job', job[r.profile.job]), ('reviewidx', r.reviewidx),
+                     ('job', r.profile.job), ('reviewidx', r.reviewidx),
                      ('totalRating', r.totalrating),
                      ('priceRating', r.pricerating), ('teachingpowerRating', r.teachingpowerrating),
                      ('recommend', r.recommend), ('improvement', r.improvement),
