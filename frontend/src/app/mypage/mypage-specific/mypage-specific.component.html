@@ -3,5 +3,7 @@
     <app-mypage-nav id="left" [key]="mypagekey"></app-mypage-nav>
     <div id="center">
         <app-favorite-lectures *ngIf="mypagekey==1"></app-favorite-lectures>
+        <app-favorite-sites *ngIf="mypagekey==2"></app-favorite-sites>
+        <app-myreviews *ngIf="mypagekey==3"></app-myreviews>
     </div>
 </div>

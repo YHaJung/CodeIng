@@ -1,4 +1,8 @@
 #main-recommend{
   margin: 4vw 24vw 4vw 24vw;
+}
+
+#main-recommend .lecturecard{
   border:1px solid var(--main-gray);
 }
+

@@ -1,0 +1,60 @@
+<form [formGroup]="wirteReviewForm" (submit)="creatReview()">
+    <br/>
+    <div class="grid-layout">
+        <div id="left">
+            <div>
+                <input type="radio" formControlName="satisfy" value="Y">만족
+                <input type="radio" formControlName="satisfy" value="N">불만족
+            </div>
+            <br/>
+            <div>
+                평점<br/><!-- class="orange" -->
+                <fa-icon
+                  [icon]="star" 
+                  *ngFor="let rate of [1,2,3,4,5]" 
+                  (mouseenter)="rateHover(rate)"
+                  (mouseleave) = "rateHovered=0"
+                  (click)="rateClicked(rate)"
+                  [ngClass]="{'orange':clickedRate >= rate}"
+                ></fa-icon>
+            </div>
+            <br/>
+            <div>
+                수준<br/>
+                <fa-icon
+                  [icon]="star" 
+                  *ngFor="let level of [1,2,3,4,5]" 
+                  (mouseenter)="levelHover(level)"
+                  (mouseleave) = "levelHovered=0"
+                  (click)="levelClicked(level)"
+                  [ngClass]="{'orange':clickedLevel >= level}"
+                ></fa-icon>
+            </div>
+            <br/>
+            <div>
+                가격만족도<br/>
+                <span
+                  *ngFor="let price of [1,2,3,4,5]" 
+                  (mouseenter)="priceHover(price)"
+                  (mouseleave) = "priceHovered=0"
+                  (click)="priceClicked(price)"
+                  [ngClass]="{'orange':clickedPrice >= price }"
+                >-O</span>
+            </div>
+        </div>
+
+        <div id="right">
+            <label> 개선사항 </label><br/>
+            <textarea type="text" formControlName="improvement"></textarea><br/>
+            <label> 장점 </label><br/>
+            <textarea type="text" formControlName="pros"></textarea><br/>
+            <label> 단점 </label><br/>
+            <textarea type="text" formControlName="cons"></textarea><br/>
+        </div>
+    </div>
+    <br/>
+    <section>
+        <button (click)="cancealWriting()">취소</button>
+        <button>저장</button>
+    </section>
+</form>

@@ -35,7 +35,14 @@
       ></fa-icon>
     </div>
     <div>
-      <p>가격</p>
+      가격<br/>
+      <span
+        *ngFor="let price of [1,2,3,4,5]" 
+        (mouseenter)="priceHover(price)"
+        (mouseleave) = "priceHovered=0"
+        (click)="priceClicked(price)"
+        [ngClass]="{'orange':priceHovered >= price }"
+      >-O</span>
     </div>
   </section>
 

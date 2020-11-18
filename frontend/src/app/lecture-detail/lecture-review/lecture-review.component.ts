@@ -27,6 +27,13 @@ export class LectureReviewComponent implements OnInit {
       },
       error => console.log(error)
     );
+  }
 
+  write = false;
+  goWriteReviewPage(){
+    this.write = true;
+  }
+  writeFinished(){
+    this.write = false;
   }
 }

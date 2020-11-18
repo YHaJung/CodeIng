@@ -15,7 +15,6 @@ export class LectureDetailComponent implements OnInit {
   lectureIdx : string;
 
   setFavoriteLecture(){
-    /*
     this.apiService.patchFavoriteLectures(Number(this.lectureIdx)).subscribe(
       result => {
         console.log(result)
@@ -27,7 +26,6 @@ export class LectureDetailComponent implements OnInit {
     }else{
       this.favoriteLecture = false;
     }
-    */
   }
 
 

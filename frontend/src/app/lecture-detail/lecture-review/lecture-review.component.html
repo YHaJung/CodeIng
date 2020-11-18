@@ -1,7 +1,12 @@
-<section>
+<section *ngIf="write == false">
+    <button id="write-review" (click)="goWriteReviewPage()">리뷰 작성하기</button>
     <app-review-card
         class="card"
         *ngFor="let review of reviews"
         [review]="review"
     ></app-review-card>
+</section>
+
+<section *ngIf="write == true">
+    <app-write-review (finish)="writeFinished()"></app-write-review>
 </section>

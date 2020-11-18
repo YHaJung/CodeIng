@@ -5,6 +5,8 @@ import { RouterModule, Routes } from '@angular/router';
 import {MainModule} from "../../main/main.module";
 import {MypageNavModule} from "../mypage-nav/mypage-nav.module";
 import {FavoriteLecturesModule} from '../favorite-lectures/favorite-lectures.module';
+import {FavoriteSitesModule} from '../favorite-sites/favorite-sites.module';
+import {MyreviewsModule} from '../myreviews/myreviews.module';
 
 const routes: Routes = [
   {path: 'mypage-specific/:mypagekey', component: MypageSpecificComponent}
@@ -17,7 +19,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     MainModule,
     MypageNavModule,
-    FavoriteLecturesModule
+    FavoriteLecturesModule,
+    FavoriteSitesModule,
+    MyreviewsModule
   ]
 })
 export class MypageSpecificModule { }

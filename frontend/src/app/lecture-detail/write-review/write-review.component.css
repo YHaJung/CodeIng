@@ -1,0 +1,16 @@
+.grid-layout{
+    display:grid;
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 20px;
+}
+
+fa-icon.orange{
+    color:orange;
+}
+.orange{
+    color:orange;
+}
+
+.grid-layout #right textarea{
+    width: 100%;
+}
