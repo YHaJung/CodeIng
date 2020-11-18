@@ -376,7 +376,7 @@ def review_list(request, pk):
 
             job = {'S': '초등학생', 'D': '전공자/비전공자', 'N': '비전공자/비개발 직군', 'T':'중/고등학생' }
 
-            print(len(review_userinfo))
+            print(len(review_userinfo),"이다")
             for r in review_userinfo:
 
                 if r.isblocked == 'Y':
@@ -399,6 +399,7 @@ def review_list(request, pk):
 
                 for c in cons2:
                     cons_list.append(c.cons.constype)
+
 
                 review_list.append(dict(
                     [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
