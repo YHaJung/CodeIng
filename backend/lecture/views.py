@@ -191,6 +191,8 @@ def lecture_list(request):
                     price_sql = 'free'
                 elif price_sql == -1:
                     price_sql = 'membership'
+                else:
+                    price_sql = format(price_sql,',')
 
                 info.append(
                     dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename), ('professor', lec.lecturer),
@@ -357,6 +359,9 @@ def lecture_detail(request, pk):
             price_sql = 'free'
         elif price_sql == -1:
             price_sql = 'membership'
+
+        else:
+            price_sql = format(price_sql, ',')
 
         detail_dict['result'] = dict([('lectureIdx', lecture.lectureidx), ('lectureName', lecture.lecturename),
                                       ('lectureLink', lecture.lecturelink),
@@ -1228,6 +1233,8 @@ def favorite_lectures(request):
                     price_sql = 'free'
                 elif price_sql == -1:
                     price_sql = 'membership'
+                else:
+                    price_sql = format(price_sql,',')
 
                 favlectures_list.append(
                     dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level.levelname),
