@@ -517,6 +517,7 @@ def personal_info(request):
         elif request.method == 'PATCH':
             userIdx = request.user.userinfo.useridx
             p_dict = QueryDict.dict(request.data)
+            print(p_dict)
 
             # 이메일 형식 확인
 
@@ -527,7 +528,8 @@ def personal_info(request):
                 raise Exception
 
             # 이메일 존재 확인(나의 이메일 제외 겹치는 이메일 있을 시)
-            exist = Profile.objects.filter(email=p_dict['email'])
+            exist = Profile.objects.get(email=p_dict['email'])
+
             if exist.userinfo.useridx != userIdx:
                 code = 402
                 message = '이미 존재하는 이메일입니다'
@@ -535,51 +537,54 @@ def personal_info(request):
                 raise Exception
                 # 에러 일으키기
 
-            if(len(p_dict['name'] == 0) or len(p_dict['nickname'] ==0) or len(p_dict['phonenumber']) == 0):
+            if len(p_dict['name']) == 0 or len(p_dict['nickname']) ==0 or len(p_dict['phonenumber']) == 0:
                 code = 402
                 message = '입력하지 않은 값을 넣어주세요'
                 status_ = status.HTTP_402_PAYMENT_REQUIRED
                 raise Exception
                 # 에러 일으키기
 
-            
+
+
             #비밀번호 변경
             if "userpwd" in p_dict and "userpwdConfirm" in p_dict:
                 
-                # 비번 안 바꿀 경우 
-                if len(p_dict['userpwd']) == 0 and len(p_dict['userpwdConfirm'] == 0):
+                # 비번 안 바꿀 경우
+                if len(p_dict['userpwd']) == 0 and len(p_dict['userpwdConfirm']) == 0:
+
                     data = request.user
                     data.email = p_dict['email']
                     data.phonenumber = p_dict['phonenumber']
                     data.name = p_dict['name']
                     data.nickname = p_dict['nickname']
                     data.save()
-                    
-                    
-                     
 
-                if(p_dict['userpwd'] != p_dict['userpwdConfirm']):
+
+                elif p_dict['userpwd'] != p_dict['userpwdConfirm']:
                     raise ValueError("비번불일치")
 
-                # 비밀번호 validation
-                validatePasswd(p_dict['userpwd'])
+                else:
+                    # 비밀번호 validation
+                    validatePasswd(p_dict['userpwd'])
 
-                # 비밀번호 암호화
-                password = p_dict['userpwd'].encode('utf-8')  # 입력된 패스워드를 바이트 형태로 인코딩
-                password_crypt = bcrypt.hashpw(password, bcrypt.gensalt())  # 암호화된 비밀번호 생성
-                password_crypt = password_crypt.decode('utf-8')  # DB에 저장할 수 있는 유니코드 문자열 형태로 디코딩
-                p_dict['userpwd'] = password_crypt
+                    # 비밀번호 암호화
+                    password = p_dict['userpwd'].encode('utf-8')  # 입력된 패스워드를 바이트 형태로 인코딩
+                    password_crypt = bcrypt.hashpw(password, bcrypt.gensalt())  # 암호화된 비밀번호 생성
+                    password_crypt = password_crypt.decode('utf-8')  # DB에 저장할 수 있는 유니코드 문자열 형태로 디코딩
+                    p_dict['userpwd'] = password_crypt
 
 
-                data = request.user
-                data.email = p_dict['email']
-                data.phonenumber = p_dict['phonenumber']
-                data.name = p_dict['name']
-                data.nickname = p_dict['nickname']
-                data.userPwd = p_dict['userpwd']
-                data.save()
-            #비번 안 바꿀 경우 -> Key 줄 때
+                    data = request.user
+                    data.email = p_dict['email']
+                    data.phonenumber = p_dict['phonenumber']
+                    data.name = p_dict['name']
+                    data.nickname = p_dict['nickname']
+                    data.userpwd = p_dict['userpwd']
+                    data.save()
+
+            #비번 안 바꿀 경우 -> Key 안 줄 때
             elif "userpwd" not in p_dict and "userpwdConfirm" not in p_dict:
+
                 data = request.user
                 data.email = p_dict['email']
                 data.phonenumber = p_dict['phonenumber']
@@ -672,6 +677,9 @@ def profile(request):
             #profile -> 받아온 데이터 넣기
             data = request.user
 
+            if len(p_dict['birthday']) != 0:
+                validateBirth(p_dict['birthday'])
+
             data.school = p_dict['school']
             data.birthday = p_dict['birthday']
             data.gender = p_dict['gender']
@@ -694,7 +702,6 @@ def profile(request):
                 category_interest['categoryidx'] = p_dict['category'][i]
                 category_interest['useridx'] = request.user.userinfo.useridx
                 category_interest['isdeleted'] = 'N'
-                print('너 뭐야')
                 # 새로운 값 차례로 넣기
                 query_dict = QueryDict('', mutable=True)
                 query_dict.update(category_interest)

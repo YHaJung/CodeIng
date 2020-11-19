@@ -127,7 +127,7 @@ def lecture_list(request):
     if request.method == 'GET':
         try:
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
-            selected_level = float(request.GET.get('level', '0'))
+            selected_level = int(request.GET.get('level', '0'))
             selected_price = int(request.GET.get('price', '0'))
             selected_rating = float(request.GET.get('rating', '0'))
             input_keyword = request.GET.get('keyword','')
@@ -146,13 +146,32 @@ def lecture_list(request):
 
             if input_keyword =='':
                 # 쿼리문
-                lectures = Lecture.objects.filter(
-                    level=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
-                    'siteinfo')[page * 6 - 6:page * 6]
+                if selected_level == 0:
+                    lectures = Lecture.objects.filter(
+                        rating__gte=selected_rating)[page * 6 - 6:page * 6]
+
+                else:
+                    lectures = Lecture.objects.filter(
+                        level__levelidx=selected_level, rating__gte=selected_rating,
+                        price__lte=selected_price).select_related(
+                        'siteinfo')[page * 6 - 6:page * 6]
+
+
+
+
             else:
-                lectures = Lecture.objects.filter(lecturename__contains=input_keyword,
-                    level=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
-                    'siteinfo')[page * 6 - 6:page * 6]
+                if selected_level == 0:
+                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                                                      rating__gte=selected_rating,
+                                                      price__lte=selected_price).select_related(
+                        'siteinfo')[page * 6 - 6:page * 6]
+
+
+                else:
+
+                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                        level__levelidx=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
+                        'siteinfo')[page * 6 - 6:page * 6]
 
 
             lec_dict = {}
@@ -161,8 +180,12 @@ def lecture_list(request):
             lec_dict['message'] = '강의 목록 조회 성공'
             info = []
 
+
             for lec in lectures:
+
+
                 h = lec.siteinfo.sitename
+
                 price_sql = lec.price
                 if price_sql == 0:
                     price_sql = 'free'
@@ -171,9 +194,9 @@ def lecture_list(request):
 
                 info.append(
                     dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename), ('professor', lec.lecturer),
-                          ('price', price_sql), ('level', lec.level), ('rating', lec.rating),
+                          ('price', price_sql), ('level', lec.level.levelname), ('rating', lec.rating),
                           ('thumbUrl', lec.thumburl), ('siteName', h)]))
-
+            print('흐ㅡㅇㅁ')
             lec_dict['result'] = info
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -338,7 +361,7 @@ def lecture_detail(request, pk):
 
         detail_dict['result'] = dict([('lectureIdx', lecture.lectureidx), ('lectureName', lecture.lecturename),
                                       ('lectureLink', lecture.lecturelink),
-                                      ('price', price_sql), ('level', lecture.level), ('rating', lecture.rating), ('thumbUrl', lecture.thumburl)])
+                                      ('price', price_sql), ('level', lecture.level.levelname), ('rating', lecture.rating), ('thumbUrl', lecture.thumburl)])
 
         return_value = json.dumps(detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
