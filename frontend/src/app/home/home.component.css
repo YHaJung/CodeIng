@@ -9,6 +9,10 @@ button{
 
 .pagebutton{
   float: right;
+  background-color: #ffffff;
+}
+.pagebutton button{
+  background-color: #ffffff;
 }
 
 article{

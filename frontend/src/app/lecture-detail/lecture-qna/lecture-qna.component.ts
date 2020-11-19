@@ -10,14 +10,6 @@ import {ActivatedRoute} from '@angular/router';
 })
 export class LectureQnaComponent implements OnInit {
   lectureIdx : number;
-  /*form */
-  qnaForm = new FormGroup({
-    question: new FormControl(''),
-    //desciption: new FormControl(''),
-  });
-  searchQna(){
-    console.log(this.qnaForm.value);
-  }
 
   write = false;
   goWriteQnaPage(){
