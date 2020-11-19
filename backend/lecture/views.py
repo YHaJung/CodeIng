@@ -196,7 +196,6 @@ def lecture_list(request):
                     dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename), ('professor', lec.lecturer),
                           ('price', price_sql), ('level', lec.level.levelname), ('rating', lec.rating),
                           ('thumbUrl', lec.thumburl), ('siteName', h)]))
-            print('흐ㅡㅇㅁ')
             lec_dict['result'] = info
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -273,7 +272,7 @@ def lectures_ranking(request):
 
             category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename','lecture__rating',
                                                            'lecture__lecturer', 'lecture__thumburl', 'lecture__price',
-                                                           'lecture__level', 'lecture__siteinfo__sitename').distinct()[
+                                                           'lecture__level__levelname', 'lecture__siteinfo__sitename').distinct()[
                                    page * 5 - 5:page * 5]
 
 
@@ -294,7 +293,7 @@ def lectures_ranking(request):
                 rank.append(
                     dict([('lectureIdx', c['lecture__lectureidx']), ('lectureName', c['lecture__lecturename']),
                           ('professor', c['lecture__lecturer']),('rating', c['lecture__rating']),
-                          ('price', price_sql), ('level', c['lecture__level']), ('thumbUrl', c['lecture__thumburl']),
+                          ('price', price_sql), ('level', c['lecture__level__levelname']), ('thumbUrl', c['lecture__thumburl']),
                           ('siteName', c['lecture__siteinfo__sitename'])]))
 
             lec_rank_dict['result'] = rank
@@ -1231,7 +1230,7 @@ def favorite_lectures(request):
                     price_sql = 'membership'
 
                 favlectures_list.append(
-                    dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level),
+                    dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level.levelname),
                           ('rating',i.lecture.rating),('thumbUrl',i.lecture.thumburl),('siteName',i.lecture.siteinfo.siteidx),('professor',i.lecture.lecturer)]))
 
 
