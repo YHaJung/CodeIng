@@ -231,7 +231,7 @@ def CBRSlist(request):
     #               ('siteinfo', i[0]['siteinfo']),
     #               ]))
     for lectureidx in krecommend:
-        i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
+        i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                  'level', 'price', 'rating',
                                                                  'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
