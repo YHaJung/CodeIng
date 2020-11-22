@@ -134,6 +134,9 @@ def CBRS(request):
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
         selectIdx = int(request.GET.get('selectIdx', '1'))
         nneigh = 5
+        # print(pk)
+        # print(recommend[pk])
+        # print(np.argsort(-recommend[int(pk)])[:5] )
         krecommend = np.argsort(-recommend[int(pk)])[5 * selectIdx - 5:nneigh * selectIdx]
 
         overview_list = []
@@ -159,8 +162,9 @@ def CBRS(request):
         #               ('rating', i[0]['rating']),
         #               ('siteinfo', i[0]['siteinfo']),
         #               ]))
+        # print(krecommend)
         for lectureidx in krecommend:
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
+            i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
                     'siteinfo').distinct()
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
