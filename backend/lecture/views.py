@@ -292,6 +292,8 @@ def lectures_ranking(request):
                     price_sql = 'free'
                 elif price_sql == -1:
                     price_sql = 'membership'
+                else:
+                    price_sql = format(price_sql, ',')
                 rank.append(
                     dict([('lectureIdx', c['lecture__lectureidx']), ('lectureName', c['lecture__lecturename']),
                           ('professor', c['lecture__lecturer']),('rating', c['lecture__rating']),
@@ -328,6 +330,9 @@ def ranking_overview(request):
             '-lecture__rating')[:5]
         cnt = 1
         for i in overview2:
+
+
+
             overview_list.append(
                 dict([('ranking', cnt), ('lectureIdx', i['lecture__lectureidx']),
                       ('lectureName', i['lecture__lecturename']),
@@ -342,6 +347,51 @@ def ranking_overview(request):
     except Exception:
 
         return for_exception()
+
+
+
+@api_view(['GET'])
+def overall_ranking(request):
+    try:
+        overview_list = []
+        overview_dict = {}
+        overview_dict['isSuccess'] = 'true'
+        overview_dict['code'] = 200
+        overview_dict['message'] = '강의 전체 랭킹 조회 성공'
+
+        lectures = Lecture.objects.all().order_by('-rating')[:5]
+        for lec in lectures:
+            price_sql = lec.price
+
+            if price_sql == 0:
+                price_sql = 'free'
+            elif price_sql == -1:
+                price_sql = 'membership'
+            else:
+                price_sql = format(price_sql, ',')
+
+            overview_list.append(
+                dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename),
+                      ('siteName', lec.siteinfo.sitename),
+                      ('price', price_sql), ('thumbUrl', lec.thumburl),
+                      ('rating', lec.rating), ('level', lec.level.levelname)]))
+
+        overview_dict['result'] = overview_list
+        return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Exception:
+
+        return for_exception()
+
+
+
+
+
+
+
+
 
 
 @api_view(['GET'])
