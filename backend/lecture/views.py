@@ -1352,7 +1352,6 @@ def favorite_lectures(request):
 def my_reviews(request):
     try:
         userIdx = request.user.userinfo.useridx
-
         page = int(request.GET.get('page', '1'))
         if page <= 0:
             page = 1
