@@ -129,6 +129,7 @@ def recommend_save(request):
 def CBRS(request):
     try:
         pk = request.user.userinfo.useridx
+
         data = pickle.load(open('knn_models/data.pkl', 'rb'))
         querys = pickle.load(open('knn_models/query.pkl', 'rb'))
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
