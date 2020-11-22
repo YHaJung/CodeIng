@@ -358,7 +358,7 @@ class Favoritesite(models.Model):
     updatedat = models.DateTimeField(db_column='updatedAt', auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
+    user = models.ForeignKey(Userinfo, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
     siteinfo = models.ForeignKey(Siteinfo, on_delete=models.CASCADE, db_column='siteIdx')  # Field name made lowercase.
 
 
@@ -373,7 +373,7 @@ class Favoritelecture(models.Model):
     updatedat = models.DateTimeField(db_column='updatedAt', auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
+    user = models.ForeignKey(Userinfo, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, db_column='lectureIdx')  # Field name made lowercase.
 
     class Meta:

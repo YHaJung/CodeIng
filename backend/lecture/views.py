@@ -196,7 +196,7 @@ def lecture_list(request):
 
                 info.append(
                     dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename), ('professor', lec.lecturer),
-                          ('price', price_sql), ('level', lec.level.levelname), ('rating', lec.rating),
+                          ('price', price_sql), ('levelIdx', lec.level.levelidx), ('levelName', lec.level.levelname), ('rating', lec.rating),
                           ('thumbUrl', lec.thumburl), ('siteName', h)]))
             lec_dict['result'] = info
 
@@ -1221,7 +1221,7 @@ def favorite_sites(request):
         elif request.method == 'PATCH':
             userIdx = request.user.userinfo.useridx
             siteIdx = int(request.GET.get('siteIdx'))
-            favsite = Favoritesite.objects.filter(user=userIdx, siteinfo=siteIdx)
+            favsite = Favoritesite.objects.filter(user=userIdx, siteinfo__siteidx=siteIdx)
             favsite_dict = {}
             if favsite.exists():
 
@@ -1244,19 +1244,21 @@ def favorite_sites(request):
                 favsite_dict['isdeleted'] ='N'
                 favsiteQuery = QueryDict('', mutable=True)
                 favsiteQuery.update(favsite_dict)
+                print(favsiteQuery)
 
                 serializer = FavoritesiteSerializer(data=favsiteQuery)
+
                 if serializer.is_valid():
                     serializer.save()
 
-            favsite_dict = {}
-            favsite_dict['isSuccess'] = 'true'
-            favsite_dict['code'] = 200
-            favsite_dict['message'] = '사이트 즐겨찾기 여부 변경'
+            favlec_dict = {}
+            favlec_dict['isSuccess'] = 'true'
+            favlec_dict['code'] = 200
+            favlec_dict['message'] = '사이트 즐겨찾기 여부 변경'
 
+            return_value = json.dumps(favlec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
-            return_value = json.dumps(favsite_dict, indent=4, use_decimal=True, ensure_ascii=False)
-            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_Ok)
 
 
     except Favoritesite.DoesNotExist:
@@ -1316,18 +1318,19 @@ def favorite_lectures(request):
 
                 favlectureQuery = QueryDict('', mutable=True)
                 favlectureQuery.update(favlectures_dict)
+                print(favlectureQuery)
                 serializer = FavoritelectureSerializer(favlectures[0], data=favlectureQuery, partial=True)
 
                 if serializer.is_valid():
                     serializer.save()
 
             else:
-
                 favlectures_dict['user'] = userIdx
                 favlectures_dict['lecture'] = lectureIdx
                 favlectures_dict['isdeleted'] ='N'
                 favlectureQuery = QueryDict('', mutable=True)
                 favlectureQuery.update(favlectures_dict)
+                print(favlectureQuery)
 
                 serializer = FavoritelectureSerializer(data=favlectureQuery)
                 if serializer.is_valid():
