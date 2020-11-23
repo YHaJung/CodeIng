@@ -6,12 +6,19 @@ import {ApiService} from '../api.service';
   templateUrl: './lecture-rank-detail.component.html',
   styleUrls: ['./lecture-rank-detail.component.css']
 })
-export class LectureRankDetailComponent implements OnInit {
 
+export class LectureRankDetailComponent implements OnInit {
+  subcategories :any =[];
+  categories :any=[];
+  lectures:any=[];
+
+  pages = [1, 2, 3 ,4, 5];
+  currentPage = 1;
+  currentCategoryIdx = 1;
+  currentSubCategoryIdx = 1;
 
   allLectures: any = [];
-  subcategories:any=[];
-  categories:any=[];
+  
   categoryLectures:any=[];
   selectedLecture = null;
 
@@ -24,44 +31,59 @@ export class LectureRankDetailComponent implements OnInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
-    this.apiService.getLectures().subscribe(
+    this.loadLectures();
+    this.apiService.getSubcategoryList().subscribe(
       data => {
-        this.allLectures = data;
-        console.log(this.allLectures);
+        this.subcategories = data['result'];
+        console.log('sub categories :'+this.subcategories);
       },
       error => console.log(error)
     );
-    this.apiService.getALLLecturesRanking().subscribe(
+    this.apiService.getCategoryList().subscribe(
       data => {
-        this.subcategories = data['subcategory'];
-        console.log(data);
-      },
-      error => console.log(error)
-    );
-    this.apiService.getALLLecturesRanking().subscribe(
-      data => {
-        this.categories = data['category'];
-        console.log(+data);
-      },
-      error => console.log(error)
-    );
-    this.apiService.getCategoryLecturesRanking(1, 1).subscribe(
-      data => {
-        this.categoryLectures = data['result'];
-        console.log(this.categoryLectures);
+        this.categories= data['result'] ;
+        console.log('categories :'+this.categories);
       },
       error => console.log(error)
     );
   }
 
-  reloadLectures(){
-
+  loadLectures(){
+    this.apiService.getALLLecturesRanking(this.currentPage, this.currentCategoryIdx , this.currentSubCategoryIdx).subscribe(
+      data => {
+        this.lectures = data['result'];
+      },
+      error => console.log(error)
+    );
   }
-
-  // tslint:disable-next-line:typedef
-  /*
-  selectLecture(allLecture){
-    this.selectedLecture = allLecture;
+  //카테고리 선택
+  selectCategory(index:number){
+    this.currentCategoryIdx = index;
+    this.loadLectures();
   }
-  */
+  selectSubCategory(index:number){
+    this.currentSubCategoryIdx = index;
+    this.loadLectures();
+  }
+  //page 선택
+  selectPage(page){
+    this.currentPage = page;
+    this.loadLectures();
+  }
+  pageMinusJump(){
+    if(this.pages[0]!=1){
+      this.pages[0] -= 5;
+      this.pages[1] -= 5;
+      this.pages[2] -= 5;
+      this.pages[3] -= 5;
+      this.pages[4] -= 5;
+    }
+  }
+  pagePlusJump(){
+    this.pages[0] += 5;
+    this.pages[1] += 5;
+    this.pages[2] += 5;
+    this.pages[3] += 5;
+    this.pages[4] += 5;
+  }
 }
