@@ -438,12 +438,13 @@ def personal_info(request):
                 if len(p_dict['userpwd']) == 0 and len(p_dict['userpwdConfirm']) == 0:
 
                     data = request.user
+                    data2 = request.user.userinfo
                     data.email = p_dict['email']
                     data.phonenumber = p_dict['phonenumber']
                     data.name = p_dict['name']
-                    data.nickname = p_dict['nickname']
+                    data2.nickname = p_dict['nickname']
                     data.save()
-
+                    data2.save()
 
                 elif p_dict['userpwd'] != p_dict['userpwdConfirm']:
                     raise ValueError("비번불일치")
@@ -460,22 +461,26 @@ def personal_info(request):
 
 
                     data = request.user
+                    data2= request.user.userinfo
                     data.email = p_dict['email']
                     data.phonenumber = p_dict['phonenumber']
                     data.name = p_dict['name']
-                    data.nickname = p_dict['nickname']
+                    data2.nickname = p_dict['nickname']
                     data.userpwd = p_dict['userpwd']
                     data.save()
+                    data2.save()
 
             #비번 안 바꿀 경우 -> Key 안 줄 때
             elif "userpwd" not in p_dict and "userpwdConfirm" not in p_dict:
 
                 data = request.user
+                data2 = request.user.userinfo
                 data.email = p_dict['email']
                 data.phonenumber = p_dict['phonenumber']
                 data.name = p_dict['name']
-                data.nickname = p_dict['nickname']
+                data2.nickname = p_dict['nickname']
                 data.save()
+                data2.save()
 
             else:
                 raise Exception

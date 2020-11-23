@@ -10,6 +10,10 @@ body{
   --main-gray:#464646;
   --main-blue:#0155FB;
   --main-yellow:#FFC000;
+  
+  --main-color:#0155FB;
+  --point-color:#FFC000;
+  
   --main-body-margin:4vh 12vw 4vh 12vw;
 }
 
