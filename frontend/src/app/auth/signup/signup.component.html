@@ -1,5 +1,5 @@
 <div id="whole-page">
-    <div class="sign-logo text-center" routerLink="/"></div>
+    <div class="center-logo text-center" routerLink="/"></div>
     <form [formGroup]="signupForm" (submit)="singup()">
         <section id="createAccount" *ngIf="page==0">    
             <p>계정 생성</p>
@@ -13,22 +13,26 @@
             <br/>
             <div>
                 <input type="text" formControlName="name" placeholder="이름">
+                <!--
                 <br/>
                 <input type="radio" formControlName="gender" value="여자">여자
                 <input type="radio" formControlName="gender" value="남자">남자
                 <br/>
                 <input type="date" formControlName="birth" placeholder="날짜">
+                -->
             </div>
             <br/>
             <div>
                 <input type="string" formControlName="phoneNum" placeholder="휴대전화 번호">
+                <!--
                 <button>인증번호 전송</button>
                 <br/>
                 <input type="number" formControlName="certificationNum" placeholder="인증번호 입력">
                 <button>확인</button>
+                -->
             </div>
             <br/>
-            <button (click)="next()">다음</button>
+            <button id="next-button"(click)="next()">다음</button>
         </section>
 
         <section id="createProfile" *ngIf="page==1">    
@@ -38,8 +42,8 @@
                 </div>
                 <br/>
                 <div>
-                    <!--api만들면 바꾸기-->
                     <input type="text" formControlName="school" placeholder="학교">
+                    <!--
                     <br/>
                     <input type="radio" formControlName="major" value="csMajor">컴퓨터공학 전공자
                     <input type="radio" formControlName="major" value="nonMajor">비전공자
@@ -50,13 +54,14 @@
                 </div>
                 <br/>
                 <div>
-                    <!--api만들면 바꾸기-->
                     <input type="text" formControlName="interestLanguage" placeholder="관심있는 언어">
-                    <input type="text" formControlName="interestField" placeholder="관심있는 분야">
+                    <input type="text" formControlName="interestField" placeholder="관심있는 분야">-->
                 </div>
                 <br/>
-                <button (click)="back()">이전</button>
-                <button type="submit">가입하기</button>
+                <div id="button-col">
+                    <button id="prev-button" (click)="back()">이전</button>
+                    <button id="signup-button" type="submit">가입하기</button>
+                </div>
         </section>
     </form>
 </div>
