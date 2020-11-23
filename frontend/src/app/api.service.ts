@@ -46,7 +46,7 @@ export class ApiService {
   // 프로그램 주제별 랭킹
   // tslint:disable-next-line:typedef
   getALLLecturesRanking(page:number, categoryIdx:number, subCategoryIdx:number) {
-    return this.httpClient.get(this.baseUrl + 'lectures-ranking?page='+page+'&categoryIdx='+categoryIdx+'&subCategoryIdx='+subCategoryIdx, {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'lectures-ranking?page='+page+'&categoryIdx='+categoryIdx+'&subcategoryIdx='+subCategoryIdx, {headers: this.headers});
   }
   getSubcategoryList(){
     return this.httpClient.get(this.baseUrl + 'subcategory-list', {headers: this.headers});
@@ -62,7 +62,7 @@ export class ApiService {
 
  //강의 상세
   getLectureDetail(lectureIdx){
-    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx, {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx);
   }
   // 강의별 리뷰 목록
   // tslint:disable-next-line:typedef

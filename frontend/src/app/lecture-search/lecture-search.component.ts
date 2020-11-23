@@ -1,6 +1,5 @@
 import { Component, EventEmitter, OnInit, Input} from '@angular/core';
 import { faStar} from '@fortawesome/free-solid-svg-icons';
-//import {Lecture} from '../lecture/lecture';
 import {ApiService} from '../api.service';
 import {ActivatedRoute} from '@angular/router';//rounter parameter
 
@@ -63,7 +62,7 @@ export class LectureSearchComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.searchLectures();    
+    this.searchLectures();
   }
 
   selectPage(page){
