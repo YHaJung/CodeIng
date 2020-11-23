@@ -27,11 +27,9 @@ export class ApiService {
   getLectures() {
     return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
   }
-  searchLecturesAll(keyword) {
-    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword, {headers: this.headers});
-  }
-  searchLecturesFilter(keyword, rate, level, price) {
-    return this.httpClient.get(this.baseUrl + 'lectures?keyword='+keyword+'&rating='+rate+'&level='+level+'&price='+price, {headers: this.headers});
+  //강의 검색
+  searchLectures(page, keyword, rate, level, price) {
+    return this.httpClient.get(this.baseUrl + 'lectures?page='+page+'&keyword='+keyword+'&rating='+rate+'&level='+level+'&price='+price, {headers: this.headers});
   }
 
 
@@ -47,11 +45,14 @@ export class ApiService {
 
   // 프로그램 주제별 랭킹
   // tslint:disable-next-line:typedef
-  getALLLecturesRanking() {
-    return this.httpClient.get(this.baseUrl + 'lectures-ranking', {headers: this.headers});
+  getALLLecturesRanking(page:number, categoryIdx:number, subCategoryIdx:number) {
+    return this.httpClient.get(this.baseUrl + 'lectures-ranking?page='+page+'&categoryIdx='+categoryIdx+'&subcategoryIdx='+subCategoryIdx, {headers: this.headers});
   }
-  getCategoryLecturesRanking(categoryIdx, subcategoryIdx) {
-    return this.httpClient.get(this.baseUrl + 'lectures-ranking?subCategoryIdx='+subcategoryIdx, {headers: this.headers});
+  getSubcategoryList(){
+    return this.httpClient.get(this.baseUrl + 'subcategory-list', {headers: this.headers});
+  }
+  getCategoryList(){
+    return this.httpClient.get(this.baseUrl + 'category-list', {headers: this.headers});
   }
   // today's recommend
   // tslint:disable-next-line:typedef
@@ -61,7 +62,7 @@ export class ApiService {
 
  //강의 상세
   getLectureDetail(lectureIdx){
-    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx, {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx);
   }
   // 강의별 리뷰 목록
   // tslint:disable-next-line:typedef
@@ -112,7 +113,7 @@ export class ApiService {
   }
   
   patchFavoriteLectures(lectureIdx){
-    return this.httpClient.patch(this.baseUrl+'favorite-sites?lectureIdx='+lectureIdx, {headers: this.headers});
+    return this.httpClient.patch(this.baseUrl+'favorite-lectures?lectureIdx='+lectureIdx, {}, {headers: this.headers});
   }
   
 

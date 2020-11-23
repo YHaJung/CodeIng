@@ -9,8 +9,8 @@
   </nav>
 </section>
 
-<div class="row" id="main-search">
-  <section class="col-sm-3"  id="side">
+<div id="main-search">
+  <section id="side">
     <p>Filter</p>
     <div>
       평점<br/><!-- class="orange" -->
@@ -45,11 +45,14 @@
       >-O</span>
     </div>
   </section>
-
-
-  <section class="col-sm-9">
-    <section id="searchedLectures" *ngFor="let lecture of lectures ">
+  <section>
+    <section *ngFor="let lecture of lectures ">
       <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
     </section>
+    <div id="page-button-div">
+      <button  (click)="pageMinusJump()"> < </button>
+      <button *ngFor="let page of pages" [ngClass]="{currentPageButton:page==currentPage}" (click)="selectPage(page)" > {{page}} </button>
+      <button  (click)="pagePlusJump()"> > </button>
+    </div>
   </section>
 </div>

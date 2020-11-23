@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../../api.service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-favorite-lectures',
@@ -8,7 +9,7 @@ import {ApiService} from '../../api.service';
 })
 export class FavoriteLecturesComponent implements OnInit {
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService, private route: ActivatedRoute) { }
 
   lectures = [];
   ngOnInit(): void {

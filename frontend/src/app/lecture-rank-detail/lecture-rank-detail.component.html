@@ -11,33 +11,39 @@
 
 
 <!----main---->
-<div class="main-ranking">
-  <div class="row">
-    <div class="col-sm-3">
-      <!--      <h2>page {{paramId}}</h2>-->
-      <p>카테고리</p>
-      <div class="div-cat">
-      <div class="div-cat-each" *ngFor = "let category of categories">
-        {{category.categoryName}}
-      </div>
-      </div>
+<div id="main-ranking">
+  <div id="left">
+    <p>카테고리</p>
+    <div id="category-button-field">
+      <button *ngFor = "let category of categories"
+            class = "category-button"
+             [ngClass]="{'currentCategory':category.categoryIdx==currentCategoryIdx}"
+             (click)="selectCategory(category.categoryIdx)"
+      > {{category.categoryName}}</button>
     </div>
-    <div class="col-sm-9">
-      <h1 id="ranking">웹 프론트엔드 랭킹</h1>
-      <div>
-        <button class="btn-cat" *ngFor = "let subcategory of subcategories | slice:0:subcategoryNum; let i=index">
-          {{subcategory.subcategoryName}}
-        </button>
-        <button class="btn-cat" (click)='getMoreSubcategory()'>...</button>
-      </div>
-      <section id="main-ranking" *ngFor="let lecture of categoryLectures ">
-        <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
-      </section>
-      <div id="page-button-div">
-        <button> < </button>
-        <button> 1 </button>
-        <button> < </button>
-      </div>
+  </div>
+
+  <div id="center">
+    <!--subcategory-->
+    <div id="subcategory-button-field">
+      <button *ngFor = "let subcategory of subcategories | slice:0:subcategoryNum; let i=index"
+              class = "subcategory-button"
+              [ngClass]="{'currentCategory':subcategory.subcategoryIdx==currentSubCategoryIdx}"
+              (click)="selectSubCategory(subcategory.subcategoryIdx)"
+      >
+        {{subcategory.subcategoryName}}
+      </button>
+      <button class = "subcategory-button" (click)='getMoreSubcategory()'>...</button>
+    </div>
+    <!--lectures-->
+    <section id="lecture-card-section" *ngFor="let lecture of lectures ">
+      <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
+    </section>
+    <!--page buttons-->
+    <div id="page-button-div">
+      <button  (click)="pageMinusJump()"> < </button>
+      <button *ngFor="let page of pages" [ngClass]="{currentPageButton:page==currentPage}" (click)="selectPage(page)" > {{page}} </button>
+      <button  (click)="pagePlusJump()"> > </button>
     </div>
   </div>
 </div>

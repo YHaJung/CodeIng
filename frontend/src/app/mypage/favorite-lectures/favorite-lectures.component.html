@@ -1,4 +1,4 @@
-<p>즐겨찾기한 강의</p>
-<section id="searchedLectures" *ngFor="let lecture of lectures ">
+<p>나의 관심 강의</p>
+<section *ngFor="let lecture of lectures ">
     <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
 </section>
