@@ -277,7 +277,7 @@ def lectures_ranking(request):
                 # 서브카테고리만 골랐을 경우,
 
                 category_ranking = Lecturecategory.objects.filter(subcategory=subcategoryIdx).select_related('lecture').order_by('-lecture__rating')
-                print('나나')
+
             else:
                 #전체 강의
                 category_ranking = Lecturecategory.objects.select_related(
@@ -1709,6 +1709,44 @@ def favorite_lecture_check(request, pk):
         return for_exception()
 
 
+@api_view(['GET'])
+@login_decorator
+def favorite_site_check(request, pk):
+    try:
+        userIdx = request.user.userinfo.useridx
+        print(pk, userIdx)
+
+        favSite = Favoritesite.objects.filter(user__useridx=userIdx, siteinfo__siteidx=pk)
+
+
+        if favSite.exists():
+
+            if favSite[0].isdeleted =='Y': #즐겨찾기 해제 상태
+                fav_dict = {}
+                fav_dict['isSuccess'] = 'true'
+                fav_dict['code'] = 200
+                fav_dict['message'] = '사이트 즐겨찾기 여부 조회 성공'
+                fav_dict['state'] = 'false'
+
+            else:
+                fav_dict = {}
+                fav_dict['isSuccess'] = 'true'
+                fav_dict['code'] = 200
+                fav_dict['message'] = '사이트 즐겨찾기 여부 조회 성공'
+                fav_dict['state'] = 'true'
+
+
+        else:
+            fav_dict = {}
+            fav_dict['isSuccess'] = 'true'
+            fav_dict['code'] = 200
+            fav_dict['message'] = '사이트 즐겨찾기 여부 조회 성공'
+            fav_dict['state'] = 'false'
+        return_value = json.dumps(fav_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+    except Exception:
+        return for_exception()
 
 
 
