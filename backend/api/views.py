@@ -129,17 +129,17 @@ def recommend_save(request):
 def CBRS(request):
     try:
         pk = request.user.userinfo.useridx
-
         data = pickle.load(open('knn_models/data.pkl', 'rb'))
         querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+
+
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
         selectIdx = int(request.GET.get('selectIdx', '1'))
         nneigh = 5
         # print(pk)
         # print(recommend[pk])
         # print(np.argsort(-recommend[int(pk)])[:5] )
-        krecommend = np.argsort(-recommend[int(pk)])[5 * selectIdx - 5:nneigh * selectIdx]
-
+        krecommend = np.argsort(-recommend[pk])[5 * selectIdx - 5:nneigh * selectIdx]
         overview_list = []
         overview_dict = {}
         overview_dict['isSuccess'] = 'true'
@@ -213,6 +213,7 @@ def CBRSlist(request):
     overview_dict['isSuccess'] = 'true'
     overview_dict['code'] = 200
     overview_dict['message'] = '추천컨텐츠 조회 성공'
+
     # .flatten()[x]
     # overview2 = list(map(
     #     lambda x: Lecture.objects.filter(lectureidx=x)
@@ -294,8 +295,9 @@ def Poprs(request, pk=None):
 
 
         for lectureidx in krecommend:
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-                    'siteinfo').distinct()
+            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level__levelname', 'price', 'rating',
+                    'siteinfo__sitename').distinct()
+
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
             # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
@@ -363,7 +365,7 @@ def Poprslist(request, pk=None):
     #               ]))
     for lectureidx in krecommend:
         i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
-                                                                 'level', 'price', 'rating',
+                                                                 'level__levelname', 'price', 'rating',
                                                                  'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
