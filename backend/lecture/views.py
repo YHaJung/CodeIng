@@ -1623,6 +1623,34 @@ def my_comments(request):
 
 
 
+@api_view(['GET'])
+def category_list(request):
+    try:
+        cate =[]
+        categoryList = Category.objects.all()
+
+
+        for i in categoryList:
+            cate.append(dict([('categoryIdx', i.categoryidx),('categoryName', i.categoryname)]))
+
+        my_qna2_dict={}
+        my_qna2_dict['isSuccess'] = 'true'
+        my_qna2_dict['code'] = 200
+        my_qna2_dict['message'] = '카테고리 리스트 조회 성공'
+        my_qna2_dict['result'] = categoryList
+
+        return JsonResponse({'isSuccess': 'true',
+                             'code': 200,
+                             'message': '카테고리 리스트 조회 성공',
+                             'result': cate}, status=200)
+
+
+
+    except Exception:
+        return for_exception()
+
+
+
 
 
 

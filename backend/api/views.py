@@ -179,6 +179,10 @@ def CBRS(request):
                 price = 'free'
             elif price == -1:
                 price = 'membership'
+            else:
+                price = format(price, ',')
+
+
             overview_list.append(
                 dict([('lectureIdx', i[0]['lectureidx']),
                       ('lectureName', i[0]['lecturename']),
