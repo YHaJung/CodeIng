@@ -248,7 +248,7 @@ def lectures_ranking(request):
     if request.method == 'GET':
         try:
             page = int(request.GET.get('page', '1'))
-            categoryIdx = int(request.GET.get('categoryIdx', '1'))
+            categoryIdx = int(request.GET.get('categoryIdx', '0'))
             subcategoryIdx = int(request.GET.get('subcategoryIdx', '0'))
 
             if page < 1:
@@ -264,14 +264,25 @@ def lectures_ranking(request):
             #       dict([('subcategoryIdx', ele['subcategory__subcategoryidx']),
             # )
 
-            if subcategoryIdx != 0:
-                # 서브카테고리까지 골랐을 경우,
+            if categoryIdx != 0 and subcategoryIdx != 0:
+                #카테고리와 서브카테고리까지 골랐을 경우,
                 category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx,
                                                                   subcategory=subcategoryIdx).select_related('lecture').order_by('-lecture__rating')
-            else:
+            elif categoryIdx !=0 and subcategoryIdx == 0:
                 # 카테고리만 골랐을 경우,
                 category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx).select_related(
                     'lecture').order_by('-lecture__rating')
+
+            elif categoryIdx == 0 and subcategoryIdx != 0:
+                # 서브카테고리만 골랐을 경우,
+
+                category_ranking = Lecturecategory.objects.filter(subcategory=subcategoryIdx).select_related('lecture').order_by('-lecture__rating')
+                print('나나')
+            else:
+                #전체 강의
+                category_ranking = Lecturecategory.objects.select_related(
+                    'lecture').order_by('-lecture__rating')
+
 
             category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename','lecture__rating',
                                                            'lecture__lecturer', 'lecture__thumburl', 'lecture__price',
@@ -404,6 +415,8 @@ def overall_ranking(request):
 def lecture_detail(request, pk):
     try:
         lecture = Lecture.objects.get(pk=pk)
+
+
         print(lecture)
 
         detail_dict = {}
@@ -1654,6 +1667,49 @@ def category_list(request):
 
     except Exception:
         return for_exception()
+
+
+@api_view(['GET'])
+@login_decorator
+def favorite_lecture_check(request, pk):
+    try:
+        userIdx = request.user.userinfo.useridx
+        print(pk, userIdx)
+
+        favLec = Favoritelecture.objects.filter(user__useridx=userIdx, lecture__lectureidx=pk)
+        print(favLec)
+
+        if favLec.exists():
+
+            if favLec[0].isdeleted =='Y': #즐겨찾기 해제 상태
+                fav_dict = {}
+                fav_dict['isSuccess'] = 'true'
+                fav_dict['code'] = 200
+                fav_dict['message'] = '강의 즐겨찾기 여부 조회 성공'
+                fav_dict['state'] = 'false'
+
+            else:
+                fav_dict = {}
+                fav_dict['isSuccess'] = 'true'
+                fav_dict['code'] = 200
+                fav_dict['message'] = '강의 즐겨찾기 여부 조회 성공'
+                fav_dict['state'] = 'true'
+
+
+        else:
+            fav_dict = {}
+            fav_dict['isSuccess'] = 'true'
+            fav_dict['code'] = 200
+            fav_dict['message'] = '강의 즐겨찾기 여부 조회 성공'
+            fav_dict['state'] = 'false'
+        return_value = json.dumps(fav_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+    except Exception:
+        return for_exception()
+
+
+
 
 
 
