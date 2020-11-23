@@ -127,7 +127,7 @@ def lecture_list(request):
     if request.method == 'GET':
         try:
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
-            selected_level = float(request.GET.get('level', '0'))
+            selected_level = int(request.GET.get('level', '0'))
             selected_price = int(request.GET.get('price', '0'))
             selected_rating = float(request.GET.get('rating', '0'))
             input_keyword = request.GET.get('keyword','')
@@ -146,13 +146,32 @@ def lecture_list(request):
 
             if input_keyword =='':
                 # 쿼리문
-                lectures = Lecture.objects.filter(
-                    level=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
-                    'siteinfo')[page * 6 - 6:page * 6]
+                if selected_level == 0:
+                    lectures = Lecture.objects.filter(
+                        rating__gte=selected_rating)[page * 6 - 6:page * 6]
+
+                else:
+                    lectures = Lecture.objects.filter(
+                        level__levelidx=selected_level, rating__gte=selected_rating,
+                        price__lte=selected_price).select_related(
+                        'siteinfo')[page * 6 - 6:page * 6]
+
+
+
+
             else:
-                lectures = Lecture.objects.filter(lecturename__contains=input_keyword,
-                    level=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
-                    'siteinfo')[page * 6 - 6:page * 6]
+                if selected_level == 0:
+                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                                                      rating__gte=selected_rating,
+                                                      price__lte=selected_price).select_related(
+                        'siteinfo')[page * 6 - 6:page * 6]
+
+
+                else:
+
+                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                        level__levelidx=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
+                        'siteinfo')[page * 6 - 6:page * 6]
 
 
             lec_dict = {}
@@ -161,19 +180,24 @@ def lecture_list(request):
             lec_dict['message'] = '강의 목록 조회 성공'
             info = []
 
+
             for lec in lectures:
+
+
                 h = lec.siteinfo.sitename
+
                 price_sql = lec.price
                 if price_sql == 0:
                     price_sql = 'free'
                 elif price_sql == -1:
                     price_sql = 'membership'
+                else:
+                    price_sql = format(price_sql,',')
 
                 info.append(
                     dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename), ('professor', lec.lecturer),
-                          ('price', price_sql), ('level', lec.level), ('rating', lec.rating),
+                          ('price', price_sql), ('levelIdx', lec.level.levelidx), ('levelName', lec.level.levelname), ('rating', lec.rating),
                           ('thumbUrl', lec.thumburl), ('siteName', h)]))
-
             lec_dict['result'] = info
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -227,20 +251,21 @@ def lectures_ranking(request):
             categoryIdx = int(request.GET.get('categoryIdx', '1'))
             subcategoryIdx = int(request.GET.get('subcategoryIdx', '0'))
 
-            subcategory = Lecturecategory.objects.filter(categoryidx=categoryIdx).select_related('subcategory').values(
-                'subcategory__subcategoryname', 'subcategory__subcategoryidx').distinct().order_by(
-                'subcategory__subcategoryidx')
+            if page < 1:
+                page = 1
 
-            subcategory_list = []
-            for ele in subcategory:
-                subcategory_list.append(
-                    dict([('subcategoryIdx', ele['subcategory__subcategoryidx']),
-                          ('subcategoryName', ele['subcategory__subcategoryname'])])
-                )
+            #subcategory = Lecturecategory.objects.filter(categoryidx=categoryIdx).select_related('subcategory').values(
+            #'subcategory__subcategoryname', 'subcategory__subcategoryidx').distinct().order_by(
+            #'subcategory__subcategoryidx')
+
+            # subcategory_list = []
+            #for ele in subcategory:
+            #    subcategory_list.append(
+            #       dict([('subcategoryIdx', ele['subcategory__subcategoryidx']),
+            # )
 
             if subcategoryIdx != 0:
                 # 서브카테고리까지 골랐을 경우,
-
                 category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx,
                                                                   subcategory=subcategoryIdx).select_related('lecture').order_by('-lecture__rating')
             else:
@@ -250,8 +275,7 @@ def lectures_ranking(request):
 
             category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename','lecture__rating',
                                                            'lecture__lecturer', 'lecture__thumburl', 'lecture__price',
-                                                           'lecture__level', 'lecture__siteinfo__sitename').distinct()[
-                                   page * 5 - 5:page * 5]
+                                                           'lecture__level__levelname', 'lecture__siteinfo__sitename').distinct()[page * 5 - 5:page * 5]
 
 
             lec_rank_dict = {}
@@ -259,23 +283,27 @@ def lectures_ranking(request):
             lec_rank_dict['code'] = 200
             lec_rank_dict['message'] = '카테고리 별 랭킹 조회 성공'
 
-            lec_rank_dict['subcategory'] = subcategory_list
             rank = []
 
             for c in category_ranking_all:
+
                 price_sql = c['lecture__price']
                 if price_sql == 0:
                     price_sql = 'free'
                 elif price_sql == -1:
                     price_sql = 'membership'
+                else:
+                    price_sql = format(price_sql, ',')
+
+
                 rank.append(
                     dict([('lectureIdx', c['lecture__lectureidx']), ('lectureName', c['lecture__lecturename']),
                           ('professor', c['lecture__lecturer']),('rating', c['lecture__rating']),
-                          ('price', price_sql), ('level', c['lecture__level']), ('thumbUrl', c['lecture__thumburl']),
+                          ('price', price_sql), ('level', c['lecture__level__levelname']), ('thumbUrl', c['lecture__thumburl']),
                           ('siteName', c['lecture__siteinfo__sitename'])]))
 
-            lec_rank_dict['result'] = rank
 
+            lec_rank_dict['result'] = rank
             return_value = json.dumps(lec_rank_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
@@ -304,6 +332,9 @@ def ranking_overview(request):
             '-lecture__rating')[:5]
         cnt = 1
         for i in overview2:
+
+
+
             overview_list.append(
                 dict([('ranking', cnt), ('lectureIdx', i['lecture__lectureidx']),
                       ('lectureName', i['lecture__lecturename']),
@@ -318,6 +349,55 @@ def ranking_overview(request):
     except Exception:
 
         return for_exception()
+
+
+
+@api_view(['GET'])
+def overall_ranking(request):
+    try:
+        overview_list = []
+        overview_dict = {}
+        overview_dict['isSuccess'] = 'true'
+        overview_dict['code'] = 200
+        overview_dict['message'] = '강의 전체 랭킹 조회 성공'
+
+        page = int(request.GET.get('page', '1'))
+        if page<1:
+            page=1
+
+        lectures = Lecture.objects.all().order_by('-rating')[page * 5 - 5:page * 5]
+        for lec in lectures:
+            price_sql = lec.price
+
+            if price_sql == 0:
+                price_sql = 'free'
+            elif price_sql == -1:
+                price_sql = 'membership'
+            else:
+                price_sql = format(price_sql, ',')
+
+            overview_list.append(
+                dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename),
+                      ('siteName', lec.siteinfo.sitename),
+                      ('price', price_sql), ('thumbUrl', lec.thumburl),
+                      ('rating', lec.rating), ('level', lec.level.levelname)]))
+
+        overview_dict['result'] = overview_list
+        return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Exception:
+
+        return for_exception()
+
+
+
+
+
+
+
+
 
 
 @api_view(['GET'])
@@ -336,9 +416,12 @@ def lecture_detail(request, pk):
         elif price_sql == -1:
             price_sql = 'membership'
 
+        else:
+            price_sql = format(price_sql, ',')
+
         detail_dict['result'] = dict([('lectureIdx', lecture.lectureidx), ('lectureName', lecture.lecturename),
                                       ('lectureLink', lecture.lecturelink),
-                                      ('price', price_sql), ('level', lecture.level), ('rating', lecture.rating), ('thumbUrl', lecture.thumburl)])
+                                      ('price', price_sql), ('level', lecture.level.levelname), ('rating', lecture.rating), ('thumbUrl', lecture.thumburl)])
 
         return_value = json.dumps(detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
@@ -711,8 +794,7 @@ def qna_list(request, pk):
             qna_dict['message'] = 'qna 목록 조회 성공'
 
             qna = Qna.objects.filter(lecture__lectureidx=pk, isblocked='N', isdeleted='N').select_related('userinfo',
-                                                                                                          'lecture')[
-                  page * 5 - 5:page * 5]
+            'lecture').order_by('-qnaidx')[page * 5 - 5:page * 5]
 
             likes = Likesforqna.objects.filter(qna__lecture__lectureidx=pk).select_related('qna').values(
                 'qna').annotate(count=Count('qna'))
@@ -910,7 +992,8 @@ def comment_list(request, pk, qnaIdx):
         if request.method == 'GET':
 
             comment = Comment.objects.filter(qna=qnaIdx, parentidx__isnull=True, isdeleted='N',
-                                             isblocked='N').select_related('userinfo')
+                                             isblocked='N').select_related('userinfo').order_by('-commentidx')
+
             reply = Comment.objects.filter(qna=qnaIdx, parentidx__isnull=False, isdeleted='N', isblocked='N')
             type = reply.values('parentidx').annotate(count=Count('parentidx'))
 
@@ -957,7 +1040,7 @@ def comment_list(request, pk, qnaIdx):
                     [('commentIdx', i.commentidx), ('commentDes', i.commentdes), ('nickname', i.userinfo.nickname),
                      ('image', image_list), ('reply', reply_list),('createdAt',time)]))
 
-                comment_dict['result'] = comments_list
+            comment_dict['result'] = comments_list
 
             return_value = json.dumps(comment_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
@@ -1144,7 +1227,7 @@ def favorite_sites(request):
         elif request.method == 'PATCH':
             userIdx = request.user.userinfo.useridx
             siteIdx = int(request.GET.get('siteIdx'))
-            favsite = Favoritesite.objects.filter(user=userIdx, siteinfo=siteIdx)
+            favsite = Favoritesite.objects.filter(user=userIdx, siteinfo__siteidx=siteIdx)
             favsite_dict = {}
             if favsite.exists():
 
@@ -1167,19 +1250,21 @@ def favorite_sites(request):
                 favsite_dict['isdeleted'] ='N'
                 favsiteQuery = QueryDict('', mutable=True)
                 favsiteQuery.update(favsite_dict)
+                print(favsiteQuery)
 
                 serializer = FavoritesiteSerializer(data=favsiteQuery)
+
                 if serializer.is_valid():
                     serializer.save()
 
-            favsite_dict = {}
-            favsite_dict['isSuccess'] = 'true'
-            favsite_dict['code'] = 200
-            favsite_dict['message'] = '사이트 즐겨찾기 여부 변경'
+            favlec_dict = {}
+            favlec_dict['isSuccess'] = 'true'
+            favlec_dict['code'] = 200
+            favlec_dict['message'] = '사이트 즐겨찾기 여부 변경'
 
+            return_value = json.dumps(favlec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
-            return_value = json.dumps(favsite_dict, indent=4, use_decimal=True, ensure_ascii=False)
-            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_Ok)
 
 
     except Favoritesite.DoesNotExist:
@@ -1206,9 +1291,11 @@ def favorite_lectures(request):
                     price_sql = 'free'
                 elif price_sql == -1:
                     price_sql = 'membership'
+                else:
+                    price_sql = format(price_sql,',')
 
                 favlectures_list.append(
-                    dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level),
+                    dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level.levelname),
                           ('rating',i.lecture.rating),('thumbUrl',i.lecture.thumburl),('siteName',i.lecture.siteinfo.siteidx),('professor',i.lecture.lecturer)]))
 
 
@@ -1237,18 +1324,19 @@ def favorite_lectures(request):
 
                 favlectureQuery = QueryDict('', mutable=True)
                 favlectureQuery.update(favlectures_dict)
+                print(favlectureQuery)
                 serializer = FavoritelectureSerializer(favlectures[0], data=favlectureQuery, partial=True)
 
                 if serializer.is_valid():
                     serializer.save()
 
             else:
-
                 favlectures_dict['user'] = userIdx
                 favlectures_dict['lecture'] = lectureIdx
                 favlectures_dict['isdeleted'] ='N'
                 favlectureQuery = QueryDict('', mutable=True)
                 favlectureQuery.update(favlectures_dict)
+                print(favlectureQuery)
 
                 serializer = FavoritelectureSerializer(data=favlectureQuery)
                 if serializer.is_valid():
@@ -1273,7 +1361,6 @@ def favorite_lectures(request):
 def my_reviews(request):
     try:
         userIdx = request.user.userinfo.useridx
-
         page = int(request.GET.get('page', '1'))
         if page <= 0:
             page = 1
@@ -1537,6 +1624,34 @@ def my_comments(request):
 
     except Review.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    except Exception:
+        return for_exception()
+
+
+
+@api_view(['GET'])
+def category_list(request):
+    try:
+        cate =[]
+        categoryList = Category.objects.all()
+
+
+        for i in categoryList:
+            cate.append(dict([('categoryIdx', i.categoryidx),('categoryName', i.categoryname)]))
+
+        my_qna2_dict={}
+        my_qna2_dict['isSuccess'] = 'true'
+        my_qna2_dict['code'] = 200
+        my_qna2_dict['message'] = '카테고리 리스트 조회 성공'
+        my_qna2_dict['result'] = categoryList
+
+        return JsonResponse({'isSuccess': 'true',
+                             'code': 200,
+                             'message': '카테고리 리스트 조회 성공',
+                             'result': cate}, status=200)
+
+
+
     except Exception:
         return for_exception()
 

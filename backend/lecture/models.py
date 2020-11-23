@@ -12,13 +12,24 @@ class Siteinfo(models.Model):
         db_table = 'siteInfo'
 
 
+
+class Level(models.Model):
+    levelidx = models.AutoField(db_column='levelIdx', primary_key=True)  # Field name made lowercase.
+    levelname = models.CharField(db_column='levelName', max_length=20, blank=True,
+                                 null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'level'
+
+
 class Lecture(models.Model):
     lectureidx = models.AutoField(db_column='lectureIdx', primary_key=True)  # Field name made lowercase.
     lecturename = models.CharField(db_column='lectureName', max_length=60)  # Field name made lowercase.
     price = models.IntegerField(blank=True, null=True)
     lecturelink = models.TextField(db_column='lectureLink')  # Field name made lowercase.
     thumburl = models.TextField(db_column='thumbUrl', blank=True, null=True)  # Field name made lowercase.
-    level = models.DecimalField(max_digits=4, decimal_places=3)
+
     lecturer = models.CharField(max_length=300, blank=True, null=True)
     rating = models.DecimalField(max_digits=4, decimal_places=3)
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
@@ -27,6 +38,10 @@ class Lecture(models.Model):
 
     siteinfo = models.ForeignKey(Siteinfo, on_delete=models.CASCADE,
                                  db_column='siteidx')  # Field name made lowercase.
+
+    #level = models.IntegerField()
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, db_column='level')
+
 
     def average_rating(self):
         # sum = 0
@@ -84,14 +99,7 @@ class Lecturecategory(models.Model):
         db_table = 'lectureCategory'
 
 
-class Level(models.Model):
-    levelidx = models.AutoField(db_column='levelIdx', primary_key=True)  # Field name made lowercase.
-    levelname = models.CharField(db_column='levelName', max_length=20, blank=True,
-                                 null=True)  # Field name made lowercase.
 
-    class Meta:
-        managed = False
-        db_table = 'level'
 
 
 class Userinfo(models.Model):
@@ -350,7 +358,7 @@ class Favoritesite(models.Model):
     updatedat = models.DateTimeField(db_column='updatedAt', auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
+    user = models.ForeignKey(Userinfo, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
     siteinfo = models.ForeignKey(Siteinfo, on_delete=models.CASCADE, db_column='siteIdx')  # Field name made lowercase.
 
 
@@ -365,7 +373,7 @@ class Favoritelecture(models.Model):
     updatedat = models.DateTimeField(db_column='updatedAt', auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
+    user = models.ForeignKey(Userinfo, on_delete=models.CASCADE, db_column='userIdx')  # Field name made lowercase.
     lecture = models.ForeignKey(Lecture, on_delete=models.CASCADE, db_column='lectureIdx')  # Field name made lowercase.
 
     class Meta:
