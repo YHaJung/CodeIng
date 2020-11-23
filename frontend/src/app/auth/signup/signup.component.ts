@@ -10,7 +10,6 @@ import {ApiService} from '../../api.service';
 export class SignupComponent implements OnInit {
   page = 0;
 
-
   constructor(private apiService:ApiService) { }
   signupForm = new FormGroup({
     /*page0*/
@@ -20,27 +19,28 @@ export class SignupComponent implements OnInit {
     pwCheck:new FormControl(''),
     //personal info
     name:new FormControl(''),
-    gender:new FormControl(''),
-    birth:new FormControl(''),
-    email:new FormControl(''),
+    //gender:new FormControl(''),
+    //birth:new FormControl(''),
+    //email:new FormControl(''),
+
     //phone
     phoneNum:new FormControl(''),
-    certificationNum:new FormControl(''),
+    
+    //certificationNum:new FormControl(''),
 
     /*page1*/
     //nickname
     nickname:new FormControl(''),
     school:new FormControl(''),
     //belong
-    major:new FormControl(''),
-    job:new FormControl(''),
+    //major:new FormControl(''),
+    //job:new FormControl(''),
     //interest
-    interestLanguage:new FormControl(''),
-    interestField:new FormControl(''),
+    //interestLanguage:new FormControl(''),
+    //interestField:new FormControl(''),
   });
 
-  phoneNumCheck(){
-  }
+  //phoneNumCheck(){}
   next(){   //'다음'버튼
     this.page=1;
   }
