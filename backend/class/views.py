@@ -137,9 +137,14 @@ def class_list(request):
                 for i in tag:
                     tag_list.append(i.tagname)
 
+                # 강의 썸네일 없을 경우
+                thumbnail = c.lectureidx.thumburl
+                if not thumbnail:
+                    thumbnail = c.lectureidx.siteinfo.logoimage
+
 
                 classes.append(
-                    dict([('classIdx', c.classidx), ('className', c.classname), ('thumbUrl', c.lectureidx.thumburl),
+                    dict([('classIdx', c.classidx), ('className', c.classname), ('thumbUrl', thumbnail),
                           ('memberCount', member[0]['count']), ('tags', tag_list), ('password', c.password)]))
 
 
@@ -183,9 +188,14 @@ def myclass_list(request):
                 for i in tag:
                     tag_list.append(i.tagname)
 
+                # 강의 썸네일 없을 경우
+                thumbnail = c.classidx.lectureidx.thumburl
+                if not thumbnail:
+                    thumbnail = c.classidx.lectureidx.siteinfo.logoimage
+
 
                 classes.append(
-                    dict([('classIdx', c.classidx.classidx), ('className', c.classidx.classname), ('thumbUrl', c.classidx.lectureidx.thumburl),
+                    dict([('classIdx', c.classidx.classidx), ('className', c.classidx.classname), ('thumbUrl', thumbnail),
                           ('memberCount', member[0]['count']), ('tags', tag_list), ('password', c.classidx.password)]))
 
 

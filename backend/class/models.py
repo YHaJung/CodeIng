@@ -4,6 +4,8 @@ from django.db import models
 class Siteinfo(models.Model):
     siteidx = models.AutoField(primary_key=True)  # Field name made lowercase.
     sitename = models.CharField(max_length=20)  # Field name made lowercase.
+    logoimage = models.TextField(db_column='logoImage', blank=True, null=True)  # Field name made lowercase.
+
 
     class Meta:
         managed = False
