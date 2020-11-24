@@ -720,7 +720,7 @@ def review_detail(request, pk, reviewIdx):
             return_value = json.dumps(del_comment, indent=4, use_decimal=True, ensure_ascii=False)
 
             return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_200_OK)
 
     except Exception:
 
