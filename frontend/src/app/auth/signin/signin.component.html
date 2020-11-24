@@ -1,20 +1,16 @@
 <div id="whole-page">
   <div class="sign-logo text-center" routerLink="/"></div>
-  <div class="middle">
-    <!--<form action="/action_page.php">-->
-
-    <form [formGroup]="signinForm" (submit)="login()">
+  <form class="middle" [formGroup]="signinForm" (submit)="login()">
+    <div>
       <input type="email" formControlName="id" placeholder="아이디(이메일)">
       <br/>
       <input type="password " formControlName="pw" placeholder="비밀번호">
       <div class="singup-div">
         <a href="/signup">회원가입</a>
       </div>
-    </form>
+    </div>
     <button type="submit">로그인</button>
-
-    
-  </div>
+  </form>
 </div>
 
 

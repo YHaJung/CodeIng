@@ -1,78 +1,24 @@
+article{
+  margin: 10px 0px 10px 0px;
+  box-shadow: 1px 1px 1px 1px darkgray;
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  text-align: left;
+}
+
 img{
-    position: absolute;
-    top:0;
-    left: 15px;
-    width: 100%;
     height: 100%;
+    width: 100%;
 }
+
 #upper{
-    padding: 10px;
-    background-color: var(--main-blue);
-    height: 70%;
-    color: white;
-    font-family: Noto Sans;
-    font-style: normal;
-  /* identical to box height */
-  color: #FFFFFF;
-}
-
-#upper #site {
-  width: 49px;
-  height: 18px;
-  left: 588px;
-  /*top: 392px;*/
-
-  font-family: Noto Sans;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 13px;
-  line-height: 18px;
-  /* identical to box height */
-  color: #FFFFFF;
-
-}
-
-#upper #title {
-  width: 301px;
-  height: 20px;
-  left: 586px;
-  /*top: 418px;*/
-
-  font-family: Noto Sans;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 15px;
-  line-height: 20px;
-  color: #FFFFFF;
-  /*border: 0.15px solid #FFFFFF;*/
-}
-
-#upper #professor{
-  width: 41px;
-  height: 12px;
-  font-family: Noto Sans;
-  font-style: normal;
-  font-weight: 500;
-  font-size: 9px;
-  /*line-height: 12px;*/
-  color: #FFFFFF;
+    padding: 10px 10px 5px 10px;
+    background-color: var(--main-color);
+    color: #FFFFFF;
 }
 
 #downer{
-  padding: 10px;
-}
-#downer .price {
-  margin-bottom: 2px;
-  /*margin: auto;*/
-  font-size: 12px;
-  float: left;
-}
-#downer .favorite-lecture {
-  margin-bottom: 15px;
-  /*margin: auto;*/
-  font-size: 10px;
-  color :var(--main-blue);
-  float: right;
+  padding: 10px 10px 5px 10px;
 }
 
 h1{
