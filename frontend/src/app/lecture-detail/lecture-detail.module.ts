@@ -12,6 +12,8 @@ import {QnaCardModule} from "../cards/qna-card/qna-card.module";
 import {RouterModule, Routes} from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {ReactiveFormsModule} from '@angular/forms';
+import { NgxSliderModule } from '@angular-slider/ngx-slider';
+
 import { WriteReviewComponent } from './write-review/write-review.component';
 
 
@@ -35,7 +37,8 @@ const routes: Routes = [
     MainModule,
     ReviewCardModule,
     QnaCardModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxSliderModule 
   ],
   exports: [
     RouterModule

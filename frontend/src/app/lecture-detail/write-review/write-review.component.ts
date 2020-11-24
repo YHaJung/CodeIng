@@ -30,18 +30,6 @@ export class WriteReviewComponent implements OnInit {
   clickedRate = 0;
   clickedLevel = 0;
   clickedPrice = 0;
-  rateHovered = 0;
-  levelHovered = 0;
-  priceHovered = 0;
-  rateHover(rate){
-    this.rateHovered = rate;   //마우스 가져가면 별 바뀜
-  }
-  levelHover(level){
-    this.levelHovered = level;   //마우스 가져가면 별 바뀜
-  }
-  priceHover(price){
-    this.priceHovered = price;   //마우스 가져가면 별 바뀜
-  }
   rateClicked(rate){
     this.clickedRate= rate;
   }
@@ -51,13 +39,28 @@ export class WriteReviewComponent implements OnInit {
   priceClicked(price){
     this.clickedPrice = price;
   }
-
+  
+  pros : Array<any> =[];
+  cons : Array<any>=[];
   wirteReviewForm = new FormGroup({
     satisfy : new FormControl(''),
     recommend : new FormControl(''),
     improvement : new FormControl(''),
-    pros : new FormControl(''),
-    cons: new FormControl('')
+    pro1 : new FormControl(''),
+    pro2 : new FormControl(''),
+    pro3 : new FormControl(''),
+    pro4 : new FormControl(''),
+    pro5 : new FormControl(''),
+    pro6 : new FormControl(''),
+
+    con1: new FormControl(''),
+    con2: new FormControl(''),
+    con3: new FormControl(''),
+    con4: new FormControl(''),
+    con5: new FormControl(''),
+    con6: new FormControl(''),
+    con7: new FormControl(''),
+    con8: new FormControl(''),
   })
 
   cancealWriting(){
@@ -71,9 +74,25 @@ export class WriteReviewComponent implements OnInit {
     this.finish.emit();
   }
   creatReview(){
+    if(this.wirteReviewForm.value.pro1) this.pros.push(1);
+    if(this.wirteReviewForm.value.pro2) this.pros.push(2);
+    if(this.wirteReviewForm.value.pro3) this.pros.push(3);
+    if(this.wirteReviewForm.value.pro4) this.pros.push(4);
+    if(this.wirteReviewForm.value.pro5) this.pros.push(5);
+    if(this.wirteReviewForm.value.pro6) this.pros.push(6);
+
+    if(this.wirteReviewForm.value.con1) this.cons.push(1);
+    if(this.wirteReviewForm.value.con2) this.cons.push(2);
+    if(this.wirteReviewForm.value.con3) this.cons.push(3);
+    if(this.wirteReviewForm.value.con4) this.cons.push(4);
+    if(this.wirteReviewForm.value.con5) this.cons.push(5);
+    if(this.wirteReviewForm.value.con6) this.cons.push(6);
+    if(this.wirteReviewForm.value.con7) this.cons.push(7);
+    if(this.wirteReviewForm.value.con8) this.cons.push(8);
+
     this.apiService.createLectureReviews(
       this.lectureIdx,this.clickedRate, this.clickedLevel, this.clickedPrice, this.wirteReviewForm.value.satisfy,
-      this.wirteReviewForm.value.improvement, this.wirteReviewForm.value.pros, this.wirteReviewForm.value.cons
+      this.wirteReviewForm.value.improvement, this.pros, this.cons
     ).subscribe(
       result => console.log(result),
       error => console.log(error)

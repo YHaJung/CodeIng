@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { faStar, faBookmark  } from '@fortawesome/free-solid-svg-icons';
 import {ActivatedRoute} from '@angular/router';
 import {ApiService} from '../api.service';
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-lecture-detail',

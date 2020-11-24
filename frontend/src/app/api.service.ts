@@ -80,8 +80,9 @@ export class ApiService {
     console.log(body);
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna', body, {headers: this.headers});
   }
-  createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:[], cons:[]){              //
+  createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:Array<any>, cons:Array<any>){              //
     const body = JSON.stringify({totalrating, teachingpowerrating, pricerating, recommend, improvement, pros, cons});
+    console.log(body);
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/review', body, {headers: this.headers});
   }
 
