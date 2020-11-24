@@ -695,7 +695,7 @@ def review_detail(request, pk, reviewIdx):
             return_value = json.dumps(put_review, indent=4, use_decimal=True, ensure_ascii=False)
 
             return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_200_OK)
 
         elif request.method == 'DELETE':
             # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
