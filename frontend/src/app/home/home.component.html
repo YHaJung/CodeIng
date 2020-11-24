@@ -43,7 +43,8 @@
   <!--lecture ranking-->
   <section id="lecture-subject-rank">
     <div>
-      <h3>오늘의 추천 콘텐츠</h3>
+      <h3 *ngIf="!token">오늘의 추천 콘텐츠</h3>
+      <h3 *ngIf="token">{{nickname}} 님을 위한 추천 콘텐츠</h3>
     </div>
     <div>
       <a href="/lecturerecommenddetail"> <button>전체보기</button></a>

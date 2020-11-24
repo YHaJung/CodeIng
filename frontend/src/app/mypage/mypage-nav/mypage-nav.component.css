@@ -6,3 +6,6 @@ button{
     margin-top: 2px;
     color: #ffffff;
 }
+.pointColor{
+    background-color: var(--point-color);
+}

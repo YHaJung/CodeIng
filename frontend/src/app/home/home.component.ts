@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../api.service';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +16,25 @@ export class HomeComponent implements OnInit {
   recommendoverview: any = [];
   selectedLecture = null;
 
-  constructor(private apiService: ApiService) { }
+  token : string;
+  nickname : string;
+
+  constructor(private apiService: ApiService, private cookieService: CookieService,) { }
 
   ngOnInit(): void {
+    this.token = this.cookieService.get('token');
+
     this.callRankingApi();
     this.callRecommendApi();
+
+    if(this.token){
+      this.apiService.getPersonalInfo().subscribe(
+        data => {
+          this.nickname = data['result'].nickname;
+        },
+        error => console.log(error)
+      );
+    }
   }
 
   callRankingApi(){

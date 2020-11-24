@@ -1,7 +1,8 @@
-<p>내가 쓴 리뷰</p>
-
-<app-review-card
-    class="card"
-    *ngFor="let review of reviews"
-    [review]="review"
-></app-review-card>
+<div id="whole">
+    <h1>내가 쓴 리뷰</h1>
+    <app-review-card
+        class="card"
+        *ngFor="let review of reviews"
+        [review]="review"
+    ></app-review-card>
+</div>
