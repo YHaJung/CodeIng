@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views import lecture_list, lectures_ranking, ranking_overview, \
     lecture_detail, review_list, qna_list, qna_detail, comment_list, comment_detail, \
     review_detail, favorite_sites, favorite_lectures, my_reviews, my_qnas, my_comments, subcategory_list, overall_ranking, \
-    category_list, favorite_lecture_check
+    category_list, favorite_lecture_check, favorite_site_check
 from rest_framework.authtoken.views import obtain_auth_token
 
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('lectures/<int:pk>/qna',qna_list),
     path('lectures/<int:pk>/review/<int:reviewIdx>',review_detail),
     path('lectures/<int:pk>/check-favorite', favorite_lecture_check),
+    path('sites/<int:pk>/check-favorite', favorite_site_check),
     path('lectures/<int:pk>/review',review_list),
     path('lectures/<int:pk>',lecture_detail),
     path('ranking-overview',ranking_overview),
