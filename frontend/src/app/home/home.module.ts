@@ -15,7 +15,8 @@ import {MainModule} from "../main/main.module";
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
-  {path: 'signin', component: SigninComponent}
+  {path: 'signin', component: SigninComponent},
+  {path: 'home/:auth', pathMatch: 'full', redirectTo: 'home'} 
   // {path: 'homenavbar', component: HomeNavBarComponent},
 ];
 

@@ -16,10 +16,20 @@ export class MainComponent implements OnInit {
     private apiService : ApiService
      ) { }
   token : string;
-    
-  auth : number;
+  nickname : string;
   ngOnInit(): void {
     this.token = this.cookieService.get('token');
+
+    if(this.token){
+      this.apiService.getPersonalInfo().subscribe(
+        data => {
+          this.nickname = data['result'].nickname;
+          console.log(this.nickname);
+        },
+        error => console.log(error)
+      );
+    }
+
   }
   gohome(){
     if(this.router.url.split('/')[1]=='home'){

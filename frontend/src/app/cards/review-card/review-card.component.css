@@ -1,3 +1,11 @@
+article{
+  text-align: left;
+  padding:10px 20px 20px 20px;
+  margin: 10px;
+  border-radius: 5px;
+  border: 0.5px solid;
+}
+
 h1{
     font-size: 1.5em;
 }
@@ -9,15 +17,29 @@ h2{
 p {
   font-size: 12px;
 }
-fa-icon.yellow{
-    color:var(--main-yellow);
+fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
+  color: var(--point-color);
 }
-
-.name {
-  float: left;
+/*--normal review*/
+.normal-review{
+  display: grid;
+  grid-template-columns: 1fr 6fr;
 }
-
-.upper {
-  padding-left: 40px;
+.userInfo{
   font-size: 16px;
+  margin-bottom: 10px;
+}
+/*myreview*/
+#lectureName{
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.edit-button-div{
+  text-align: right;
+}
+
+
+.main{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }

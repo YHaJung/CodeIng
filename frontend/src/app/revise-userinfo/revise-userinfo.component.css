@@ -1,0 +1,26 @@
+.whole{
+    text-align: center;
+}
+
+h1{
+    font-size: 21px;
+    margin: 20px;
+}
+
+form{
+    text-align: left;
+}
+input{
+    width: 100%;
+}
+input[type=radio]{
+    width:auto;
+}
+
+input[type=date]{
+    width:auto;
+}
+
+select{
+    width: 120px;
+}

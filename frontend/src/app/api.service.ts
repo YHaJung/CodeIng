@@ -82,7 +82,6 @@ export class ApiService {
   }
   createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:[], cons:[]){              //
     const body = JSON.stringify({totalrating, teachingpowerrating, pricerating, recommend, improvement, pros, cons});
-    console.log(body);
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/review', body, {headers: this.headers});
   }
 
@@ -105,17 +104,33 @@ export class ApiService {
   }
 
   //mypage
+  //개인정보
   getPersonalInfo(){
     return this.httpClient.get(this.baseUrl+'personal-info', {headers: this.headers});
+  }
+  patchPersonalInfo(email:string, userpwd:string, userpwdConfirm:string, name:string, phonenumber:string, nickname:string){
+    const body = JSON.stringify({email, userpwd, userpwdConfirm, name, phonenumber, nickname});
+    console.log(body);
+    return this.httpClient.patch(this.baseUrl + 'personal-info', body, {headers: this.headers});
   }
   getProfile(){
     return this.httpClient.get(this.baseUrl+'profile', {headers: this.headers});
   }
+  patchProfile(birthday:string, school:string, level:number, job:CharacterData, gender:CharacterData, subcategory:Array<number>, category:Array<number>){
+    const body = JSON.stringify({birthday, school, level, job, gender, subcategory, category});
+    console.log(body);
+    return this.httpClient.patch(this.baseUrl + 'profile', body, {headers: this.headers});
+  }
+
+  //마이페이지 상세
   getFavoriteLectures(){
     return this.httpClient.get(this.baseUrl+'favorite-lectures', {headers: this.headers});
   }
   getMyReviews(){
     return this.httpClient.get(this.baseUrl +'my-reviews', {headers: this.headers});
+  }
+  deleteMyReview(lectureIdx:number, reviewIdx:number){
+    return this.httpClient.delete(this.baseUrl +'lectures/'+lectureIdx+'/review/'+reviewIdx, {headers: this.headers});
   }
   
   patchFavoriteLectures(lectureIdx){

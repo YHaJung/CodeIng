@@ -5,6 +5,11 @@
 #top-bar .nav-auth{
   text-align: right;
   font-size: 12px;
+  padding-bottom: 10px;
+}
+#top-bar .nav-auth span{
+  float: left;
+  color:var(--main-gray);
 }
 #top-bar .nav-auth a{
   color:var(--main-gray);

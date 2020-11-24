@@ -3,7 +3,7 @@
   <nav>
     <div><a routerLink="/home">홈</a>&nbsp;</div>&nbsp;
     <div class="clicked-menu"><a routerLink="/lecturerankdetail">프로그램 주제별 랭킹</a></div>&nbsp;
-    <div><a routerLink="/lecturerecommenddetail">오늘의 추천 컨텐츠</a></div>&nbsp;
+    <div><a routerLink="/lecturerecommenddetail">추천 컨텐츠</a></div>&nbsp;
     <div><a routerLink="/lecturesearch/ ">강의 검색</a></div>
     <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
   </nav>
@@ -15,6 +15,10 @@
   <div id="left">
     <p>카테고리</p>
     <div id="category-button-field">
+      <button class = "category-button"
+              [ngClass]="{'currentCategory':currentCategoryIdx==0}"
+              (click)="selectCategory(0)"
+       >전체</button>
       <button *ngFor = "let category of categories"
             class = "category-button"
              [ngClass]="{'currentCategory':category.categoryIdx==currentCategoryIdx}"
@@ -26,6 +30,12 @@
   <div id="center">
     <!--subcategory-->
     <div id="subcategory-button-field">
+      <button class = "subcategory-button"
+              [ngClass]="{'currentCategory':currentSubCategoryIdx==0}"
+              (click)="selectSubCategory(0)"
+      >
+        전체
+      </button>
       <button *ngFor = "let subcategory of subcategories | slice:0:subcategoryNum; let i=index"
               class = "subcategory-button"
               [ngClass]="{'currentCategory':subcategory.subcategoryIdx==currentSubCategoryIdx}"
