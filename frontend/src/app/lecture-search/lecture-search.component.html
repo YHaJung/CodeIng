@@ -37,11 +37,7 @@
     </div>
     <div>
       가격(이하)<br/>
-      <span
-        *ngFor="let price of [1,2,3,4,5]" 
-        (click)="priceClicked(price)"
-        [ngClass]="{'orange':currentPrice >= price }"
-      >-O</span>
+      <ngx-slider [(highValue)]= "currentPrice" [options]="options"></ngx-slider>
     </div>
   </section>
   <section>

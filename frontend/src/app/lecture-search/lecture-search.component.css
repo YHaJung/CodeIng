@@ -6,6 +6,9 @@
 }
 
 /*side*/
+#side{
+    width: 80%;
+}
 #side div{
     margin-bottom: 15px;
 }
@@ -37,3 +40,30 @@ fa-icon.purple{
   }
   
 
+  /*slider*/
+  /*ngx-slider{*/
+/*최소값 설정 숨김*/
+::ng-deep .ngx-slider .ngx-slider-pointer-min{
+    display: none !important;
+}
+::ng-deep .ngx-slider .ngx-slider-pointer{
+    width: 8px !important;
+    height: 16px !important;;
+    background-color: #333 !important;
+    border-top-left-radius: 3px !important;;
+    border-top-right-radius: 3px !important;;
+}
+::ng-deep .ngx-slider .ngx-slider-selection{
+    background-color:var(--point-color) !important;
+}
+/*작은 동그라미 없애기*/
+::ng-deep .ngx-slider .ngx-slider-pointer:after {
+    display: none !important;
+}
+/*최대최소값 숨기기*/
+::ng-deep .ngx-slider .ngx-slider-floor{
+    display: none !important;
+}
+::ng-deep .ngx-slider .ngx-slider-ceil{
+    display: none !important;
+}
