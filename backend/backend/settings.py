@@ -55,8 +55,7 @@ INSTALLED_APPS = [
     'core',
     # 책 랭킹
     'book',
-
-
+    'class',
     # allauth
     'allauth',
     'allauth.account',

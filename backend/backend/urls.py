@@ -10,6 +10,7 @@ urlpatterns = [
     path('auth/', obtain_auth_token),
     path('', include('lecture.urls')),
     path('', include('book.urls')),
+    path('', include('class.urls')),
     path('', include('user.urls')), # 로그인 / 회원 가입
     path('accounts/', include('allauth.urls')),
 
