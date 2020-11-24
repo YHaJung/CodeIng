@@ -4,6 +4,8 @@ from django.db import models
 class Siteinfo(models.Model):
     siteidx = models.AutoField(primary_key=True)  # Field name made lowercase.
     sitename = models.CharField(max_length=20)  # Field name made lowercase.
+    logoimage = models.TextField(db_column='logoImage', blank=True, null=True)  # Field name made lowercase.
+
 
     class Meta:
         managed = False
@@ -107,7 +109,7 @@ class Choice(models.Model):
 class Study(models.Model):
     classidx = models.AutoField(db_column='classIdx', primary_key=True)  # Field name made lowercase.
     classname = models.CharField(db_column='className', max_length=100)  # Field name made lowercase.
-    password = models.CharField(max_length=100)
+    password = models.CharField(max_length=100, blank=True, null=True)
 
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.

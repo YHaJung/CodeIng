@@ -187,6 +187,7 @@ def lecture_list(request):
 
                 h = lec.siteinfo.sitename
 
+                #가격
                 price_sql = lec.price
                 if price_sql == 0:
                     price_sql = 'free'
@@ -195,10 +196,17 @@ def lecture_list(request):
                 else:
                     price_sql = format(price_sql,',')
 
+
+                #강의 썸네일 없을 경우
+                thumbnail = lec.thumburl
+                if not thumbnail:
+                    thumbnail = lec.siteinfo.logoimage
+
+
                 info.append(
                     dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename), ('professor', lec.lecturer),
                           ('price', price_sql), ('levelIdx', lec.level.levelidx), ('levelName', lec.level.levelname), ('rating', lec.rating),
-                          ('thumbUrl', lec.thumburl), ('siteName', h)]))
+                          ('thumbUrl', thumbnail), ('siteName', h)]))
             lec_dict['result'] = info
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -287,7 +295,7 @@ def lectures_ranking(request):
 
             category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename','lecture__rating',
                                                            'lecture__lecturer', 'lecture__thumburl', 'lecture__price',
-                                                           'lecture__level__levelname', 'lecture__siteinfo__sitename').distinct()[page * 5 - 5:page * 5]
+                                                           'lecture__level__levelname', 'lecture__siteinfo__sitename', 'lecture__siteinfo__logoimage').distinct()[page * 5 - 5:page * 5]
 
 
             lec_rank_dict = {}
@@ -307,11 +315,18 @@ def lectures_ranking(request):
                 else:
                     price_sql = format(price_sql, ',')
 
+                # 강의 썸네일 없을 경우
+                thumbnail = c['lecture__thumburl']
+                if not thumbnail:
+
+                    thumbnail = c['lecture__siteinfo__logoimage']
+
+
 
                 rank.append(
                     dict([('lectureIdx', c['lecture__lectureidx']), ('lectureName', c['lecture__lecturename']),
                           ('professor', c['lecture__lecturer']),('rating', c['lecture__rating']),
-                          ('price', price_sql), ('level', c['lecture__level__levelname']), ('thumbUrl', c['lecture__thumburl']),
+                          ('price', price_sql), ('level', c['lecture__level__levelname']), ('thumbUrl', thumbnail),
                           ('siteName', c['lecture__siteinfo__sitename'])]))
 
 
@@ -388,10 +403,15 @@ def overall_ranking(request):
             else:
                 price_sql = format(price_sql, ',')
 
+            # 강의 썸네일 없을 경우
+            thumbnail = lec.thumburl
+            if not thumbnail:
+                thumbnail = lec.siteinfo.logoimage
+
             overview_list.append(
                 dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename),
                       ('siteName', lec.siteinfo.sitename),
-                      ('price', price_sql), ('thumbUrl', lec.thumburl),
+                      ('price', price_sql), ('thumbUrl', thumbnail),
                       ('rating', lec.rating), ('level', lec.level.levelname)]))
 
         overview_dict['result'] = overview_list
@@ -433,9 +453,14 @@ def lecture_detail(request, pk):
         else:
             price_sql = format(price_sql, ',')
 
+        # 강의 썸네일 없을 경우
+        thumbnail = lecture.thumburl
+        if not thumbnail:
+            thumbnail = lecture.siteinfo.logoimage
+
         detail_dict['result'] = dict([('lectureIdx', lecture.lectureidx), ('lectureName', lecture.lecturename),
                                       ('lectureLink', lecture.lecturelink),
-                                      ('price', price_sql), ('level', lecture.level.levelname), ('rating', lecture.rating), ('thumbUrl', lecture.thumburl)])
+                                      ('price', price_sql), ('level', lecture.level.levelname), ('rating', lecture.rating), ('thumbUrl', thumbnail)])
 
         return_value = json.dumps(detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
@@ -695,7 +720,7 @@ def review_detail(request, pk, reviewIdx):
             return_value = json.dumps(put_review, indent=4, use_decimal=True, ensure_ascii=False)
 
             return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_200_OK)
 
         elif request.method == 'DELETE':
             # 내가 쓴 글 일때만 삭제 가능 -> 토큰에 해당하는 useridx랑 글 idx 비교하기, qna의 모든 답글, 이미지도 동시에 삭제되어야함
@@ -720,7 +745,7 @@ def review_detail(request, pk, reviewIdx):
             return_value = json.dumps(del_comment, indent=4, use_decimal=True, ensure_ascii=False)
 
             return HttpResponse(return_value, content_type="text/json-comment-filtered",
-                                status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_200_OK)
 
     except Exception:
 
@@ -1308,9 +1333,14 @@ def favorite_lectures(request):
                 else:
                     price_sql = format(price_sql,',')
 
+                # 강의 썸네일 없을 경우
+                thumbnail = i.thumburl
+                if not thumbnail:
+                    thumbnail = i.siteinfo.logoimage
+
                 favlectures_list.append(
                     dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level.levelname),
-                          ('rating',i.lecture.rating),('thumbUrl',i.lecture.thumburl),('siteinfo',{'siteIdx': i.lecture.siteinfo.siteidx,
+                          ('rating',i.lecture.rating),('thumbUrl',thumbnail),('siteinfo',{'siteIdx': i.lecture.siteinfo.siteidx,
                                                                                        'siteName': i.lecture.siteinfo.sitename}),('professor',i.lecture.lecturer)]))
 
 
