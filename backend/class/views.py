@@ -10,7 +10,7 @@ from django.http import JsonResponse, HttpResponse, QueryDict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import viewsets, status
-from .models import Lecture, Profile, Classmember, Study
+from .models import Lecture, Profile, Classmember, Study, Classtag
 
 
 def convert_time(createdat):
@@ -122,21 +122,34 @@ def for_exception():
 def class_list(request):
     if request.method == 'GET':
         try:
-            class_list = Study.objects.all()
+            page = int(request.GET.get('page', '1'))
+            if page <= 0:
+                page = 1
 
+            classes =[]
+
+            class_list = Study.objects.filter(isdeleted='N')[page * 6 - 6:page * 6]
             for c in class_list:
-                print(c.lectureidx.thumburl, c.classname)
+
+                member = Classmember.objects.filter(classidx__classidx=c.classidx,isdeleted='N').values('classidx__classidx').annotate(count=Count('classidx__classidx'))
+                tag = Classtag.objects.filter(classidx__classidx=c.classidx,isdeleted='N')
+                tag_list =[]
+                for i in tag:
+                    tag_list.append(i.tagname)
+
+
+                classes.append(
+                    dict([('classIdx', c.classidx), ('className', c.classname), ('thumbUrl', c.lectureidx.thumburl),
+                          ('memberCount', member[0]['count']), ('tags', tag_list), ('password', c.password)]))
+
 
 
 
             lec_dict = {}
             lec_dict['isSuccess'] = 'true'
             lec_dict['code'] = 200
-            lec_dict['message'] = '서브카테고리 목록 조회 성공'
-            info = []
-
-
-            lec_dict['result'] = info
+            lec_dict['message'] = '전체 클래스 목록 조회 성공'
+            lec_dict['result'] = classes
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
 
@@ -145,6 +158,57 @@ def class_list(request):
         except Exception:
 
             return for_exception()
+
+
+
+@api_view(['GET'])
+@login_decorator
+def myclass_list(request):
+    if request.method == 'GET':
+        try:
+
+            userIdx = request.user.userinfo.useridx
+            page = int(request.GET.get('page', '1'))
+            if page <= 0:
+                page = 1
+
+            classes =[]
+
+            myclass_list = Classmember.objects.filter(user__useridx = userIdx,isdeleted='N')
+            for c in myclass_list:
+
+                member = Classmember.objects.filter(classidx__classidx=c.classidx.classidx,isdeleted='N').values('classidx__classidx').annotate(count=Count('classidx__classidx'))
+                tag = Classtag.objects.filter(classidx__classidx=c.classidx.classidx,isdeleted='N')
+                tag_list =[]
+                for i in tag:
+                    tag_list.append(i.tagname)
+
+
+                classes.append(
+                    dict([('classIdx', c.classidx.classidx), ('className', c.classidx.classname), ('thumbUrl', c.classidx.lectureidx.thumburl),
+                          ('memberCount', member[0]['count']), ('tags', tag_list), ('password', c.classidx.password)]))
+
+
+
+
+            lec_dict = {}
+            lec_dict['isSuccess'] = 'true'
+            lec_dict['code'] = 200
+            lec_dict['message'] = '나의 클래스 목록 조회 성공'
+            lec_dict['result'] = classes
+
+            return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
+
+            return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+        except Exception:
+
+            return for_exception()
+
+
+
+
+
 
 
 

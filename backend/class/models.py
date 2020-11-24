@@ -107,7 +107,7 @@ class Choice(models.Model):
 class Study(models.Model):
     classidx = models.AutoField(db_column='classIdx', primary_key=True)  # Field name made lowercase.
     classname = models.CharField(db_column='className', max_length=100)  # Field name made lowercase.
-    password = models.CharField(max_length=100)
+    password = models.CharField(max_length=100, blank=True, null=True)
 
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
