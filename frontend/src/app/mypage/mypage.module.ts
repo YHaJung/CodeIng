@@ -20,7 +20,7 @@ const routes: Routes = [
     FavoriteLecturesModule
   ],
   exports: [
-    RouterModule
+    MypageComponent
   ],
 })
 export class MypageModule { }

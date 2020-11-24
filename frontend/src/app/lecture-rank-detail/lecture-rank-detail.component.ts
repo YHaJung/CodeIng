@@ -11,6 +11,7 @@ export class LectureRankDetailComponent implements OnInit {
   subcategories :any =[];
   categories :any=[];
   lectures:any=[];
+  lectureIdxs=[1, 2, 3, 4, 5];
 
   pages = [1, 2, 3 ,4, 5];
   currentPage = 1;
@@ -59,10 +60,12 @@ export class LectureRankDetailComponent implements OnInit {
   //카테고리 선택
   selectCategory(index:number){
     this.currentCategoryIdx = index;
+    this.currentPage = 1;
     this.loadLectures();
   }
   selectSubCategory(index:number){
     this.currentSubCategoryIdx = index;
+    this.currentPage = 1;
     this.loadLectures();
   }
   //page 선택

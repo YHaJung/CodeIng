@@ -37,6 +37,7 @@
     </div>
     <!--lectures-->
     <section id="lecture-card-section" *ngFor="let lecture of lectures ">
+      <span>{{ lectures.indexOf(lecture)+1 +(currentPage-1)*5}}</span>
       <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
     </section>
     <!--page buttons-->
