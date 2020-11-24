@@ -166,7 +166,7 @@ def CBRS(request):
         # print(krecommend)
         for lectureidx in krecommend:
             i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-                    'siteinfo').distinct()
+                    'siteinfo', 'siteinfo__logoimage').distinct()
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
             # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
@@ -182,11 +182,16 @@ def CBRS(request):
             else:
                 price = format(price, ',')
 
+            # 강의 썸네일 없을 경우
+            thumbnail = i[0]['thumburl']
+            if not thumbnail:
+                thumbnail = i[0]['siteinfo__logoimage']
+
 
             overview_list.append(
                 dict([('lectureIdx', i[0]['lectureidx']),
                       ('lectureName', i[0]['lecturename']),
-                      ('thumbUrl', i[0]['thumburl']),
+                      ('thumbUrl', thumbnail),
                       ('lecturer', i[0]['lecturer']),
                       ('level', decimal.Decimal(i[0]['level'])),
                       ('price', price),
@@ -238,7 +243,7 @@ def CBRSlist(request):
     for lectureidx in krecommend:
         i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                  'level', 'price', 'rating',
-                                                                 'siteinfo').distinct()
+                                                                 'siteinfo','siteinfo__logoimage').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
         # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
@@ -251,10 +256,17 @@ def CBRSlist(request):
             price = 'free'
         elif price == -1:
             price = 'membership'
+
+
+        # 강의 썸네일 없을 경우
+        thumbnail = i[0]['thumburl']
+        if not thumbnail:
+            thumbnail = i[0]['siteinfo__logoimage']
+
         overview_list.append(
             dict([('lectureIdx', i[0]['lectureidx']),
                   ('lectureName', i[0]['lecturename']),
-                  ('thumbUrl', i[0]['thumburl']),
+                  ('thumbUrl', thumbnail),
                   ('lecturer', i[0]['lecturer']),
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
@@ -299,7 +311,7 @@ def Poprs(request, pk=None):
 
 
         for lectureidx in krecommend:
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
+            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
                     'siteinfo').distinct()
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -313,10 +325,16 @@ def Poprs(request, pk=None):
                 price = 'free'
             elif price == -1:
                 price = 'membership'
+
+            # 강의 썸네일 없을 경우
+            thumbnail = i[0]['thumburl']
+            if not thumbnail:
+                thumbnail = i[0]['siteinfo__logoimage']
+
             overview_list.append(
                 dict([('lectureIdx', i[0]['lectureidx']),
                       ('lectureName', i[0]['lecturename']),
-                      ('thumbUrl', i[0]['thumburl']),
+                      ('thumbUrl', thumbnail),
                       ('lecturer', i[0]['lecturer']),
                       ('level', decimal.Decimal(i[0]['level'])),
                       ('price', price),
@@ -367,7 +385,7 @@ def Poprslist(request, pk=None):
     #               ('siteinfo', i[0]['siteinfo']),
     #               ]))
     for lectureidx in krecommend:
-        i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
+        i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                  'level', 'price', 'rating',
                                                                  'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
@@ -382,10 +400,16 @@ def Poprslist(request, pk=None):
             price = 'free'
         elif price == -1:
             price = 'membership'
+
+       # 강의 썸네일 없을 경우
+        thumbnail = i[0]['thumburl']
+        if not thumbnail:
+            thumbnail = i[0]['siteinfo__logoimage']
+
         overview_list.append(
             dict([('lectureIdx', i[0]['lectureidx']),
                   ('lectureName', i[0]['lecturename']),
-                  ('thumbUrl', i[0]['thumburl']),
+                  ('thumbUrl', thumbnail),
                   ('lecturer', i[0]['lecturer']),
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
@@ -518,7 +542,7 @@ def KNN_IBCF(request, pk=None):
     #               ('level', decimal.Decimal(i[0]['level']))
     #               ]))
     for x in range(0, len(distances.flatten())):
-        i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
+        i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                  'level', 'price', 'rating',
                                                                  'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
@@ -533,10 +557,17 @@ def KNN_IBCF(request, pk=None):
             price = 'free'
         elif price == -1:
             price = 'membership'
+
+            # 강의 썸네일 없을 경우
+        thumbnail = i[0]['thumburl']
+        if not thumbnail:
+            thumbnail = i[0]['siteinfo__logoimage']
+
+
         overview_list.append(
             dict([('lectureIdx', i[0]['lectureidx']),
                   ('lectureName', i[0]['lecturename']),
-                  ('thumbUrl', i[0]['thumburl']),
+                  ('thumbUrl', thumbnail),
                   ('lecturer', i[0]['lecturer']),
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
@@ -581,7 +612,7 @@ def KNN_UBCF(request, pk=None):
     #               ('level', decimal.Decimal(i[0]['level']))
     #               ]))
     for x in range(0, len(distances.flatten())):
-        i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('lectureidx', 'lecturename', 'thumburl',
+        i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl',
                                                                            'lecturer',
                                                                            'level', 'price', 'rating',
                                                                            'siteinfo').distinct()
@@ -597,10 +628,18 @@ def KNN_UBCF(request, pk=None):
             price = 'free'
         elif price == -1:
             price = 'membership'
+
+            # 강의 썸네일 없을 경우
+        thumbnail = i[0]['thumburl']
+        if not thumbnail:
+            thumbnail = i[0]['siteinfo__logoimage']
+
+
+
         overview_list.append(
             dict([('lectureIdx', i[0]['lectureidx']),
                   ('lectureName', i[0]['lecturename']),
-                  ('thumbUrl', i[0]['thumburl']),
+                  ('thumbUrl', thumbnail),
                   ('lecturer', i[0]['lecturer']),
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
