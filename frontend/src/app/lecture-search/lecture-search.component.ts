@@ -25,8 +25,20 @@ export class LectureSearchComponent implements OnInit {
 
   /*stars */
   star = faStar;
+  rateHovered = 0;
+  levelHovered = 0;
+  priceHovered = 0;
+  rateHover(rate){
+    this.rateHovered = rate;   //마우스 가져가면 별 바뀜
+  }
+  levelHover(level){
+    this.levelHovered = level;   //마우스 가져가면 별 바뀜
+  }
+  priceHover(price){
+    this.priceHovered = price;   //마우스 가져가면 별 바뀜
+  }
   rateClicked(rate){
-    this.currentRate = rate;
+    this.currentRate= rate;
     this.searchLectures();
   }
   levelClicked(level){
@@ -39,6 +51,7 @@ export class LectureSearchComponent implements OnInit {
   }
 
   searchLectures(){
+    this.keyword = this.route.snapshot.paramMap.get('keyword');
     console.log(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice*20000);
     this.apiService.searchLectures(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice*20000).subscribe(
       data => {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {CookieService} from 'ngx-cookie-service';
-import {Router} from '@angular/router';
+import {Router, ActivatedRoute} from '@angular/router';
 import {ApiService} from '../api.service';
 
 @Component({
@@ -13,12 +13,19 @@ export class MainComponent implements OnInit {
   constructor( 
     private cookieService: CookieService,
     private router : Router,
+    private route : ActivatedRoute,
     private apiService : ApiService
      ) { }
   token : string;
   nickname : string;
+  searchtext = "강의 제목 검색하기";
+  searchedText : string;
   ngOnInit(): void {
     this.token = this.cookieService.get('token');
+    this.searchedText= this.route.snapshot.paramMap.get('keyword');
+    if(this.searchedText){
+      this.searchtext = this.searchedText;
+    }
 
     if(this.token){
       this.apiService.getPersonalInfo().subscribe(
