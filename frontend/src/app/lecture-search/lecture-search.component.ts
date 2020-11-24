@@ -25,15 +25,6 @@ export class LectureSearchComponent implements OnInit {
 
   /*stars */
   star = faStar;
-  rateHovered = 0;
-  levelHovered = 0;
-  priceHovered = 0;
-  levelHover(level){
-    this.levelHovered = level;   //마우스 가져가면 별 바뀜
-  }
-  priceHover(price){
-    this.priceHovered = price;   //마우스 가져가면 별 바뀜
-  }
   rateClicked(rate){
     this.currentRate = rate;
     this.searchLectures();
