@@ -105,6 +105,12 @@ export class ApiService {
   }
 
   //mypage
+  getPersonalInfo(){
+    return this.httpClient.get(this.baseUrl+'personal-info', {headers: this.headers});
+  }
+  getProfile(){
+    return this.httpClient.get(this.baseUrl+'profile', {headers: this.headers});
+  }
   getFavoriteLectures(){
     return this.httpClient.get(this.baseUrl+'favorite-lectures', {headers: this.headers});
   }
