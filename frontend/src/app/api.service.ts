@@ -108,13 +108,13 @@ export class ApiService {
   getPersonalInfo(){
     return this.httpClient.get(this.baseUrl+'personal-info', {headers: this.headers});
   }
+  getProfile(){
+    return this.httpClient.get(this.baseUrl+'profile', {headers: this.headers});
+  }
   patchPersonalInfo(email:string, userpwd:string, userpwdConfirm:string, name:string, phonenumber:string, nickname:string){
     const body = JSON.stringify({email, userpwd, userpwdConfirm, name, phonenumber, nickname});
     console.log(body);
     return this.httpClient.patch(this.baseUrl + 'personal-info', body, {headers: this.headers});
-  }
-  getProfile(){
-    return this.httpClient.get(this.baseUrl+'profile', {headers: this.headers});
   }
   patchProfile(birthday:string, school:string, level:number, job:CharacterData, gender:CharacterData, subcategory:Array<number>, category:Array<number>){
     const body = JSON.stringify({birthday, school, level, job, gender, subcategory, category});

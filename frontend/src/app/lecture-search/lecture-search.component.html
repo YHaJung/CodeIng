@@ -12,36 +12,35 @@
 <div id="main-search">
   <section id="side">
     <p>Filter</p>
+    <!--마우스 가져다 대면 색 변화
+      (mouseenter)="levelHover(level)"
+        (mouseleave) = "levelHovered=0"
+        [ngClass]="{'orange':levelHovered >= level}"
+    -->
     <div>
-      평점<br/><!-- class="orange" -->
+      평점(이상)<br/><!-- class="orange" -->
       <fa-icon
         [icon]="star" 
         *ngFor="let rate of [1,2,3,4,5]" 
-        (mouseenter)="rateHover(rate)"
-        (mouseleave) = "rateHovered=0"
         (click)="rateClicked(rate)"
-        [ngClass]="{'orange':rateHovered >= rate}"
+        [ngClass]="{'orange':currentRate >= rate}"
       ></fa-icon>
     </div>
     <div class="test">
       수준<br/>
       <fa-icon
         [icon]="star" 
-        *ngFor="let level of [1,2,3,4,5]" 
-        (mouseenter)="levelHover(level)"
-        (mouseleave) = "levelHovered=0"
+        *ngFor="let level of [1,2,3,4,5]"
         (click)="levelClicked(level)"
-        [ngClass]="{'orange':levelHovered >= level}"
+        [ngClass]="{'orange':currentLevel >= level}"
       ></fa-icon>
     </div>
     <div>
-      가격<br/>
+      가격(이하)<br/>
       <span
         *ngFor="let price of [1,2,3,4,5]" 
-        (mouseenter)="priceHover(price)"
-        (mouseleave) = "priceHovered=0"
         (click)="priceClicked(price)"
-        [ngClass]="{'orange':priceHovered >= price }"
+        [ngClass]="{'orange':currentPrice >= price }"
       >-O</span>
     </div>
   </section>
