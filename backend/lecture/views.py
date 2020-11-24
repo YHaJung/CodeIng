@@ -144,6 +144,7 @@ def lecture_list(request):
 
 
 
+
             if input_keyword =='':
                 # 쿼리문
                 if selected_level == 0:
@@ -1309,7 +1310,8 @@ def favorite_lectures(request):
 
                 favlectures_list.append(
                     dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level.levelname),
-                          ('rating',i.lecture.rating),('thumbUrl',i.lecture.thumburl),('siteName',i.lecture.siteinfo.siteidx),('professor',i.lecture.lecturer)]))
+                          ('rating',i.lecture.rating),('thumbUrl',i.lecture.thumburl),('siteinfo',{'siteIdx': i.lecture.siteinfo.siteidx,
+                                                                                       'siteName': i.lecture.siteinfo.sitename}),('professor',i.lecture.lecturer)]))
 
 
             favlecture_dict={}
