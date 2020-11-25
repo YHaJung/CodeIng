@@ -128,7 +128,7 @@ def lecture_list(request):
         try:
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
             selected_level = int(request.GET.get('level', '0'))
-            selected_price = int(request.GET.get('price', '0'))
+            selected_price = int(request.GET.get('price', '-1'))
             selected_rating = float(request.GET.get('rating', '0'))
             input_keyword = request.GET.get('keyword','')
             page = int(request.GET.get('page', '1'))
@@ -139,7 +139,7 @@ def lecture_list(request):
                 page = 1
 
             # 잘못된 파라미터 값이 들어왔을 경우
-            if selected_level < 0 or selected_level > 5 or selected_rating < 0 or selected_rating > 5 or selected_price < 0:
+            if selected_level < 0 or selected_level > 5 or selected_rating < 0 or selected_rating > 5 or selected_price < -1:
                 raise Exception
 
 
@@ -148,11 +148,21 @@ def lecture_list(request):
             if input_keyword =='':
                 # 쿼리문
                 if selected_level == 0:
-                    lectures = Lecture.objects.filter(
-                        rating__gte=selected_rating)[page * 6 - 6:page * 6]
+                    if selected_price == -1:
+                        lectures = Lecture.objects.filter(
+                            rating__gte=selected_rating)[page * 6 - 6:page * 6]
+                    else:
+                        lectures = Lecture.objects.filter(price__lte=selected_price,
+                            rating__gte=selected_rating)[page * 6 - 6:page * 6]
 
                 else:
-                    lectures = Lecture.objects.filter(
+                    if selected_price == -1:
+                        lectures = Lecture.objects.filter(
+                            level__levelidx=selected_level, rating__gte=selected_rating).select_related(
+                            'siteinfo')[page * 6 - 6:page * 6]
+
+                    else:
+                        lectures = Lecture.objects.filter(
                         level__levelidx=selected_level, rating__gte=selected_rating,
                         price__lte=selected_price).select_related(
                         'siteinfo')[page * 6 - 6:page * 6]
@@ -162,15 +172,29 @@ def lecture_list(request):
 
             else:
                 if selected_level == 0:
-                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
-                                                      rating__gte=selected_rating,
-                                                      price__lte=selected_price).select_related(
-                        'siteinfo')[page * 6 - 6:page * 6]
+
+                    if selected_price == -1:
+                        print('여기잖아')
+                        lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                                                          rating__gte=selected_rating
+                                                          ).select_related(
+                            'siteinfo')[page * 6 - 6:page * 6]
+                    else:
+                        lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                                                         rating__gte=selected_rating,price__lte=selected_price
+                                                         ).select_related(
+                            'siteinfo')[page * 6 - 6:page * 6]
 
 
                 else:
+                    if selected_price == -1:
+                        lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                                                          level__levelidx=selected_level, rating__gte=selected_rating
+                                                         ).select_related(
+                            'siteinfo')[page * 6 - 6:page * 6]
 
-                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
+                    else:
+                        lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
                         level__levelidx=selected_level, rating__gte=selected_rating, price__lte=selected_price).select_related(
                         'siteinfo')[page * 6 - 6:page * 6]
 
@@ -183,6 +207,7 @@ def lecture_list(request):
 
 
             for lec in lectures:
+
 
 
                 h = lec.siteinfo.sitename
