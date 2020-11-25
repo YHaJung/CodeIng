@@ -11,9 +11,7 @@
                 평점<br/><!-- class="orange" -->
                 <fa-icon
                   [icon]="star" 
-                  *ngFor="let rate of [1,2,3,4,5]" 
-                  (mouseenter)="rateHover(rate)"
-                  (mouseleave) = "rateHovered=0"
+                  *ngFor="let rate of [1,2,3,4,5]"
                   (click)="rateClicked(rate)"
                   [ngClass]="{'orange':clickedRate >= rate}"
                 ></fa-icon>
@@ -23,9 +21,7 @@
                 수준<br/>
                 <fa-icon
                   [icon]="star" 
-                  *ngFor="let level of [1,2,3,4,5]" 
-                  (mouseenter)="levelHover(level)"
-                  (mouseleave) = "levelHovered=0"
+                  *ngFor="let level of [1,2,3,4,5]"
                   (click)="levelClicked(level)"
                   [ngClass]="{'orange':clickedLevel >= level}"
                 ></fa-icon>
@@ -33,13 +29,12 @@
             <br/>
             <div>
                 가격만족도<br/>
-                <span
-                  *ngFor="let price of [1,2,3,4,5]" 
-                  (mouseenter)="priceHover(price)"
-                  (mouseleave) = "priceHovered=0"
+                <fa-icon
+                  [icon]="star" 
+                  *ngFor="let price of [1,2,3,4,5]"
                   (click)="priceClicked(price)"
-                  [ngClass]="{'orange':clickedPrice >= price }"
-                >-O</span>
+                  [ngClass]="{'orange':clickedPrice >=price}"
+                ></fa-icon>
             </div>
         </div>
 
@@ -47,9 +42,21 @@
             <label> 개선사항 </label><br/>
             <textarea type="text" formControlName="improvement"></textarea><br/>
             <label> 장점 </label><br/>
-            <textarea type="text" formControlName="pros"></textarea><br/>
+            <p><input type="checkbox" formControlName="pro1" value="1">설명이 친절해요</p>
+            <p><input type="checkbox" formControlName="pro2" value="2">수강생과 소통이 잘돼요</p>
+            <p><input type="checkbox" formControlName="pro3" value="3">집중이 잘돼요</p>
+            <p><input type="checkbox" formControlName="pro4" value="4">커리큘럼이 체계적이에요</p>
+            <p><input type="checkbox" formControlName="pro5" value="5">강의자료가 풍부해요</p>
+            <p><input type="checkbox" formControlName="pro6" value="6">없음</p>
             <label> 단점 </label><br/>
-            <textarea type="text" formControlName="cons"></textarea><br/>
+            <p><input type="checkbox" formControlName="con1" value="1">지루해요</p>
+            <p><input type="checkbox" formControlName="con2" value="2">발음이 이해하기 힘들어요</p>
+            <p><input type="checkbox" formControlName="con3" value="3">소리가 너무 작아요</p>
+            <p><input type="checkbox" formControlName="con4" value="4">소리가 너무 커요</p>
+            <p><input type="checkbox" formControlName="con5" value="5">강의자료가 부실해요</p>
+            <p><input type="checkbox" formControlName="con6" value="6">커리큘럼이 아쉬워요</p>
+            <p><input type="checkbox" formControlName="con7" value="7">설명이 불친절해요</p>
+            <p><input type="checkbox" formControlName="con8" value="8">없음</p>
         </div>
     </div>
     <br/>

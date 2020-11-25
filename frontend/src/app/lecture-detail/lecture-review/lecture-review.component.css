@@ -3,10 +3,10 @@ section{
 }
 section .card{
     background-color: white;
-    margin: 10px 0px 10px 0px;
-    padding: 10px;
+    /*margin: 10px 0px 10px 0px;*/
 }
 
-section p #write-review{
+#write-review-div{
     text-align: right;
+     font-size: 0.8em;
 }

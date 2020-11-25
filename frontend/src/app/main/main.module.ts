@@ -4,11 +4,8 @@ import {MainComponent} from './main.component';
 
 import {ReactiveFormsModule} from '@angular/forms';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from '../home/home.component';
 
-const routes: Routes = [
-  {path: 'home/:auth', pathMatch: 'full', redirectTo: 'home'} 
-];
+const routes: Routes = [];
 
 @NgModule({
   declarations: [MainComponent],

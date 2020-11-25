@@ -1,48 +1,67 @@
-<div>
-  <ngx-avatar class="name" size="30" name="{{review.nickname}}"></ngx-avatar>
-  <div class="upper">{{review.nickname}}
-  <h2>{{review.job}}/{{review.userlevel}}</h2>
-  </div>
-</div>
-<div class="row">
-  <div class="col-sm-4">
-    <div>
-      <h2>총점</h2>
-      <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating > 0}"></fa-icon>
-      <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating > 1}"></fa-icon>
-      <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating  > 2}"></fa-icon>
-      <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating  > 3}"></fa-icon>
-      <fa-icon [icon]="star" [ngClass]="{'yellow':review.totalRating  > 4}"></fa-icon>
-    </div>
-    <div>
-      <h2>강의력</h2>
-      <fa-icon
-        [icon]="star"
-        *ngFor="let num of [0,1,2,3,4]"
-        [ngClass]="{'yellow':review.teachingpowerRating > num}"
-      ></fa-icon>
-    </div>
-    <div>
-      <h2>가격</h2>
-      <fa-icon
-        [icon]="star"
-        *ngFor="let num of [0,1,2,3,4]"
-        [ngClass]="{'yellow':review.priceRating > num}"
-      ></fa-icon>
+<article>
+
+  <!--normal review-->
+  <div *ngIf="review.nickname" class="normal-review">  
+    <ngx-avatar class="user-avatar" size="40" name="{{review.nickname}}"></ngx-avatar>
+    <div class="userInfo">
+      {{review.nickname}}
+      <h2>{{review.job}}/{{review.userlevel}}</h2>
     </div>
   </div>
-  <div class="col-sm-8">
-    <div>
-      <h2>장점</h2>
-      <p>{{review.pros}}</p>
-    </div>
-    <div>
-      <h2>단점</h2>
-      <p>{{review.cons}}</p>
-    </div>
-    <div>
-      <h2>개선점</h2>
-      <p>{{review.improvement}}</p>
+
+  <!--myreview-->
+  <div *ngIf="review.lectureName">  
+    <div id="lectureName">{{review.lectureName}}</div>
+    <div class="edit-button-div">
+      <fa-icon [icon]="edit" (click)="editReview()"></fa-icon>&nbsp; 
+      <fa-icon [icon]="delete" (click)="deleteReview()"></fa-icon>
     </div>
   </div>
-</div>
+
+  <div class="main">
+    <section>
+      <div>
+        <h2>총점</h2>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 0}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 1}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 2}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 3}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 4}"></fa-icon>
+      </div>
+      <br/>
+      <div>
+        <h2>강의력</h2>
+        <fa-icon
+          [icon]="star"
+          *ngFor="let num of [0,1,2,3,4]"
+          [ngClass]="{'orange':review.teachingpowerRating > num}"
+        ></fa-icon>
+      </div>
+      <br/>
+      <div>
+        <h2>가격</h2>
+        <fa-icon
+          [icon]="star"
+          *ngFor="let num of [0,1,2,3,4]"
+          [ngClass]="{'orange':review.priceRating > num}"
+        ></fa-icon>
+      </div>
+    </section>
+    <section>
+      <div>
+        <h2>장점</h2>
+        <p>{{review.pros}}</p>
+      </div>
+      <br/>
+      <div>
+        <h2>단점</h2>
+        <p>{{review.cons}}</p>
+      </div>
+      <br/>
+      <div>
+        <h2>개선점</h2>
+        <p>{{review.improvement}}</p>
+      </div>
+    </section>
+  </div>
+</article>

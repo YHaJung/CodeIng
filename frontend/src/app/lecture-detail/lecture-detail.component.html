@@ -18,7 +18,12 @@
         <fa-icon [icon]="star" [ngClass]="{'orange':level > 4}"></fa-icon>
       </div>
       <div>
-        <p>가격</p>
+        <p>
+          <span>가격 : </span>
+          <span *ngIf="this.lectureDetail.price!='free'">{{this.lectureDetail.price}}원</span>
+          <span *ngIf="this.lectureDetail.price=='free'">무료</span>
+        </p>
+        
       </div>
     </section>
     <section class="col-sm-9" id="content">

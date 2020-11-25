@@ -1,0 +1,17 @@
+<article>
+    <section>
+        <h3>{{qna.createAt}}</h3>
+        <h1>{{qna.qnaTitle}}</h1>
+        <h2>{{qna.qnaDes}}</h2>
+    </section>
+    <br/><br/>
+    <section>
+        <h3></h3>
+    </section>
+    <section>
+        <form [formGroup]="wirteCommentForm" (submit)="createComment()">
+            <textarea type="text" formControlName="comment" placeholder="답글을 입력하세요."></textarea>
+            <button type="submit">입력</button>
+        </form>
+    </section>
+</article>

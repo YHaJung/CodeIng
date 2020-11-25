@@ -1,1 +1,76 @@
-<p>revise-userinfo works!</p>
+<div class="whole">
+    <h1>개인정보 수정</h1>
+    <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
+        <p>계정 생성</p>
+        <div>
+            <p>아이디(이메일)<br/><input type="email" formControlName="id" placeholder="{{personalInfo.email}}"></p>
+            <p>비밀번호<br/><input type="password " formControlName="pw" placeholder="비밀번호"></p>
+            <p>비밀번호 확인<input type="password " formControlName="pwCheck" placeholder="비밀번호 확인"></p>
+        </div>
+        <br/>
+        <div>
+            <p>이름<br/><input type="text" formControlName="name" placeholder="{{personalInfo.name}}"></p>
+            <p>닉네임<br/><input type="text" formControlName="nickname" placeholder="{{personalInfo.nickname}}"></p>
+        </div>
+        <div>
+            <p>휴대전화 번호<br/><input type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" formControlName="phonenumber" placeholder="{{personalInfo.phonenumber}}"></p>
+            <!--
+            <button>인증번호 전송</button>
+            <br/>
+            <input type="number" formControlName="certificationNum" placeholder="인증번호 입력">
+            <button>확인</button>
+            -->
+            <p>생일<input type="date" formControlName="birth" placeholder=""></p>
+            <input type="radio" formControlName="gender" value="W">여자
+            <input type="radio" formControlName="gender" value="M">남자
+        </div>
+        <br/><br/>
+        <div>
+            <p>
+                수준
+                <select>
+                    <option name="0">미정</option>
+                    <option name="1">기초</option>
+                    <option name="2">초급</option>
+                    <option name="3">중금</option>
+                    <option name="4">고급</option>
+                    <option name="5">실무</option>
+                </select>
+            </p>
+            <p>
+                <input type="radio" formControlName="job" value='S'>초등학생
+                <input type="radio" formControlName="job" value='T'>중고등학생
+                <br/>
+                <input type="radio" formControlName="job" value='D'>개발자/전공생
+                <input type="radio" formControlName="job" value='N'>비개발직군/비전공자
+            </p>
+            <p>학교<br/><input type="text" formControlName="school" placeholder="{{personalInfo.school}}"></p>
+        </div>
+        
+        <div>
+            <p>
+                관심있는 분야
+                <select name="interestLanguage" (change)="addCategory($event)">
+                    <option *ngFor="let category of categories"
+                            value="{{category.categoryIdx}},{{category.categoryName}}"
+                        >{{category.categoryName}}</option>
+                </select>
+                <span>*복수선택가능</span>
+                <br/>
+                <span *ngFor="let category of profile.category">#{{category.categoryName}}</span>
+            </p>
+            <p>
+                관심있는 언어
+                <select name="interestField" (change)="addSubCategory($event)">
+                    <option *ngFor="let subcategory of subcategories"
+                            value="{{subcategory.subcategoryIdx}},{{subcategory.subcategoryName}}"
+                        >{{subcategory.subcategoryName}}</option>
+                </select>
+                <span>*복수선택가능</span>
+                <span *ngFor="let subcategory of profile.subcategory">#{{subcategory.categoryName}}</span>
+            </p>
+        </div>
+        <br/>
+        <button id="signup-button" type="submit">개인정보 수정</button>
+    </form>
+</div>

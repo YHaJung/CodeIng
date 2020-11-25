@@ -15,8 +15,8 @@ export class LectureRankDetailComponent implements OnInit {
 
   pages = [1, 2, 3 ,4, 5];
   currentPage = 1;
-  currentCategoryIdx = 1;
-  currentSubCategoryIdx = 1;
+  currentCategoryIdx = 0;
+  currentSubCategoryIdx = 0;
 
   allLectures: any = [];
   

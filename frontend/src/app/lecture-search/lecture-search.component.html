@@ -3,7 +3,7 @@
   <nav>
     <div><a routerLink="/home">홈</a>&nbsp;</div>&nbsp;
     <div><a routerLink="/lecturerankdetail">프로그램 주제별 랭킹</a></div>&nbsp;
-    <div><a routerLink="/lecturerecommenddetail">오늘의 추천 컨텐츠</a></div>&nbsp;
+    <div><a routerLink="/lecturerecommenddetail">추천 컨텐츠</a></div>&nbsp;
     <div class="clicked-menu"><a routerLink="/lecturesearch/{{keyword}}">강의 검색</a></div>
     <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
   </nav>
@@ -12,37 +12,32 @@
 <div id="main-search">
   <section id="side">
     <p>Filter</p>
+    <!--마우스 가져다 대면 색 변화
+      (mouseenter)="levelHover(level)"
+        (mouseleave) = "levelHovered=0"
+        [ngClass]="{'orange':levelHovered >= level}"
+    -->
     <div>
-      평점<br/><!-- class="orange" -->
+      평점(이상)<br/><!-- class="orange" -->
       <fa-icon
         [icon]="star" 
         *ngFor="let rate of [1,2,3,4,5]" 
-        (mouseenter)="rateHover(rate)"
-        (mouseleave) = "rateHovered=0"
         (click)="rateClicked(rate)"
-        [ngClass]="{'orange':rateHovered >= rate}"
+        [ngClass]="{'orange':currentRate >= rate}"
       ></fa-icon>
     </div>
     <div class="test">
       수준<br/>
       <fa-icon
         [icon]="star" 
-        *ngFor="let level of [1,2,3,4,5]" 
-        (mouseenter)="levelHover(level)"
-        (mouseleave) = "levelHovered=0"
+        *ngFor="let level of [1,2,3,4,5]"
         (click)="levelClicked(level)"
-        [ngClass]="{'orange':levelHovered >= level}"
+        [ngClass]="{'orange':currentLevel >= level}"
       ></fa-icon>
     </div>
     <div>
       가격<br/>
-      <span
-        *ngFor="let price of [1,2,3,4,5]" 
-        (mouseenter)="priceHover(price)"
-        (mouseleave) = "priceHovered=0"
-        (click)="priceClicked(price)"
-        [ngClass]="{'orange':priceHovered >= price }"
-      >-O</span>
+      <ngx-slider [(highValue)]= "currentPrice" [options]="options" (click)="priceClicked()"></ngx-slider>
     </div>
   </section>
   <section>

@@ -1,7 +1,6 @@
-<div id="whole">
+<div class="whole">
     <h1>내가 쓴 리뷰</h1>
     <app-review-card
-        class="card"
         *ngFor="let review of reviews"
         [review]="review"
     ></app-review-card>

@@ -20,7 +20,7 @@ fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
 }
 
 #content .clicked-menu {
-  border-bottom: 4px solid var(--main-yellow);
+  border-bottom: 4px solid var(--main-point);
 }
 .col-sm-3 {
   font-weight: 600;

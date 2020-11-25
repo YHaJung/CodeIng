@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../api.service';
 import {CookieService} from 'ngx-cookie-service';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -19,22 +20,25 @@ export class HomeComponent implements OnInit {
   token : string;
   nickname : string;
 
-  constructor(private apiService: ApiService, private cookieService: CookieService,) { }
+  constructor(private apiService: ApiService,
+             private cookieService: CookieService,
+             private route: ActivatedRoute 
+  ) { }
 
   ngOnInit(): void {
     this.token = this.cookieService.get('token');
-
-    this.callRankingApi();
-    this.callRecommendApi();
 
     if(this.token){
       this.apiService.getPersonalInfo().subscribe(
         data => {
           this.nickname = data['result'].nickname;
+          console.log(this.nickname);
         },
         error => console.log(error)
       );
     }
+    this.callRankingApi();
+    this.callRecommendApi();
   }
 
   callRankingApi(){
@@ -47,13 +51,23 @@ export class HomeComponent implements OnInit {
     );
   }
   callRecommendApi(){
-    this.apiService.getRecommendOverview(this.recommendPage).subscribe(
-      data => {
-        this.recommendoverview = data['result'];
-        console.log(this.recommendoverview);
-      },
-      error => console.log(error)
-    );
+    if(this.token){
+      this.apiService.getRecommendOverview(this.recommendPage).subscribe(
+        data => {
+          this.recommendoverview = data['result'];
+          console.log(this.recommendoverview);
+        },
+        error => console.log(error)
+      );
+    }else{
+      this.apiService.getRecommendOverview(this.recommendPage).subscribe(
+        data => {
+          this.recommendoverview = data['result'];
+          console.log(this.recommendoverview);
+        },
+        error => console.log(error)
+      );
+    }
   }
 
   // tslint:disable-next-line:typedef

@@ -11,12 +11,12 @@ import {ActivatedRoute} from '@angular/router';
 export class LectureQnaComponent implements OnInit {
   lectureIdx : number;
 
-  write = false;
+  page = 0;
   goWriteQnaPage(){
-    this.write = true;
+    this.page = 1;
   }
   writeFinished(){
-    this.write = false;
+    this.page = 0;
   }
 
   qnas: any = [];
@@ -39,6 +39,13 @@ export class LectureQnaComponent implements OnInit {
       error => console.log(error)
     );
 
+  }
+  //comments
+  selectedQnaIdx : number;
+  selectQna(qna){
+    this.page=2;
+    this.selectedQnaIdx = qna.qnaIdx;
+    console.log('qnaidx:'+this.selectedQnaIdx);
   }
 
 }

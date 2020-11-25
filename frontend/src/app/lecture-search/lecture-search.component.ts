@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Input} from '@angular/core';
 import { faStar} from '@fortawesome/free-solid-svg-icons';
 import {ApiService} from '../api.service';
 import {ActivatedRoute} from '@angular/router';//rounter parameter
+import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-lecture-search',
@@ -14,7 +15,13 @@ export class LectureSearchComponent implements OnInit {
   keyword='';
   currentRate = 0;
   currentLevel = 0;
+
   currentPrice = 0;
+  options: Options = {
+    floor: 0,
+    ceil: 200000
+  };
+
   pages = [1, 2, 3 ,4, 5];
   currentPage = 1;
 
@@ -25,18 +32,6 @@ export class LectureSearchComponent implements OnInit {
 
   /*stars */
   star = faStar;
-  rateHovered = 0;
-  levelHovered = 0;
-  priceHovered = 0;
-  rateHover(rate){
-    this.rateHovered = rate;   //마우스 가져가면 별 바뀜
-  }
-  levelHover(level){
-    this.levelHovered = level;   //마우스 가져가면 별 바뀜
-  }
-  priceHover(price){
-    this.priceHovered = price;   //마우스 가져가면 별 바뀜
-  }
   rateClicked(rate){
     this.currentRate= rate;
     this.searchLectures();
@@ -45,14 +40,14 @@ export class LectureSearchComponent implements OnInit {
     this.currentLevel = level;
     this.searchLectures();
   }
-  priceClicked(price){
-    this.currentPrice = price;
+  priceClicked(){
     this.searchLectures();
   }
 
   searchLectures(){
-    console.log(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice*20000);
-    this.apiService.searchLectures(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice*20000).subscribe(
+    this.keyword = this.route.snapshot.paramMap.get('keyword');
+    console.log(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice);
+    this.apiService.searchLectures(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice).subscribe(
       data => {
         this.lectures = data['result'];
         console.log(this.lectures);

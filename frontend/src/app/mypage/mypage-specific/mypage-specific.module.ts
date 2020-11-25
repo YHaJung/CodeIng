@@ -7,6 +7,7 @@ import {MypageNavModule} from "../mypage-nav/mypage-nav.module";
 import {FavoriteLecturesModule} from '../favorite-lectures/favorite-lectures.module';
 import {FavoriteSitesModule} from '../favorite-sites/favorite-sites.module';
 import {MyreviewsModule} from '../myreviews/myreviews.module';
+import {ReviseUserinfoModule} from '../../revise-userinfo/revise-userinfo.module';
 
 const routes: Routes = [
   {path: 'mypage-specific/:mypagekey', component: MypageSpecificComponent}
@@ -21,7 +22,8 @@ const routes: Routes = [
     MypageNavModule,
     FavoriteLecturesModule,
     FavoriteSitesModule,
-    MyreviewsModule
+    MyreviewsModule,
+    ReviseUserinfoModule
   ]
 })
 export class MypageSpecificModule { }
