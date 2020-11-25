@@ -15,6 +15,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
 
 import { WriteReviewComponent } from './write-review/write-review.component';
+import { LectureQnaCommentsComponent } from './lecture-qna-comments/lecture-qna-comments.component';
 
 
 const routes: Routes = [
@@ -28,7 +29,8 @@ const routes: Routes = [
     LectureReviewComponent,
     LectureQnaComponent,
     WriteLectureQnaComponent,
-    WriteReviewComponent
+    WriteReviewComponent,
+    LectureQnaCommentsComponent
   ],
   imports: [
     CommonModule,

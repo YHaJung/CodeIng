@@ -9,11 +9,9 @@
   float: right;
 }
 
-#content .qcard{
-    width:25vw;
-    height: 20vw;
-    display: inline-block;
-    margin: 0.5vw;
-    overflow: hidden;
-    background-color: #F6F7FA;
+#content{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap : 10px
 }
+
