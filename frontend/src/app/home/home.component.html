@@ -12,27 +12,27 @@
   <!--lecture ranking-->
   <section id="lecture-subject-rank">
     <div>
-      <h3>프로그램 주제별 랭킹</h3>
+      <h1>프로그램 주제별 랭킹</h1>
     </div>
     <div>
-      <a href="/lecturerankdetail"> <button>전체보기</button></a>
+      <a href="/lecturerankdetail"> <button class="goWhole">전체보기</button></a>
       <div class='pagebutton'>
-        <button (click)="rankingPageMinus()"> < </button>
-        <button (click)="rankingPagePuls()"> > </button>
+        <button (click)="rankingPageMinus()"><</button>
+        <button (click)="rankingPagePuls()">></button>
       </div>
     </div>
     <div id="wrapper">
       <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
-        {{lecture.ranking + (rankingPage-1)*5}}
+        <h2>{{lecture.ranking + (rankingPage-1)*5}}</h2>
         <div class="img-div"><img src="{{lecture?.thumbUrl}}" alt="Card image"></div>
         <div>
-          {{lecture.siteName}}
-          <p class="title">{{lecture.lectureName}}</p>
+          <h3>{{lecture.siteName}}</h3>
+          <h4 class="title">{{lecture.lectureName}}</h4>
           <p *ngIf="lecture.level == 0">입문</p>
           <p *ngIf="2>lecture.level&& lecture.level >= 1">초급</p>
           <p *ngIf="3>lecture.level&& lecture.level >= 2">중급</p>
           <p *ngIf="4>lecture.level&&  lecture.level >= 3">고급</p>
-          <p *ngIf="5>lecture.level&&  lecture.level >= 4">전문가</p>
+          <p *ngIf="5>lecture.level&&  lecture.level >= 4">실무</p>
 <!--          레벨 {{lecture.level}}-->
         </div>
       </article>
@@ -43,30 +43,29 @@
   <!--lecture ranking-->
   <section id="lecture-subject-rank">
     <div>
-      <h3 *ngIf="!token">오늘의 추천 콘텐츠</h3>
-      <h3 *ngIf="token">{{nickname}} 님을 위한 추천 콘텐츠</h3>
+      <h1 *ngIf="!token">오늘의 추천 콘텐츠</h1>
+      <h1 *ngIf="token">{{nickname}} 님을 위한 추천 콘텐츠</h1>
     </div>
     <div>
-      <a href="/lecturerecommenddetail"> <button>전체보기</button></a>
+      <a href="/lecturerecommenddetail"> <button class="goWhole">전체보기</button></a>
       <div class='pagebutton'>
-        <button (click)="recommendPageMinus()"> < </button>
-        <button (click)="recommendPagePuls()"> > </button>
+        <button (click)="recommendPageMinus()"><</button>
+        <button (click)="recommendPagePuls()">></button>
       </div>
     </div>
     <div id="wrapper">
       <!--recommendoverview 이어야 하지만 안되므로 임시-->
       <article *ngFor="let lecture of recommendoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
-        {{lecture.ranking + (recommendPage-1)*5}}
         <div class="img-div"><img src="{{lecture.thumbUrl}}" alt="Card image"></div>
         <div (click)="lectureClicked(lecture)">
-          {{lecture.siteName}}
-          <p class="title">{{lecture.lectureName}}</p>
+          <h3>{{lecture.siteName}}</h3>
+          <h4 class="title">{{lecture.lectureName}}</h4>
 <!--          <p>레벨 {{lecture.level}}</p>-->
           <p *ngIf="lecture.level == 0">입문</p>
           <p *ngIf="2>lecture.level&& lecture.level >= 1">초급</p>
           <p *ngIf="3>lecture.level&& lecture.level >= 2">중급</p>
           <p *ngIf="4>lecture.level&&  lecture.level >= 3">고급</p>
-          <p *ngIf="5>lecture.level&&  lecture.level >= 4">전문가</p>
+          <p *ngIf="5>lecture.level&&  lecture.level >= 4">실무</p>
         </div>
       </article>
       <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->

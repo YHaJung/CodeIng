@@ -40,8 +40,7 @@ export class LectureSearchComponent implements OnInit {
     this.currentLevel = level;
     this.searchLectures();
   }
-  priceClicked(price){
-    this.currentPrice = price;
+  priceClicked(){
     this.searchLectures();
   }
 

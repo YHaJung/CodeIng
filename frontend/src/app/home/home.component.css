@@ -5,14 +5,17 @@
 
 button{
   border: 0px;
+  background-color: transparent;
 }
+.goWhole{
+  box-shadow: 1px 1px 0.5px 0.5px gray;
+}
+
 
 .pagebutton{
   float: right;
   background-color: #ffffff;
-}
-.pagebutton button{
-  background-color: #ffffff;
+  margin-right: 40px;
 }
 
 article{
@@ -34,4 +37,19 @@ article .title{
   overflow: hidden;
   /*font-size: 1.2em;*/
   font-size: 0.9em;
+}
+
+
+
+h1{
+  font-size: 1.5em;
+}
+h2{
+  font-size: 1em;
+}
+h3{
+  font-size: 1em;
+}
+h4{
+  font-size: 1em;
 }
