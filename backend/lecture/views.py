@@ -140,7 +140,7 @@ def lecture_list(request):
                 page = 1
 
             if upper_price == -1:
-                upper_price == 10000000
+                upper_price == 20000000
 
 
             # 잘못된 파라미터 값이 들어왔을 경우
@@ -150,6 +150,7 @@ def lecture_list(request):
             if input_keyword =='':
                 # 쿼리문
                 if selected_level == 0:
+
                     lectures = Lecture.objects.filter(price__lte=upper_price, price__gte=lower_price,
                                                       rating__gte=selected_rating)[page * 6 - 6:page * 6]
 
@@ -161,23 +162,53 @@ def lecture_list(request):
                         'siteinfo')[page * 6 - 6:page * 6]
 
 
-
+            # 키워드가 있을 경우
             else:
-                if selected_level == 0:
-
-                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword,
-                                                      rating__gte=selected_rating, price__lte=upper_price,
-                                                      price__gte=lower_price
-                                                      ).select_related('siteinfo')[page * 6 - 6:page * 6]
+                #키워드 공백 단위로 분리
+                input_keyword = " ".join(input_keyword.strip().split()).split()
 
 
+                key = []
+                for ele in input_keyword:
+
+
+                    if selected_level == 0:
+
+                        lectures = Lecture.objects.filter(lecturename__icontains=ele,
+                                                          rating__gte=selected_rating, price__lte=upper_price,
+                                                          price__gte=lower_price
+                                                          ).select_related('siteinfo')
+
+
+                    else:
+                        lectures = Lecture.objects.filter(lecturename__icontains=ele, price__gte=lower_price,
+                                                          level__levelidx=selected_level, rating__gte=selected_rating,
+                                                          price__lte=upper_price).select_related('siteinfo')
+
+
+
+                    key.append(lectures)
+
+                if len(input_keyword) == 1:
+                   result = key[0]
                 else:
-                    lectures = Lecture.objects.filter(lecturename__icontains=input_keyword, price__gte=lower_price,
-                                                      level__levelidx=selected_level, rating__gte=selected_rating,
-                                                      price__lte=upper_price).select_related(
-                        'siteinfo')[page * 6 - 6:page * 6]
+                    # a+b
+                    for i in range(len(key)):
+                        if i == 0:
+                            inter = key[i]
+                        else:
+                            inter = inter & key[i]
 
+                    # a+b+I
+                    for i in range(len(key)):
+                        if i == 0:
+                            sum = key[i]
+                        else:
+                            sum = sum.union(key[i], all=False)
 
+                    minus = set(sum).difference(set(inter))
+
+                    result = (list(inter) + list(minus))[page * 6 - 6:page * 6]
 
             lec_dict = {}
             lec_dict['isSuccess'] = 'true'
@@ -186,10 +217,7 @@ def lecture_list(request):
             info = []
 
 
-            for lec in lectures:
-
-
-
+            for lec in result:
                 h = lec.siteinfo.sitename
 
                 #가격
