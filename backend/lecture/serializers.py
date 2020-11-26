@@ -37,7 +37,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['commentidx','commentdes','qna','userinfo','parentidx', 'isdeleted']
+        fields = ['commentidx','commentdes','qna','userinfo','parentidx', 'isdeleted', 'isblocked']
 
 
 class CommentimageSerializer(serializers.ModelSerializer):

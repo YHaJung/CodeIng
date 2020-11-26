@@ -562,16 +562,17 @@ def profile(request):
         elif request.method == 'PATCH':
             p_dict = QueryDict.dict(request.data)
 
-            print(p_dict)
+
             
             #profile -> 받아온 데이터 넣기
             data = request.user
 
             if len(p_dict['birthday']) != 0:
                 validateBirth(p_dict['birthday'])
+                data.birthday = p_dict['birthday']
 
             data.school = p_dict['school']
-            data.birthday = p_dict['birthday']
+
             data.gender = p_dict['gender']
             data.level.levelidx = int(p_dict['level'])
             data.job = p_dict['job']
@@ -612,7 +613,7 @@ def profile(request):
                 serializer = SubcategoryinterestSerializer(data=query_dict)
                 if serializer.is_valid():
                     serializer.save()
-                    print('성공')
+
 
 
             return JsonResponse({'isSuccess': 'true',
