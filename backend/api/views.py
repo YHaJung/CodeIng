@@ -212,7 +212,7 @@ def CBRS(request):
 @login_decorator
 def CBRSlist(request):
     pk = request.user.userinfo.useridx
-    data = pickle.load(open('knn_models/data.pkl', 'rb'))
+    data = picle.load(open('knn_models/data.pkl', 'rb'))
     querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
     nneigh = 25
@@ -288,6 +288,10 @@ def Poprs(request, pk=None):
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
         selectIdx = int(request.GET.get('selectIdx', '1'))
         nneigh = 5
+        page = int(request.GET.get('page', '1'))
+        if page <1:
+            page =1
+
         krecommend = np.argsort(-recommend)[5 * selectIdx - 5:nneigh * selectIdx]
 
         cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
@@ -310,9 +314,10 @@ def Poprs(request, pk=None):
         #     , krecommend))
 
 
-        for lectureidx in krecommend:
+        for lectureidx in krecommend[page * 5 - 5:page * 5]:
             i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
                     'siteinfo').distinct()
+
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
             # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
