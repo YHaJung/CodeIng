@@ -148,7 +148,7 @@ def lecture_list(request):
 
                 raise Exception
 
-            if input_keyword =='' or input_keyword =='""':
+            if input_keyword =='' or input_keyword =='""' or input_keyword=='' or len(input_keyword.replce(' ','')) ==0:
                 # 쿼리문
                 if selected_level == 0:
 
