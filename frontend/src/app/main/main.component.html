@@ -13,7 +13,7 @@
     <div id="middle">
         <div class="logo" routerLink='/home' type="button" (click)="gohome()"></div>
         <form [formGroup]="searchForm" (submit)="searchLectures()">
-            <input ng-init="확률" type="text" [(ngModel)]="keyword" formControlName="keywordForm" placeholder="{{searchtext}}"/>
+            <input type="text" [(ngModel)]="keyword" formControlName="keywordForm" placeholder="{{searchtext}}"/>
             <button class="btn" type="submit" routerLink="/lecturesearch/{{keyword}}">검색</button>
         </form>
     </div>

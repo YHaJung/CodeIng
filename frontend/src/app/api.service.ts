@@ -39,8 +39,12 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + '/overall-ranking?page='+page, {headers: this.headers});
   }
   // tslint:disable-next-line:typedef
-  getRecommendOverview(categoryIdx) {  // 나중에 api 바꾸기
-    return this.httpClient.get(this.baseUrl + 'ranking-overview?categoryIdx='+categoryIdx, {headers: this.headers});
+  getRecommendOverview(page:number) {  // 나중에 api 바꾸기
+    if(this.token){
+      return this.httpClient.get(this.baseUrl + 'api/user_recommend?page='+page, {headers: this.headers});
+    }else{
+      return this.httpClient.get(this.baseUrl + 'api/recommend?page='+page, {headers: this.headers});
+    }
   }
 
   // 프로그램 주제별 랭킹

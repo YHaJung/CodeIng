@@ -1,7 +1,7 @@
 article .img-div{
   height: 10vw;
-  width: 13vw;
-  background-color: var(--main-gray);
+  width:100%;
+  border: 0.2px var(--light-gray) solid;
 }
 
 img{
@@ -9,25 +9,22 @@ img{
     width: 100%;
 }
 
-
-article .title{
-  height: 5vw;
+.text-div{
+  margin: 5px;
+}
+h1{   /*사이트이름*/
+  font-size: 1.0em;
+}
+h2{   /*강의이름*/
+  font-size: 1.1em;
   overflow: hidden;
-  /*font-size: 1.2em;*/
+  line-height: 1.2;
+  height: 2.4em;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  display: -webkit-box;  /*초과시 말줄임표*/
+  word-break:break-all; /*문자 단위 줄바꿈*/
+}
+h3{   /*강의수준*/
   font-size: 0.9em;
-}
-
-
-
-h1{
-  font-size: 1.5em;
-}
-h2{
-  font-size: 1em;
-}
-h3{
-  font-size: 1em;
-}
-h4{
-  font-size: 1em;
 }

@@ -10,7 +10,7 @@ import {FormsModule} from '@angular/forms';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MainModule} from "../main/main.module";
 import {LectureCardSmallModule} from '../cards/lecture-card-small/lecture-card-small.module';
-
+import {MainNavModule} from '../nav/main-nav/main-nav.module';
 
 const routes: Routes = [
   {path: 'home', component: HomeComponent},
@@ -31,6 +31,7 @@ const routes: Routes = [
     FormsModule,
     HttpClientModule,
     MainModule,
+    MainNavModule,
     LectureCardSmallModule
   ],
   exports: [

@@ -16,7 +16,6 @@ fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
 /*search-main*/
 #content div {
   display: inline-block;
-  color: var(--main-gray);
 }
 
 #content .clicked-menu {
