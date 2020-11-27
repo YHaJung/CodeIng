@@ -13,7 +13,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
        model = Profile
        fields = ['userpwd','name', 'email', 'phonenumber',
-                   'isdeleted', 'isblocked']
+                   'isdeleted', 'isblocked', 'level']
 
 #원래
 #class UserinfoSerializer(serializers.ModelSerializer):
