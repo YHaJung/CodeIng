@@ -45,7 +45,7 @@ export class HomeComponent implements OnInit {
     this.apiService.getRankingOverview(this.rankingPage).subscribe(
       data => {
         this.rankingdoverview = data['result'];
-        console.log(this.rankingdoverview.length);
+        console.log(this.rankingdoverview);
       },
       error => console.log(error)
     );

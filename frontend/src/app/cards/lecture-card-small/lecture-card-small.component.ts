@@ -10,8 +10,6 @@ export class LectureCardSmallComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log('lectiure');
-    console.log(this.lecture);
   }
 
 }
