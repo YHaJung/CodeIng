@@ -29,7 +29,7 @@
     <section class="col-sm-9" id="content">
       <p>
         {{title}}
-        <fa-icon [icon]="bookmark" [ngClass]="{'orange': favoriteLecture}" type="button" (click)="setFavoriteLecture()"></fa-icon>
+        <fa-icon [icon]="bookmark" [ngClass]="{'orange': favoriteLecture==1}" type="button" (click)="setFavoriteLecture()"></fa-icon>
       </p> 
       <div (click)="viewReviews()" [ngClass]="{'clicked-menu':reviewChecked==1}">리뷰</div>&nbsp;
       <div (click)="viewQna()" [ngClass]="{'clicked-menu':qnaChecked==1}">QnA</div>

@@ -116,6 +116,7 @@ export class ReviseUserinfoComponent implements OnInit {
       },
       error => console.log(error)
     );
+    
     this.apiService.patchProfile(this.reviseUserInfoForm.value.birth,
                                   this.reviseUserInfoForm.value.school,
                                   this.reviseUserInfoForm.value.level,
@@ -129,6 +130,7 @@ export class ReviseUserinfoComponent implements OnInit {
       },
       error => console.log(error)
       );
+      
     
   }
 

@@ -1,14 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
-@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+/*@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
+@import url(https://fonts.google.com/specimen/Noto+Sans);*/
+@import url(https://www.google.com/get/noto/);
 
 body{
-  font-family: 'Noto Sans KB';
+  font-family: 'Noto Sans CJK';
 }
 
 
 /*main colors*/
-:root{
+:root{/*star - EBEBEB*/
   --main-gray:#464646;
   --main-blue:#0155FB;
   --main-yellow:#FFC000;

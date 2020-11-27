@@ -71,7 +71,7 @@ export class ApiService {
   getLectureReviews(lectureIdx : number){
     return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review', {headers: this.headers});
   }
-  createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:Array<any>, cons:Array<any>){              //
+  createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:Array<number>, cons:Array<number>){              //
     const body = JSON.stringify({totalrating, teachingpowerrating, pricerating, recommend, improvement, pros, cons});
     console.log(body);
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/review', body, {headers: this.headers});
@@ -126,6 +126,17 @@ export class ApiService {
   }
   patchPersonalInfo(email:string, userpwd:string, userpwdConfirm:string, name:string, phonenumber:string, nickname:string){
     const body = JSON.stringify({email, userpwd, userpwdConfirm, name, phonenumber, nickname});
+    /*
+    const body = {
+      'email' : email,
+      'name' : name,
+      'nickname': nickname,
+      'phonenumber': phonenumber,
+      'userpwd': userpwd,
+      'userpwdConfirm': userpwdConfirm
+    };
+    */
+    console.log('personalInfo 수정');
     console.log(body);
     return this.httpClient.patch(this.baseUrl + 'personal-info', body, {headers: this.headers});
   }
@@ -148,6 +159,9 @@ export class ApiService {
   
   patchFavoriteLectures(lectureIdx){
     return this.httpClient.patch(this.baseUrl+'favorite-lectures?lectureIdx='+lectureIdx, {}, {headers: this.headers});
+  }///lecture/:lectureIdx/check-favorite
+  isFavoriteLectures(lectureIdx : number){
+    return this.httpClient.get(this.baseUrl+'lectures/'+lectureIdx+'/check-favorite', {headers: this.headers});
   }
   
 

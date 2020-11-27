@@ -40,8 +40,8 @@ export class WriteReviewComponent implements OnInit {
     this.clickedPrice = price;
   }
   
-  pros : Array<any> =[];
-  cons : Array<any>=[];
+  pros : Array<number> =[];
+  cons : Array<number>=[];
   wirteReviewForm = new FormGroup({
     satisfy : new FormControl(''),
     recommend : new FormControl(''),

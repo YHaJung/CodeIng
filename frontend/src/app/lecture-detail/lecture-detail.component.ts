@@ -12,24 +12,8 @@ import { Options } from '@angular-slider/ngx-slider';
 export class LectureDetailComponent implements OnInit {
   star = faStar;
   bookmark = faBookmark;
-  favoriteLecture = false;
-  lectureIdx : string;
-
-  setFavoriteLecture(){
-    this.apiService.patchFavoriteLectures(this.lectureIdx).subscribe(
-      result => {
-        console.log(result);
-      },
-      error => console.log(error)
-    );
-    if(this.favoriteLecture == false){
-      this.favoriteLecture = true;
-    }else{
-      this.favoriteLecture = false;
-    }
-  }
-
-
+  favoriteLecture = 0 ;       //관심강의 여부
+  lectureIdx : number;
   lectureDetail: any=[];
   title :string;
   avg_rating = 0;
@@ -38,7 +22,6 @@ export class LectureDetailComponent implements OnInit {
   reviews: any = [];
   recommendoverview: any = [];
 
-  
 
   constructor(
     private route: ActivatedRoute,
@@ -51,7 +34,7 @@ export class LectureDetailComponent implements OnInit {
     this.avg_rating = 0;
     this.level = 0;
 
-    this.lectureIdx = this.route.snapshot.paramMap.get('lectureIdx');
+    this.lectureIdx = Number(this.route.snapshot.paramMap.get('lectureIdx'));
 
     //call lecture info
     this.apiService.getLectureDetail(this.lectureIdx).subscribe(
@@ -65,6 +48,18 @@ export class LectureDetailComponent implements OnInit {
       error => console.log(error)
     );
     //patchFavoriteLectures(lectureIdx:number)
+    this.apiService.isFavoriteLectures(this.lectureIdx).subscribe(
+      data => {
+        if(data['state']=='true'){
+          this.favoriteLecture = 1;
+        }else{
+          this.favoriteLecture = 0;
+        }
+        console.log('favor?');
+        console.log(this.favoriteLecture);
+      },
+      error => console.log(error)
+    );
 
   }
   
@@ -80,6 +75,24 @@ export class LectureDetailComponent implements OnInit {
   viewQna(){
     this.qnaChecked = 1;
     this.reviewChecked = 0;
+  }
+
+  setFavoriteLecture(){
+    this.apiService.patchFavoriteLectures(this.lectureIdx).subscribe(
+      result => {
+        console.log(result);
+      },
+      error => console.log(error)
+    );
+    /*
+    if(this.favoriteLecture == 0){
+      this.favoriteLecture = 1;
+    }else{
+      this.favoriteLecture = 0;
+    }
+    */
+    window.location.reload();
+    
   }
 
 }
