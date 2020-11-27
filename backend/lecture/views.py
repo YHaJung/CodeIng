@@ -148,7 +148,7 @@ def lecture_list(request):
 
                 raise Exception
 
-            if input_keyword =='':
+            if input_keyword =='' or input_keyword =='""':
                 # 쿼리문
                 if selected_level == 0:
 
@@ -192,7 +192,8 @@ def lecture_list(request):
                     key.append(lectures)
 
                 if len(input_keyword) == 1:
-                   result = key[0]
+                   result = key[0][page * 6 - 6:page * 6]
+
                 else:
                     # a+b
                     for i in range(len(key)):
