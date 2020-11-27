@@ -315,7 +315,7 @@ def Poprs(request, pk=None):
 
 
         for lectureidx in krecommend[page * 5 - 5:page * 5]:
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
+            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level','level__levelname', 'price', 'rating',
                     'siteinfo').distinct()
 
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
@@ -341,7 +341,8 @@ def Poprs(request, pk=None):
                       ('lectureName', i[0]['lecturename']),
                       ('thumbUrl', thumbnail),
                       ('lecturer', i[0]['lecturer']),
-                      ('level', decimal.Decimal(i[0]['level'])),
+                      ('levelIdx', int(decimal.Decimal(i[0]['level']))),
+                      ('levelName', i[0]['level__levelname']),
                       ('price', price),
                       ('rating', i[0]['rating']),
                       ('siteinfo', sitename),
