@@ -16,7 +16,6 @@ export class LectureCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('called');
     console.log(this.lecture);
   }
 

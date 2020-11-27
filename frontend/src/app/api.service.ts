@@ -28,8 +28,8 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
   }
   //강의 검색
-  searchLectures(page, keyword, rate, level, price) {
-    return this.httpClient.get(this.baseUrl + 'lectures?page='+page+'&keyword='+keyword+'&rating='+rate+'&level='+level+'&price='+price, {headers: this.headers});
+  searchLectures(page, keyword, rate, level, lowPrice, highPrice) {
+    return this.httpClient.get(this.baseUrl + 'lectures?page='+page+'&keyword='+keyword+'&rating='+rate+'&level='+level+'&lowerLimit='+lowPrice+'&upperLimit='+highPrice, {headers: this.headers});
   }
 
 

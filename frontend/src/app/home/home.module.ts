@@ -5,12 +5,11 @@ import {ApiService} from '../api.service';
 import { HomeComponent } from './home.component';
 import {SigninComponent } from '../auth/signin/signin.component';
 // import {HomeNavBarComponent} from '../home-nav-bar/home-nav-bar.component';
-import { LectureRankListComponent } from './lecture-rank-list/lecture-rank-list.component';
-import { LectureRecommendListComponent } from './lecture-recommend-list/lecture-recommend-list.component';
 import {FormsModule} from '@angular/forms';
 
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {MainModule} from "../main/main.module";
+import {LectureCardSmallModule} from '../cards/lecture-card-small/lecture-card-small.module';
 
 
 const routes: Routes = [
@@ -23,17 +22,16 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     HomeComponent,
-    // LectureRankDetailComponent,
-    LectureRankListComponent,
+    // LectureRankDetailComponent
     // LectureRecommendDetailComponent,
-    LectureRecommendListComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
     FormsModule,
     HttpClientModule,
-    MainModule
+    MainModule,
+    LectureCardSmallModule
   ],
   exports: [
     RouterModule

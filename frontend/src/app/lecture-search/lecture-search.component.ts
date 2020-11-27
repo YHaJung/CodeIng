@@ -14,9 +14,11 @@ export class LectureSearchComponent implements OnInit {
   lectures:any=[];
   keyword='';
   currentRate = 0;
+  sendRate = 0;//반올림 별점으로 적용하기 위함
   currentLevel = 0;
 
-  currentPrice = 0;
+  lowPrice = 0;
+  highPrice = 200000;
   options: Options = {
     floor: 0,
     ceil: 200000
@@ -45,12 +47,18 @@ export class LectureSearchComponent implements OnInit {
   }
 
   searchLectures(){
+    if(this.currentRate>0.5){
+      this.sendRate = this.currentRate - 0.5;
+    }else{
+      this.sendRate = this.currentRate;
+    }
     this.keyword = this.route.snapshot.paramMap.get('keyword');
-    console.log(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice);
-    this.apiService.searchLectures(this.currentPage, this.keyword, this.currentRate, this.currentLevel, this.currentPrice).subscribe(
+    console.log('search filter');
+    console.log(this.currentPage, this.keyword, this.sendRate, this.currentLevel, this.lowPrice, this.highPrice);
+    this.apiService.searchLectures(this.currentPage, this.keyword, this.sendRate, this.currentLevel, this.lowPrice, this.highPrice).subscribe(
       data => {
         this.lectures = data['result'];
-        console.log(this.lectures);
+       // console.log(this.lectures);
       },
       error => console.log(error)
     );

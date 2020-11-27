@@ -44,7 +44,7 @@ fa-icon.purple{
   /*ngx-slider{*/
 /*최소값 설정 숨김*/
 ::ng-deep .ngx-slider .ngx-slider-pointer-min{
-    display: none !important;
+   /* display: none !important;*/
 }
 ::ng-deep .ngx-slider .ngx-slider-pointer{
     width: 8px !important;

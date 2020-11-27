@@ -6,6 +6,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 import { AppComponent } from './app.component';
 
 import {RouterModule, Routes} from '@angular/router';
+
 import {HomeModule} from './home/home.module';
 
 import {MypageModule} from './mypage/mypage.module';
@@ -31,6 +32,8 @@ import { CookieService } from 'ngx-cookie-service';
 
 import {ReviewCardModule} from './cards/review-card/review-card.module';
 import {QnaCardModule} from './cards/qna-card/qna-card.module';
+import {LectureCardSmallModule} from './cards/lecture-card-small/lecture-card-small.module';
+
 import { AvatarModule } from 'ngx-avatar';
 
 const appRoutes: Routes = [
@@ -73,6 +76,7 @@ const appRoutes: Routes = [
     LectureCardModule,
     ReviewCardModule,
     QnaCardModule,
+    LectureCardSmallModule,
     AvatarModule,
     SigninModule,
     SignupModule,
