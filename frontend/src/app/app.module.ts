@@ -11,7 +11,6 @@ import {HomeModule} from './home/home.module';
 
 import {MypageModule} from './mypage/mypage.module';
 import {ReviseUserinfoModule} from './revise-userinfo/revise-userinfo.module';
-import {BasketModule} from './basket/basket.module';
 import {MypageNavModule} from './mypage/mypage-nav/mypage-nav.module';
 import {MypageSpecificModule} from './mypage/mypage-specific/mypage-specific.module';
 import {FavoriteLecturesModule} from './mypage/favorite-lectures/favorite-lectures.module';
@@ -33,6 +32,7 @@ import { CookieService } from 'ngx-cookie-service';
 import {ReviewCardModule} from './cards/review-card/review-card.module';
 import {QnaCardModule} from './cards/qna-card/qna-card.module';
 import {LectureCardSmallModule} from './cards/lecture-card-small/lecture-card-small.module';
+import {MainNavModule} from './nav/main-nav/main-nav.module';
 
 import { AvatarModule } from 'ngx-avatar';
 
@@ -60,8 +60,8 @@ const appRoutes: Routes = [
     ReactiveFormsModule,
     // AppRoutingModule,
     HomeModule,
+    MainNavModule,
     MypageModule,
-    BasketModule,
     ReviseUserinfoModule,
     MypageNavModule,
     MypageSpecificModule,

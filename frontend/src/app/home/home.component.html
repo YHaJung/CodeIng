@@ -8,12 +8,12 @@
   </nav>
 </section>
 
+<br/>
+
 <div id="main-home">
   <!--lecture ranking-->
-  <section id="lecture-subject-rank">
-    <div>
-      <h1>프로그램 주제별 랭킹</h1>
-    </div>
+  <section>
+    <h1>프로그램 주제별 랭킹</h1>
     <div>
       <a href="/lecturerankdetail"> <button class="goWhole">전체보기</button></a>
       <div class='pagebutton'>
@@ -21,24 +21,25 @@
         <button (click)="rankingPagePuls()">></button>
       </div>
     </div>
-    <div id="wrapper">
+    <div class="lectures-div">
       <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
-        <h2>{{rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5}}</h2>
+        <h2 *ngIf="(rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5) < 10">0{{rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5}}</h2>
+        <h2 *ngIf="(rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5) >= 10">{{rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5}}</h2>
         <app-lecture-card-small
           [lecture]="lecture"
           routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
         </app-lecture-card-small>
       </article>
-      <!--<button routerLink="lecturereview/{{lecture.lectureIdx}}" type="button" class="btn btn-primary">강의 듣기</button>-->
     </div>
   </section>
 
+  <br/>
+  <br/>
+
   <!--lecture ranking-->
-  <section id="lecture-subject-rank">
-    <div>
-      <h1 *ngIf="!token">오늘의 추천 콘텐츠</h1>
-      <h1 *ngIf="token">{{nickname}} 님을 위한 추천 콘텐츠</h1>
-    </div>
+  <section>
+    <h1 *ngIf="!token">오늘의 추천 콘텐츠</h1>
+    <h1 *ngIf="token">{{nickname}} 님을 위한 추천 콘텐츠</h1>
     <div>
       <a href="/lecturerecommenddetail"> <button class="goWhole">전체보기</button></a>
       <div class='pagebutton'>
@@ -46,7 +47,7 @@
         <button (click)="recommendPagePuls()">></button>
       </div>
     </div>
-    <div id="wrapper">
+    <div class="lectures-div">
       <article *ngFor="let lecture of recommendoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
         <app-lecture-card-small
           [lecture]="lecture"
@@ -56,5 +57,7 @@
     </div>
   </section>
 </div>
+<br/>
+<br/>
 
 

@@ -13,15 +13,12 @@
     margin-bottom: 15px;
 }
 fa-icon.orange{
-    color:orange;
+    color:var(--point-color);
 }
 .orange{
-    color:orange;
+    color:var(--point-color);
 }
 
-fa-icon.purple{
-    color: purple;
-}
 #side div fa-icon{
     cursor: pointer; /*mouse를 pointer모양으로*/
     font-size: 1em;
@@ -42,14 +39,10 @@ fa-icon.purple{
 
   /*slider*/
   /*ngx-slider{*/
-/*최소값 설정 숨김*/
-::ng-deep .ngx-slider .ngx-slider-pointer-min{
-   /* display: none !important;*/
-}
 ::ng-deep .ngx-slider .ngx-slider-pointer{
     width: 8px !important;
     height: 16px !important;;
-    background-color: #333 !important;
+    background-color: var(--dark-gray) !important;
     border-top-left-radius: 3px !important;;
     border-top-right-radius: 3px !important;;
 }

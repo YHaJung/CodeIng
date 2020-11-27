@@ -20,19 +20,15 @@ article {
 
 h3{   /*qna날짜*/
   font-size: 0.7em;
-  color:var(--dark-gray);
 }
 h1{       /*qna제목*/
   font-size: 1.3em;
-  color:var(--dark-gray);
 }
 h2{       /*qna내용*/
   font-size: 1.1em;
-  color:var(--dark-gray);
 }
 h4{       /*comment작성자*/
   font-size: 0.9em;
-  color:var(--dark-gray);
 }
 h5{       /*comment내용*/
   font-size: 1.1em;

@@ -3,53 +3,33 @@
   padding:var(--main-body-margin);
 }
 
-button{
+h1{
+  font-size: 1.8em;
+
+}
+
+.goWhole{
   border: 0px;
   background-color: transparent;
+  border-bottom: 0.05px solid var(--light-gray);
 }
-.goWhole{
-  box-shadow: 1px 1px 0.5px 0.5px gray;
-}
-
-
 .pagebutton{
   float: right;
-  background-color: #ffffff;
-  margin-right: 40px;
+}
+.pagebutton button{
+  background-color: transparent;
+  border: 0px;
 }
 
-article{
-  width: 13vw;
-  height: 30vw;
-  overflow: hidden;
-  display: inline-block;
-  word-break:break-all;
-  margin-right: 1.4vw;
-  margin-top: 1.4vw;
-}
-article .img-div{
-  height: 10vw;
-  width: 13vw;
-  background-color: var(--main-gray);
-}
-article .title{
-  height: 5vw;
-  overflow: hidden;
-  /*font-size: 1.2em;*/
-  font-size: 0.9em;
+.lectures-div{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap : 10px;
+  margin-top: 20px;
 }
 
-
-
-h1{
-  font-size: 1.5em;
-}
 h2{
-  font-size: 1em;
+  font-size: 1.1em;
+  font-family: 'Lily Script One';
 }
-h3{
-  font-size: 1em;
-}
-h4{
-  font-size: 1em;
-}
+

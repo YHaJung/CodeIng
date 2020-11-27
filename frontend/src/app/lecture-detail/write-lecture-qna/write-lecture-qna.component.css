@@ -1,0 +1,12 @@
+.qna-write-section{
+    background-color: #ffffff;
+}
+
+input{
+    width:100%;
+    border : 0px;
+}
+
+textarea{
+    width:100%;
+}

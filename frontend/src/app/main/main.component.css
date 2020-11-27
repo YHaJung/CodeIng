@@ -9,11 +9,8 @@
 }
 #top-bar .nav-auth span{
   float: left;
-  color:var(--main-gray);
 }
-#top-bar .nav-auth a{
-  color:var(--main-gray);
-}
+
 #top-bar #middle{
   line-height: 4.5vw;
   height: 4.5vw;
@@ -47,7 +44,7 @@
   font-size: 12px;
   border: 0px;
   /*background-color: var(--main-gray);*/
-  background-color: var(--main-blue);
+  background-color: var(--main-color);
   color:white;
 
   line-height: 100%;  /*글자 가운데 정렬*/

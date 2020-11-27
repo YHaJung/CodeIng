@@ -2,10 +2,23 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 /*@import url(//fonts.googleapis.com/earlyaccess/notosanskr.css);
 @import url(https://fonts.google.com/specimen/Noto+Sans);*/
-@import url(https://www.google.com/get/noto/);
+@import url('https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Noto+Sans&display=swap');
 
 body{
-  font-family: 'Noto Sans CJK';
+  font-family: var(--main-font);
+  color:var(--dark-gray);
+}
+button{
+  font-family: var(--main-font);
+  color:var(--dark-gray);
+}
+input{
+  font-family: var(--main-font);
+  color:var(--dark-gray);
+}
+a{
+  font-family: var(--main-font);
+  color:var(--dark-gray);
 }
 
 
@@ -22,6 +35,8 @@ body{
   --light-gray:#A5A5A5;
   
   --main-body-margin:4vh 12vw 4vh 12vw;
+
+  --main-font:'Noto Sans';
 }
 
 /*main-menu*/
@@ -42,9 +57,6 @@ body{
 }
 #main-menu nav .clicked-menu{
   border-top: 4px solid;
-}
-#main-menu nav a{
-  color:var(--main-gray);
 }
 
 /*logo*/
