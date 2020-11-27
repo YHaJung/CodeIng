@@ -1,1 +1,9 @@
-<p>즐겨찾기 한 사이트</p>
+<div id="whole">
+    <h1>나의 관심 사이트</h1>
+    <section class="sites-section">
+        <app-site-card *ngFor="let site of sites"
+                        [site]="site"
+                        class="site-card"
+        ></app-site-card>
+    </section>
+</div>

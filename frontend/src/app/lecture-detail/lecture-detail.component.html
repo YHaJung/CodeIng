@@ -10,27 +10,31 @@
         <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 4}"></fa-icon>
       </div>
       <div>
-        수준<br/>
-        <fa-icon [icon]="star" [ngClass]="{'orange':level > 0}"></fa-icon>
-        <fa-icon [icon]="star" [ngClass]="{'orange':level > 1}"></fa-icon>
-        <fa-icon [icon]="star" [ngClass]="{'orange':level > 2}"></fa-icon>
-        <fa-icon [icon]="star" [ngClass]="{'orange':level > 3}"></fa-icon>
-        <fa-icon [icon]="star" [ngClass]="{'orange':level > 4}"></fa-icon>
+        수준 : {{lectureDetail.level}}
       </div>
       <div>
         <p>
           <span>가격 : </span>
-          <span *ngIf="this.lectureDetail.price!='free'">{{this.lectureDetail.price}}원</span>
-          <span *ngIf="this.lectureDetail.price=='free'">무료</span>
+          <span *ngIf="lectureDetail.price!='free'">{{lectureDetail.price}}원</span>
+          <span *ngIf="lectureDetail.price=='free'">무료</span>
         </p>
         
       </div>
     </section>
     <section class="col-sm-9" id="content">
-      <p>
-        {{title}}
+      <h1>
+        {{lectureDetail.siteName}}
+        <fa-icon [icon]="check" [ngClass]="{'orange': favoriteSite==1}" type="button" (click)="setFavoriteSite()"></fa-icon>
+      </h1>
+      <h2>
+        {{lectureDetail.lectureName}}
         <fa-icon [icon]="bookmark" [ngClass]="{'orange': favoriteLecture==1}" type="button" (click)="setFavoriteLecture()"></fa-icon>
-      </p> 
+      </h2>
+      <h3>
+        {{lectureDetail.lectureLink}} &nbsp;
+        <a href="{{lectureDetail.lectureLink}}">수강하러 가기</a>
+      </h3>
+      <br/>
       <div (click)="viewReviews()" [ngClass]="{'clicked-menu':reviewChecked==1}">리뷰</div>&nbsp;
       <div (click)="viewQna()" [ngClass]="{'clicked-menu':qnaChecked==1}">QnA</div>
       <app-lecture-review *ngIf="reviewChecked==1"></app-lecture-review>

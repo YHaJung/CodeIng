@@ -135,16 +135,6 @@ export class ApiService {
   }
   patchPersonalInfo(email:string, userpwd:string, userpwdConfirm:string, name:string, phonenumber:string, nickname:string){
     const body = JSON.stringify({email, userpwd, userpwdConfirm, name, phonenumber, nickname});
-    /*
-    const body = {
-      'email' : email,
-      'name' : name,
-      'nickname': nickname,
-      'phonenumber': phonenumber,
-      'userpwd': userpwd,
-      'userpwdConfirm': userpwdConfirm
-    };
-    */
     console.log('personalInfo 수정');
     console.log(body);
     return this.httpClient.patch(this.baseUrl + 'personal-info', body, {headers: this.headers});
@@ -156,9 +146,27 @@ export class ApiService {
   }
 
   //마이페이지 상세
+  //관심 강의
   getFavoriteLectures(){
     return this.httpClient.get(this.baseUrl+'favorite-lectures', {headers: this.headers});
   }
+  patchFavoriteLectures(lectureIdx){
+    return this.httpClient.patch(this.baseUrl+'favorite-lectures?lectureIdx='+lectureIdx, {}, {headers: this.headers});
+  }
+  isFavoriteLectures(lectureIdx : number){
+    return this.httpClient.get(this.baseUrl+'lectures/'+lectureIdx+'/check-favorite', {headers: this.headers});
+  }
+  //관심 사이트
+  getFavoriteSites(){
+    return this.httpClient.get(this.baseUrl+'favorite-sites', {headers: this.headers});
+  }
+  patchFavoriteSites(siteIdx : number){
+    return this.httpClient.patch(this.baseUrl+'favorite-sites?siteIdx='+siteIdx, {}, {headers: this.headers});
+  }
+  isFavoriteSites(siteIdx : number){
+    return this.httpClient.get(this.baseUrl+'sites/'+siteIdx+'/check-favorite', {headers: this.headers});
+  }
+  //내가쓴 리뷰
   getMyReviews(){
     return this.httpClient.get(this.baseUrl +'my-reviews', {headers: this.headers});
   }
@@ -166,12 +174,8 @@ export class ApiService {
     return this.httpClient.delete(this.baseUrl +'lectures/'+lectureIdx+'/review/'+reviewIdx, {headers: this.headers});
   }
   
-  patchFavoriteLectures(lectureIdx){
-    return this.httpClient.patch(this.baseUrl+'favorite-lectures?lectureIdx='+lectureIdx, {}, {headers: this.headers});
-  }///lecture/:lectureIdx/check-favorite
-  isFavoriteLectures(lectureIdx : number){
-    return this.httpClient.get(this.baseUrl+'lectures/'+lectureIdx+'/check-favorite', {headers: this.headers});
-  }
+  
+  
   
 
   //개인정보조회

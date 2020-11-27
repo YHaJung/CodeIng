@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { faStar, faBookmark  } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faBookmark, faCheck  } from '@fortawesome/free-solid-svg-icons';
 import {ActivatedRoute} from '@angular/router';
 import {ApiService} from '../api.service';
-import { Options } from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-lecture-detail',
@@ -12,10 +11,11 @@ import { Options } from '@angular-slider/ngx-slider';
 export class LectureDetailComponent implements OnInit {
   star = faStar;
   bookmark = faBookmark;
+  check = faCheck;
   favoriteLecture = 0 ;       //관심강의 여부
+  favoriteSite = 0 ;       //관심사이트 여부
   lectureIdx : number;
   lectureDetail: any=[];
-  title :string;
   avg_rating = 0;
   level = 0;
   
@@ -40,10 +40,23 @@ export class LectureDetailComponent implements OnInit {
     this.apiService.getLectureDetail(this.lectureIdx).subscribe(
       data => {
         this.lectureDetail = data['result'];
+        console.log('lecture-detail');
         console.log(this.lectureDetail);
-        this.title = this.lectureDetail.lectureName;
         this.avg_rating = this.lectureDetail.rating;
         this.level = this.lectureDetail.level;
+
+        this.apiService.isFavoriteSites(this.lectureDetail.siteIdx).subscribe(
+          data => {
+            if(data['state']=='true'){
+              this.favoriteSite = 1;
+            }else{
+              this.favoriteSite = 0;
+            }
+            console.log('favor-site?');
+            console.log(this.favoriteSite);
+          },
+          error => {console.log(error)}
+        );
       },
       error => console.log(error)
     );
@@ -55,11 +68,12 @@ export class LectureDetailComponent implements OnInit {
         }else{
           this.favoriteLecture = 0;
         }
-        console.log('favor?');
+        console.log('favor-lecture?');
         console.log(this.favoriteLecture);
       },
       error => console.log(error)
     );
+    
 
   }
   
@@ -84,15 +98,16 @@ export class LectureDetailComponent implements OnInit {
       },
       error => console.log(error)
     );
-    /*
-    if(this.favoriteLecture == 0){
-      this.favoriteLecture = 1;
-    }else{
-      this.favoriteLecture = 0;
-    }
-    */
     window.location.reload();
-    
   }
 
+  setFavoriteSite(){
+    this.apiService.patchFavoriteSites(this.lectureDetail.siteIdx).subscribe(
+      result => {
+        console.log(result);
+      },
+      error => console.log(error)
+    );
+    window.location.reload();
+  }
 }
