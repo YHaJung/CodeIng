@@ -128,7 +128,7 @@ def lecture_list(request):
         try:
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
             selected_level = int(request.GET.get('level', '0'))
-            upper_price = int(request.GET.get('upperLimit', '10000000'))
+            upper_price = int(request.GET.get('upperLimit', '20000000'))
             lower_price = int(request.GET.get('lowerLimit', '-1'))
             selected_rating = float(request.GET.get('rating', '0'))
             input_keyword = request.GET.get('keyword','')
@@ -145,18 +145,19 @@ def lecture_list(request):
 
             # 잘못된 파라미터 값이 들어왔을 경우
             if selected_level < 0 or selected_level > 5 or selected_rating < 0 or selected_rating > 5 or upper_price < -1 or lower_price < -1 or upper_price < lower_price:
+
                 raise Exception
 
             if input_keyword =='':
                 # 쿼리문
                 if selected_level == 0:
 
-                    lectures = Lecture.objects.filter(price__lte=upper_price, price__gte=lower_price,
+                    result = Lecture.objects.filter(price__lte=upper_price, price__gte=lower_price,
                                                       rating__gte=selected_rating)[page * 6 - 6:page * 6]
 
 
                 else:
-                    lectures = Lecture.objects.filter(
+                    result = Lecture.objects.filter(
                         level__levelidx=selected_level, rating__gte=selected_rating, price__gte=lower_price,
                         price__lte=upper_price).select_related(
                         'siteinfo')[page * 6 - 6:page * 6]
@@ -166,6 +167,7 @@ def lecture_list(request):
             else:
                 #키워드 공백 단위로 분리
                 input_keyword = " ".join(input_keyword.strip().split()).split()
+                print(input_keyword)
 
 
                 key = []
