@@ -2,28 +2,63 @@ article {
     background-color: #ffffff;
     width : 100%;
     padding: 10%;
-  }
-  
-  .content{
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-h1{
-    font-size: 1.2em;
-  }
-  
-  h2{
-    font-size: 0.8em;
-    color: gray;
-  }
-  h3{
-    font-size: 0.8em;
-  }
+}
+
+.question-section{
+  padding-bottom: 20px;
+}
+
+.comment-section{
+  border-top: var(--light-gray) solid 0.2px;
+  margin-bottom: 40px;
+}
+
+.comment-card{
+  margin:20px 0px 20px 0px;
+}
+
+
+h3{   /*qna날짜*/
+  font-size: 0.7em;
+  color:var(--dark-gray);
+}
+h1{       /*qna제목*/
+  font-size: 1.3em;
+  color:var(--dark-gray);
+}
+h2{       /*qna내용*/
+  font-size: 1.1em;
+  color:var(--dark-gray);
+}
+h4{       /*comment작성자*/
+  font-size: 0.9em;
+  color:var(--dark-gray);
+}
+h5{       /*comment내용*/
+  font-size: 1.1em;
+  color: var(--light-gray);
+}
+
   
 
-  /*comment 작성*/
-  form{
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-  }
+/*comment 작성*/
+form{
+  display: grid;
+  grid-template-columns: 15fr 2fr;
+  
+}
+form textarea{
+  border: 0.2px solid var(--light-gray);
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: 0.9em;
+  padding : 0.4em;
+  min-height: 60px;
+}
+form button{
+  border: 0px;
+
+  background-color: var(--main-color);
+  border-radius: 5px;
+  color: #ffffff;
+}

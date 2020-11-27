@@ -1,12 +1,14 @@
 <article>
-    <section>
+    <section class="question-section">
         <h3>{{qna.createAt}}</h3>
         <h1>{{qna.qnaTitle}}</h1>
         <h2>{{qna.qnaDes}}</h2>
     </section>
-    <br/><br/>
-    <section>
-        <h3></h3>
+    <section  class="comment-section">
+        <div class="comment-card" *ngFor="let comment of comments">
+            <h4>{{comment.nickname}}</h4>
+            <h5>{{comment.commentDes}}</h5>
+        </div>
     </section>
     <section>
         <form [formGroup]="wirteCommentForm" (submit)="createComment()">

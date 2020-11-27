@@ -58,7 +58,7 @@ export class ApiService {
   // tslint:disable-next-line:typedef
   getLecturesRecommend() {  // 나중에 api 바꾸기
     if(this.token){
-      return this.httpClient.get(this.baseUrl + '/api/recommend', {headers: this.headers});
+      return this.httpClient.get(this.baseUrl + 'api/user_recommendlist', {headers: this.headers});
     }else{
       return this.httpClient.get(this.baseUrl + 'api/recommendlist', {headers: this.headers});
     }

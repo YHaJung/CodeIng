@@ -15,8 +15,11 @@ body{
   --main-blue:#0155FB;
   --main-yellow:#FFC000;
   
+  
   --main-color:#0155FB;
   --point-color:#FFC000;
+  --dark-gray:#464646;
+  --light-gray:#A5A5A5;
   
   --main-body-margin:4vh 12vw 4vh 12vw;
 }
