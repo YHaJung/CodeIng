@@ -1,8 +1,8 @@
 #whole{
-    text-align: center;
 }
 
 h1{
-    font-size: 21px;
+    font-size: 1.2em;
+    font-weight: 600;
     margin: 20px;
 }

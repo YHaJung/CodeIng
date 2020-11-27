@@ -16,6 +16,7 @@ export class FavoriteLecturesComponent implements OnInit {
     this.apiService.getFavoriteLectures().subscribe(
       data => {
         this.lectures = data['result'];
+        console.log('favorite-lecture');
         console.log(this.lectures);
       },
       error => console.log(error)

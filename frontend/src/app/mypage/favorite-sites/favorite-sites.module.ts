@@ -1,13 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FavoriteSitesComponent } from './favorite-sites.component';
+import {SiteCardModule} from '../../cards/site-card/site-card.module';
 
 
 
 @NgModule({
   declarations: [FavoriteSitesComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    SiteCardModule
   ],
   exports:[
     FavoriteSitesComponent

@@ -1,0 +1,25 @@
+article{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap : 5px;
+    padding: 5px;
+}
+img{
+    width: 100%;
+    height: 3.5em;
+    border: 1px solid var(--light-gray);
+}
+
+h1{
+    font-size: 1.2em;
+}
+
+.likes-div{
+    text-align: right;
+    font-size: 0.8em;
+    margin-top: 15px;
+}
+.heart-icon{
+    font-size: 0.8em;
+    color: #F3143C;
+}

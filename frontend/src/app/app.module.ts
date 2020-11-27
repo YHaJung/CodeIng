@@ -23,6 +23,7 @@ import {LectureRankDetailModule} from './lecture-rank-detail/lecture-rank-detail
 import {LectureSearchModule} from './lecture-search/lecture-search.module';
 import {LectureDetailModule} from './lecture-detail/lecture-detail.module';
 import {LectureCardModule} from './lecture-card/lecture-card.module';
+import {SiteCardModule} from './cards/site-card/site-card.module';
 
 
 import {SigninModule} from './auth/signin/signin.module';
@@ -77,6 +78,7 @@ const appRoutes: Routes = [
     ReviewCardModule,
     QnaCardModule,
     LectureCardSmallModule,
+    SiteCardModule,
     AvatarModule,
     SigninModule,
     SignupModule,

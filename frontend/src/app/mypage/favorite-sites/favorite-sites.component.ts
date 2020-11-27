@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {ApiService} from '../../api.service';
 
 @Component({
   selector: 'app-favorite-sites',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FavoriteSitesComponent implements OnInit {
 
-  constructor() { }
-
+  constructor(private apiService: ApiService) { }
+  sites = [];
   ngOnInit(): void {
+    //getFavoriteSites()
+    this.apiService.getFavoriteSites().subscribe(
+      data => {
+        this.sites = data['result'];
+        console.log('favorite-sites');
+        console.log(this.sites);
+      },
+      error => console.log(error)
+    );
   }
 
 }

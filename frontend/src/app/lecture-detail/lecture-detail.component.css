@@ -18,8 +18,19 @@ fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
   display: inline-block;
 }
 
+h1{
+  font-size: 1.1em;
+}
+h2{
+  font-size: 1.5em;
+}
+h3{
+  font-size: 0.9em;
+}
+
+
 #content .clicked-menu {
-  border-bottom: 4px solid var(--main-point);
+  border-bottom: 4px solid var(--dark-gray);
 }
 .col-sm-3 {
   font-weight: 600;
