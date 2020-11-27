@@ -1,12 +1,10 @@
 <article>
-    <div class="img-div"><img src="{{lecture?.thumbUrl}}" alt="Card image"></div>
-    <div>
-      <h3>{{lecture.siteName}}</h3>
-      <h4 class="title">{{lecture.lectureName}}</h4>
-      <p *ngIf="lecture.level == 0">입문</p>
-      <p *ngIf="2>lecture.level&& lecture.level >= 1">초급</p>
-      <p *ngIf="3>lecture.level&& lecture.level >= 2">중급</p>
-      <p *ngIf="4>lecture.level&&  lecture.level >= 3">고급</p>
-      <p *ngIf="5>lecture.level&&  lecture.level >= 4">실무</p>
-    </div>
-  </article>
+  <div class="img-div">
+    <img src="{{lecture.thumbUrl}}"/>
+  </div>
+  <div>
+    <h3>{{lecture.siteName}}</h3>
+    <h4 class="title">{{lecture.lectureName}}</h4>
+    <h3>{{lecture.level}}</h3>
+  </div>
+</article>

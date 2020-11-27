@@ -35,8 +35,8 @@ export class ApiService {
 
   /*for main-page*/
   // tslint:disable-next-line:typedef
-  getRankingOverview(categoryIdx) {
-    return this.httpClient.get(this.baseUrl + 'ranking-overview?categoryIdx='+categoryIdx, {headers: this.headers});
+  getRankingOverview(page) {
+    return this.httpClient.get(this.baseUrl + '/overall-ranking?page='+page, {headers: this.headers});
   }
   // tslint:disable-next-line:typedef
   getRecommendOverview(categoryIdx) {  // 나중에 api 바꾸기
@@ -57,7 +57,12 @@ export class ApiService {
   // today's recommend
   // tslint:disable-next-line:typedef
   getLecturesRecommend() {  // 나중에 api 바꾸기
-    return this.httpClient.get(this.baseUrl + 'api/recommendlist', {headers: this.headers});
+    if(this.token){
+      return this.httpClient.get(this.baseUrl + '/api/recommend', {headers: this.headers});
+    }else{
+      return this.httpClient.get(this.baseUrl + 'api/recommendlist', {headers: this.headers});
+    }
+    
   }
 
  //강의 상세

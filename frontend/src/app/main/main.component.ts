@@ -23,7 +23,7 @@ export class MainComponent implements OnInit {
   ngOnInit(): void {
     this.token = this.cookieService.get('token');
     this.searchedText= this.route.snapshot.paramMap.get('keyword');
-    if(this.searchedText){
+    if(this.searchedText && this.searchedText!='""'){
       this.searchtext = this.searchedText;
     }
 
