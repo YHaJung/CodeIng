@@ -127,12 +127,13 @@ def lecture_list(request):
     if request.method == 'GET':
         try:
             # param 값이 0~5 사이의 숫자값이 아니면, 예외처리하기
-            selected_level = int(request.GET.get('level', '0'))
+            selected_level = int(request.GET.get('level', '6'))
             upper_price = int(request.GET.get('upperLimit', '20000000'))
             lower_price = int(request.GET.get('lowerLimit', '-1'))
             selected_rating = float(request.GET.get('rating', '0'))
             input_keyword = request.GET.get('keyword','')
             page = int(request.GET.get('page', '1'))
+
 
 
             # 둘다 -1
@@ -144,14 +145,15 @@ def lecture_list(request):
 
 
             # 잘못된 파라미터 값이 들어왔을 경우
-            if selected_level < 0 or selected_level > 5 or selected_rating < 0 or selected_rating > 5 or upper_price < -1 or lower_price < -1 or upper_price < lower_price:
+            if selected_level < 1 or selected_level > 6 or selected_rating < 0 or selected_rating > 5 or upper_price < -1 or lower_price < -1 or upper_price < lower_price:
 
                 raise Exception
 
             if input_keyword =='' or input_keyword =='""' or len(input_keyword.replce(' ','')) ==0:
+                print('sk!!!')
 
                 # 쿼리문
-                if selected_level == 0:
+                if selected_level == 6:
 
                     result = Lecture.objects.filter(price__lte=upper_price, price__gte=lower_price,
                                                       rating__gte=selected_rating)[page * 6 - 6:page * 6]
@@ -159,7 +161,7 @@ def lecture_list(request):
 
 
                 else:
-                    result = Lecture.objects.filter(
+                   result = Lecture.objects.filter(
                         level__levelidx=selected_level, rating__gte=selected_rating, price__gte=lower_price,
                         price__lte=upper_price).select_related(
                         'siteinfo')[page * 6 - 6:page * 6]
@@ -167,7 +169,9 @@ def lecture_list(request):
 
             # 키워드가 있을 경우
             else:
+
                 #키워드 공백 단위로 분리
+
                 input_keyword = " ".join(input_keyword.strip().split()).split()
                 print(input_keyword)
 
@@ -176,7 +180,7 @@ def lecture_list(request):
                 for ele in input_keyword:
 
 
-                    if selected_level == 0:
+                    if selected_level == 6:
 
                         lectures = Lecture.objects.filter(lecturename__icontains=ele,
                                                           rating__gte=selected_rating, price__lte=upper_price,
@@ -520,13 +524,13 @@ def review_list(request, pk):
             review_dict['code'] = 200
             review_dict['message'] = '강의 리뷰 목록 조회 성공'
 
-            review_userinfo = Review.objects.filter(lectureidx=pk).select_related('profile')[page * 5 - 5:page * 5]
+            review_userinfo = Review.objects.filter(lectureidx=pk, isdeleted='N').select_related('profile')[page * 5 - 5:page * 5]
 
-            pros = Reviewpros.objects.filter(review__lectureidx=pk).select_related('review')
+            pros = Reviewpros.objects.filter(review__lectureidx=pk, isdeleted='N').select_related('review')
 
-            cons = Reviewcons.objects.filter(review__lectureidx=pk).select_related('review')
+            cons = Reviewcons.objects.filter(review__lectureidx=pk, isdeleted='N').select_related('review')
 
-            likes = Likesforreview.objects.filter(review__lectureidx=pk).select_related('review').values(
+            likes = Likesforreview.objects.filter(review__lectureidx=pk, isdeleted='N').select_related('review').values(
                 'review').annotate(
                 count=Count('review'))
 
@@ -565,7 +569,6 @@ def review_list(request, pk):
                 for c in cons2:
                     cons_list.append(c.cons.constype)
 
-                print(r.profile.level.levelname,'didi')
                 review_list.append(dict(
                     [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
                      ('profileImage', r.profile.userinfo.profileimg),
@@ -632,8 +635,10 @@ def review_list(request, pk):
             query_dict.update(review_dict)
             print(query_dict)
             serializer = ReviewSerializer(data=query_dict)
+
             if serializer.is_valid():
-                serializer.save()
+
+               serializer.save()
 
             # 문자열 ->
             #tmp = pros_list_dict['pros'][1:-1]
