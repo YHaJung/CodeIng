@@ -275,9 +275,10 @@ def sign_up(request):
             query_dict = QueryDict('', mutable=True)
             query_dict.update(userinfo_dict)
             serializer = UserinfoSerializer(data=query_dict)
-
             if serializer.is_valid():
                 serializer.save()
+            a = Userinfo.objects.last().useridx
+
 
 
 
@@ -285,20 +286,19 @@ def sign_up(request):
             del sign_up_dict['userpwdConfirm']
             sign_up_dict['isdeleted'] = 'N'
             sign_up_dict['isblocked'] = 'N'
-            sign_up_dict['level'] = 0
+            sign_up_dict['level'] = 6
+            sign_up_dict['userinfo'] = a
 
 
 
             query_dict = QueryDict('', mutable=True)
             query_dict.update(sign_up_dict)
-            print(query_dict,'이지롱')
 
 
             serializer = ProfileSerializer(data=query_dict)
             if serializer.is_valid():
 
                 serializer.save()
-                print('뭐')
 
 
 

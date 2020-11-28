@@ -148,12 +148,14 @@ def lecture_list(request):
 
                 raise Exception
 
-            if input_keyword =='' or input_keyword =='""' or input_keyword=='' or len(input_keyword.replce(' ','')) ==0:
+            if input_keyword =='' or input_keyword =='""' or len(input_keyword.replce(' ','')) ==0:
+
                 # 쿼리문
                 if selected_level == 0:
 
                     result = Lecture.objects.filter(price__lte=upper_price, price__gte=lower_price,
                                                       rating__gte=selected_rating)[page * 6 - 6:page * 6]
+
 
 
                 else:
@@ -221,6 +223,7 @@ def lecture_list(request):
 
 
             for lec in result:
+
                 h = lec.siteinfo.sitename
 
                 #가격
@@ -535,7 +538,7 @@ def review_list(request, pk):
 
             job = {'S': '초등학생', 'D': '전공자/비전공자', 'N': '비전공자/비개발 직군', 'T':'중/고등학생' }
 
-            print(len(review_userinfo),"이다")
+
 
             for r in review_userinfo:
 
@@ -630,7 +633,6 @@ def review_list(request, pk):
             print(query_dict)
             serializer = ReviewSerializer(data=query_dict)
             if serializer.is_valid():
-                print('왜')
                 serializer.save()
 
             # 문자열 ->
