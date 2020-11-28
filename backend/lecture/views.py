@@ -148,12 +148,14 @@ def lecture_list(request):
 
                 raise Exception
 
-            if input_keyword =='' or input_keyword =='""' or input_keyword=='' or len(input_keyword.replce(' ','')) ==0:
+            if input_keyword =='' or input_keyword =='""' or len(input_keyword.replce(' ','')) ==0:
+
                 # 쿼리문
                 if selected_level == 0:
 
                     result = Lecture.objects.filter(price__lte=upper_price, price__gte=lower_price,
                                                       rating__gte=selected_rating)[page * 6 - 6:page * 6]
+
 
 
                 else:
@@ -221,6 +223,7 @@ def lecture_list(request):
 
 
             for lec in result:
+
                 h = lec.siteinfo.sitename
 
                 #가격
@@ -535,7 +538,8 @@ def review_list(request, pk):
 
             job = {'S': '초등학생', 'D': '전공자/비전공자', 'N': '비전공자/비개발 직군', 'T':'중/고등학생' }
 
-            print(len(review_userinfo),"이다")
+
+
             for r in review_userinfo:
 
                 if r.isblocked == 'Y':
@@ -547,10 +551,12 @@ def review_list(request, pk):
                     likes_count = 0
                     pass
 
+
                 pros2 = pros.filter(review=r.reviewidx)
                 pros_list = []
                 cons2 = cons.filter(review=r.reviewidx)
                 cons_list = []
+
 
 
                 for p in pros2:
@@ -559,7 +565,7 @@ def review_list(request, pk):
                 for c in cons2:
                     cons_list.append(c.cons.constype)
 
-
+                print(r.profile.level.levelname,'didi')
                 review_list.append(dict(
                     [('nickname', r.profile.userinfo.nickname), ('userlevel', r.profile.level.levelname),
                      ('profileImage', r.profile.userinfo.profileimg),
@@ -618,6 +624,7 @@ def review_list(request, pk):
             review_dict['profile'] = userIdx
             review_dict['lectureidx'] = pk
             review_dict['isdeleted'] = 'N'
+            review_dict['isblocked'] = 'N'
             del review_dict['pros']
             del review_dict['cons']
 
@@ -626,7 +633,6 @@ def review_list(request, pk):
             print(query_dict)
             serializer = ReviewSerializer(data=query_dict)
             if serializer.is_valid():
-                print('왜')
                 serializer.save()
 
             # 문자열 ->
@@ -646,7 +652,6 @@ def review_list(request, pk):
 
                 serializer = ReviewprosSerializer(data=query_dict)
                 if serializer.is_valid():
-                    print('뭘ㄹㄹ')
                     serializer.save()
 
             for cons in cons_list_dict['cons']:
@@ -708,6 +713,8 @@ def review_detail(request, pk, reviewIdx):
             if 'improvement' not in review_dict:
                 review_dict['improvement'] = ""
 
+            review_dict['isdeleted'] ='N'
+            review_dict['isblocked'] ='N'
             # 리뷰 테이블에 수정사항 반영
             reviewQuery = QueryDict('', mutable=True)
             reviewQuery.update(review_dict)
@@ -1361,6 +1368,7 @@ def favorite_lectures(request):
     try:
         userIdx = request.user.userinfo.useridx
 
+
         if request.method == 'GET':
             page = int(request.GET.get('page', '1'))
             if page <= 0:
@@ -1377,13 +1385,13 @@ def favorite_lectures(request):
                     price_sql = 'membership'
                 else:
                     price_sql = format(price_sql,',')
-
+                print('')
                 # 강의 썸네일 없을 경우
                 thumbnail = i.lecture.thumburl
                 if not thumbnail:
-                    thumbnail = i.siteinfo.logoimage
+                    thumbnail = i.lecture.siteinfo.logoimage
 
-
+                print(i.lecture.level.levelname)
                 favlectures_list.append(
                     dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level.levelname),
                           ('rating',i.lecture.rating),('thumbUrl',thumbnail),('siteinfo',{'siteIdx': i.lecture.siteinfo.siteidx,

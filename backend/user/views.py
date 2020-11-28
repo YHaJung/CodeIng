@@ -48,7 +48,7 @@ def login_decorator(func):
                                      'code': 400,
                                      'message': '유효기간이 만료된 토큰'}, status=400)
 
-
+            print(payload['email'])
             #유저 확인
             user = Profile.objects.get(email=payload['email'])
             request.user = user
@@ -268,32 +268,38 @@ def sign_up(request):
             userinfo_dict['nickname'] = sign_up_dict['nickname']
             userinfo_dict['isdeleted'] = 'N'
 
+
             #닉네임
             nickname_response = sign_up_dict['nickname']
 
             query_dict = QueryDict('', mutable=True)
             query_dict.update(userinfo_dict)
-            print(query_dict)
             serializer = UserinfoSerializer(data=query_dict)
-
             if serializer.is_valid():
                 serializer.save()
+            a = Userinfo.objects.last().useridx
+
+
 
 
             del sign_up_dict['nickname']
             del sign_up_dict['userpwdConfirm']
             sign_up_dict['isdeleted'] = 'N'
             sign_up_dict['isblocked'] = 'N'
+            sign_up_dict['level'] = 6
+            sign_up_dict['userinfo'] = a
 
 
 
             query_dict = QueryDict('', mutable=True)
             query_dict.update(sign_up_dict)
-            print(query_dict)
+
 
             serializer = ProfileSerializer(data=query_dict)
             if serializer.is_valid():
+
                 serializer.save()
+
 
 
             email_dict = {}
@@ -404,23 +410,6 @@ def personal_info(request):
             p_dict = QueryDict.dict(request.data)
             print(p_dict)
 
-            # 이메일 형식 확인
-
-            if not validateEmail(p_dict['email']):  # 이메일에 대한 validation
-                code = 401
-                message = '이메일 형식 오류'
-                status_ = status.HTTP_401_UNAUTHORIZED
-                raise Exception
-
-            # 이메일 존재 확인(나의 이메일 제외 겹치는 이메일 있을 시)
-            exist = Profile.objects.get(email=p_dict['email'])
-
-            if exist.userinfo.useridx != userIdx:
-                code = 402
-                message = '이미 존재하는 이메일입니다'
-                status_ = status.HTTP_402_PAYMENT_REQUIRED
-                raise Exception
-                # 에러 일으키기
 
             if len(p_dict['name']) == 0 or len(p_dict['nickname']) ==0 or len(p_dict['phonenumber']) == 0:
                 code = 402
@@ -433,13 +422,12 @@ def personal_info(request):
 
             #비밀번호 변경
             if "userpwd" in p_dict and "userpwdConfirm" in p_dict:
-                
+
                 # 비번 안 바꿀 경우
                 if len(p_dict['userpwd']) == 0 and len(p_dict['userpwdConfirm']) == 0:
 
                     data = request.user
                     data2 = request.user.userinfo
-                    data.email = p_dict['email']
                     data.phonenumber = p_dict['phonenumber']
                     data.name = p_dict['name']
                     data2.nickname = p_dict['nickname']
@@ -462,7 +450,6 @@ def personal_info(request):
 
                     data = request.user
                     data2= request.user.userinfo
-                    data.email = p_dict['email']
                     data.phonenumber = p_dict['phonenumber']
                     data.name = p_dict['name']
                     data2.nickname = p_dict['nickname']
@@ -475,7 +462,6 @@ def personal_info(request):
 
                 data = request.user
                 data2 = request.user.userinfo
-                data.email = p_dict['email']
                 data.phonenumber = p_dict['phonenumber']
                 data.name = p_dict['name']
                 data2.nickname = p_dict['nickname']

@@ -50,7 +50,7 @@ class CommentimageSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['lectureidx', 'totalrating', 'pricerating', 'teachingpowerrating', 'recommend', 'improvement', 'isdeleted', 'profile']
+        fields = ['lectureidx', 'totalrating', 'pricerating', 'teachingpowerrating', 'recommend', 'improvement', 'isdeleted', 'isblocked', 'profile']
 
 class ReviewprosSerializer(serializers.ModelSerializer):
     class Meta:

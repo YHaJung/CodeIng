@@ -40,7 +40,7 @@ class Profile(models.Model):
     updatedat = models.DateTimeField(db_column='updatedAt',auto_now=True, blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
 
-    level = models.ForeignKey(Level, on_delete=models.CASCADE, blank=True, null=True, db_column='level')
+    level = models.ForeignKey(Level, on_delete=models.CASCADE, db_column='level')
 
     class Meta:
         managed = False

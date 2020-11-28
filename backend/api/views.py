@@ -271,7 +271,7 @@ def CBRSlist(request):
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
                   ('rating', i[0]['rating']),
-                  ('siteinfo', sitename),
+                  ('siteName', sitename),
                   ]))
     overview_dict['result'] = overview_list
     # use_decimal = True,
@@ -345,7 +345,7 @@ def Poprs(request, pk=None):
                       ('levelName', i[0]['level__levelname']),
                       ('price', price),
                       ('rating', i[0]['rating']),
-                      ('siteinfo', sitename),
+                      ('siteName', sitename),
                       ]))
 
         overview_dict['result'] = overview_list
@@ -420,7 +420,7 @@ def Poprslist(request, pk=None):
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
                   ('rating', i[0]['rating']),
-                  ('siteinfo', sitename),
+                  ('siteName', sitename),
                   ]))
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
@@ -578,7 +578,7 @@ def KNN_IBCF(request, pk=None):
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
                   ('rating', i[0]['rating']),
-                  ('siteinfo', sitename),
+                  ('siteName', sitename),
                   ]))
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
@@ -650,7 +650,7 @@ def KNN_UBCF(request, pk=None):
                   ('level', decimal.Decimal(i[0]['level'])),
                   ('price', price),
                   ('rating', i[0]['rating']),
-                  ('siteinfo', sitename),
+                  ('siteName', sitename),
                   ]))
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
