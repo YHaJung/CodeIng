@@ -22,12 +22,11 @@
       </div>
     </div>
     <div class="lectures-div">
-      <article *ngFor="let lecture of rankingdoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
+      <article *ngFor="let lecture of rankingdoverview;">
         <h2 *ngIf="(rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5) < 10">0{{rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5}}</h2>
         <h2 *ngIf="(rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5) >= 10">{{rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5}}</h2>
         <app-lecture-card-small
-          [lecture]="lecture"
-          routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
+          [lecture]="lecture">
         </app-lecture-card-small>
       </article>
     </div>
@@ -48,10 +47,9 @@
       </div>
     </div>
     <div class="lectures-div">
-      <article *ngFor="let lecture of recommendoverview;" routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
+      <article *ngFor="let lecture of recommendoverview;">
         <app-lecture-card-small
-          [lecture]="lecture"
-          routerLink="/lecturerdetail/{{lecture.lectureIdx}}">
+          [lecture]="lecture">
         </app-lecture-card-small>
       </article>
     </div>

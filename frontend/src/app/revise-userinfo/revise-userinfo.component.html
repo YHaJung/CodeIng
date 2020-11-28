@@ -1,7 +1,6 @@
 <div class="whole">
     <h1>개인정보 수정</h1>
     <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
-        <p>계정 생성</p>
         <div>
             <p>아이디(이메일)<br/><input type="email" formControlName="id" placeholder="{{personalInfo.email}}"></p>
             <p>비밀번호<br/><input type="password " formControlName="pw" placeholder="비밀번호"></p>
@@ -21,21 +20,21 @@
             <button>확인</button>
             -->
             
-            <p>생일<input type="date" formControlName="birth" placeholder=""></p>
-            <input type="radio" formControlName="gender" value="W">여자
+            <p>생일<input type="date" formControlName="birth"></p>
+            <input type="radio" formControlName="gender" value="W"  checked="checked">여자
             <input type="radio" formControlName="gender" value="M">남자
         </div>
         <br/><br/>
         <div>
             <p>
                 수준
-                <select>
-                    <option name="0">미정</option>
-                    <option name="1">기초</option>
-                    <option name="2">초급</option>
-                    <option name="3">중금</option>
-                    <option name="4">고급</option>
-                    <option name="5">실무</option>
+                <select name="level" (change)="setLevel($event)">
+                    <option value="0">미정</option>
+                    <option value="1">기초</option>
+                    <option value="2">초급</option>
+                    <option value="3">중급</option>
+                    <option value="4">고급</option>
+                    <option value="5">실무</option>
                 </select>
             </p>
             <p>

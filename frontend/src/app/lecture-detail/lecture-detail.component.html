@@ -10,7 +10,7 @@
         <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 4}"></fa-icon>
       </div>
       <div>
-        수준 : {{lectureDetail.level}}
+        수준 : {{lectureDetail.levelName}}
       </div>
       <div>
         <p>
@@ -28,7 +28,7 @@
       </h1>
       <h2>
         {{lectureDetail.lectureName}}
-        <fa-icon [icon]="bookmark" [ngClass]="{'orange': favoriteLecture==1}" type="button" (click)="setFavoriteLecture()"></fa-icon>
+        <fa-icon class="bookmark" [icon]="bookmark" [ngClass]="{'orange': favoriteLecture==1}" type="button" (click)="setFavoriteLecture()"></fa-icon>
       </h2>
       <h3>
         {{lectureDetail.lectureLink}} &nbsp;
@@ -36,12 +36,11 @@
       </h3>
       <br/>
       <div class="nav-div">
-        <div (click)="viewReviews()" [ngClass]="{'clicked-menu':reviewChecked==1}">리뷰</div>&nbsp;
-        <div (click)="viewQna()" [ngClass]="{'clicked-menu':qnaChecked==1}">QnA</div>
+        <a href="/lecturedetail/{{lectureIdx}}/review/view" [ngClass]="{'clicked-menu':page=='review'}">리뷰</a>&nbsp;
+        <a href="/lecturedetail/{{lectureIdx}}/qna/view"  [ngClass]="{'clicked-menu':page=='qna'}">QnA</a>
       </div>
-      <app-lecture-review *ngIf="reviewChecked==1"></app-lecture-review>
-      <app-lecture-qna  *ngIf="qnaChecked==1"></app-lecture-qna>
-<!--      class="qna"-->
+      <app-lecture-review *ngIf="page=='review'"></app-lecture-review>
+      <app-lecture-qna  *ngIf="page=='qna'"></app-lecture-qna>
     </section>
 
   </div>

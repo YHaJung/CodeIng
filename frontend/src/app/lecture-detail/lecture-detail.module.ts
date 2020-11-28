@@ -19,7 +19,7 @@ import { LectureQnaCommentsComponent } from './lecture-qna-comments/lecture-qna-
 
 
 const routes: Routes = [
-  {path: 'lecturerdetail/:lectureIdx', component: LectureDetailComponent },
+  {path: 'lecturedetail/:lectureIdx/:page/:subpage', component: LectureDetailComponent },
   // {path: 'homenavbar', component: HomeNavBarComponent},
 ];
 

@@ -42,7 +42,7 @@
   </section>
   <section>
     <section *ngFor="let lecture of lectures ">
-      <app-lecture-card [lecture]="lecture" routerLink="/lecturerdetail/{{lecture.lectureIdx}}"></app-lecture-card>
+      <app-lecture-card [lecture]="lecture"></app-lecture-card>
     </section>
     <div id="page-button-div">
       <button  (click)="pageMinusJump()"> < </button>

@@ -1,4 +1,4 @@
-import { Component, IterableDiffers, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { faStar, faBookmark, faCheck  } from '@fortawesome/free-solid-svg-icons';
 import {ActivatedRoute} from '@angular/router';
 import {ApiService} from '../api.service';
@@ -16,6 +16,7 @@ export class LectureDetailComponent implements OnInit {
   favoriteLecture = 0 ;       //관심강의 여부
   favoriteSite = 0 ;       //관심사이트 여부
   lectureIdx : number;
+  page : string;
   lectureDetail: any=[];
   avg_rating = 0;
   level = 0;
@@ -39,6 +40,7 @@ export class LectureDetailComponent implements OnInit {
     this.level = 0;
 
     this.lectureIdx = Number(this.route.snapshot.paramMap.get('lectureIdx'));
+    this.page = this.route.snapshot.paramMap.get('page');
 
     //강의상세 불러오기
     this.apiService.getLectureDetail(this.lectureIdx).subscribe(
@@ -90,19 +92,6 @@ export class LectureDetailComponent implements OnInit {
 
   }
   
-
-
-  /*navigation */
-  reviewChecked = 1;
-  qnaChecked = 0;
-  viewReviews(){
-    this.reviewChecked = 1;
-    this.qnaChecked = 0;
-  }
-  viewQna(){
-    this.qnaChecked = 1;
-    this.reviewChecked = 0;
-  }
 
   //관심 강의 여부 변경
   setFavoriteLecture(){

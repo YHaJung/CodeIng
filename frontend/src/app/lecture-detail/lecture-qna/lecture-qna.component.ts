@@ -15,30 +15,29 @@ export class LectureQnaComponent implements OnInit {
     private route: ActivatedRoute,
     private cookieService: CookieService,
   ) { }
-
-  lectureIdx : number;
   token : string;
+  
+  lectureIdx : number;
+  page :string;
+  subpage : string;
 
-  page = 0;
+  selectedQnaIdx : number;
+  qnas: any = [];
+  selectedReview = null;
+
   goWriteQnaPage(){
     if(this.token){
-      this.page = 1;
+      window.location.href="/lecturedetail/"+this.lectureIdx+"/qna/write";
     }else{
       alert('로그인하셔야 이용할 수 있는 서비스입니다.');
     }
   }
-  writeFinished(){
-    this.page = 0;
-  }
-
-  qnas: any = [];
-  selectedReview = null;
-
-  
 
   ngOnInit(): void {
-    this.lectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
     this.token = this.cookieService.get('token');
+    this.lectureIdx = Number(this.route.snapshot.paramMap.get('lectureIdx'));
+    this.page = this.route.snapshot.paramMap.get('page');
+    this.subpage = this.route.snapshot.paramMap.get('subpage').substr(0,7);
 
     this.apiService.getLectureQnas(this.lectureIdx).subscribe(
       data => {
@@ -51,11 +50,8 @@ export class LectureQnaComponent implements OnInit {
 
   }
   //comments
-  selectedQnaIdx : number;
   selectQna(qna){
-    this.page=2;
-    this.selectedQnaIdx = qna.qnaIdx;
-    console.log('qnaidx:'+this.selectedQnaIdx);
+    window.location.href="/lecturedetail/"+this.lectureIdx+"/qna/comment"+qna.qnaIdx;
   }
 
 }

@@ -1,20 +1,20 @@
-<div *ngIf = "page==0">
+<div  *ngIf = "subpage=='view'">
     <button id="addbutton" (click)="goWriteQnaPage()">QnA 작성</button>
     <br/>
     <section id="content">
         <app-qna-card
             (click) = "selectQna(qna)"
-          class="qcard"
+            class="qcard"
             *ngFor="let qna of qnas"
             [qna]="qna"
         ></app-qna-card>
     </section>
 </div>
 
-<div *ngIf = "page==1">
-   <app-write-lecture-qna (finish)="writeFinished()"></app-write-lecture-qna>
+<div *ngIf = "subpage=='write'">
+   <app-write-lecture-qna></app-write-lecture-qna>
 </div>
 
-<div *ngIf = "page==2">
-    <app-lecture-qna-comments [qnaIdx]="selectedQnaIdx"></app-lecture-qna-comments>
+<div *ngIf = "subpage=='comment'">
+    <app-lecture-qna-comments ></app-lecture-qna-comments>
 </div>
