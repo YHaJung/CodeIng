@@ -535,7 +535,7 @@ def profile(request):
 
 
             personal_dict['result'] = dict([('school', request.user.school), ('gender', request.user.gender),
-                                            ('birthday', str(request.user.birthday)), ('level', request.user.level.levelname),
+                                            ('birthday', str(request.user.birthday)), ('levelIdx', request.user.level.levelidx), ('levelName', request.user.level.levelname),
                                             ('job', request.user.job), ('category', cate_list), ('subcategory', subcate_list)
                                             ])
 
@@ -560,6 +560,9 @@ def profile(request):
             data.school = p_dict['school']
 
             data.gender = p_dict['gender']
+            if p_dict['level'] =='' or p_dict['level'] ==' ' or p_dict['level'] == " " or int(p_dict['level']) <1:
+                p_dict['level'] = 6
+
             data.level.levelidx = int(p_dict['level'])
             data.job = p_dict['job']
             data.save()

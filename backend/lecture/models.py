@@ -210,7 +210,7 @@ class Review(models.Model):
     class Meta:
         managed = False
         db_table = 'review'
-        unique_together = (('profile', 'lectureidx'),)
+        unique_together = (('profile', 'lectureidx', 'isdeleted'),)
         index_together = (('profile', 'lectureidx'),)
 
 
