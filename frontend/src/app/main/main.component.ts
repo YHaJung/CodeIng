@@ -57,7 +57,8 @@ export class MainComponent implements OnInit {
   //log out
   logout(){
     this.cookieService.deleteAll();
-    this.gohome();
+    window.location.reload();
+    //this.gohome();
   }
 
 }

@@ -7,7 +7,7 @@
     <nav class="nav-auth" *ngIf="token">
         <span>반갑습니다, {{nickname}}님!</span>
         <a href="/mypage">마이페이지</a>&nbsp;
-        <a type="button" (click)="logout()" routerLink='/home'>로그아웃</a>
+        <a type="button" (click)="logout()">로그아웃</a>
         <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
     </nav>
     <div id="middle">
