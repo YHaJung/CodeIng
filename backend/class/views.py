@@ -135,7 +135,7 @@ def class_list(request):
                 tag = Classtag.objects.filter(classidx__classidx=c.classidx,isdeleted='N')
                 tag_list =[]
                 for i in tag:
-                    tag_list.append(i.tagname)
+                    tag_list.append('#'+i.tagname)
 
                 # 강의 썸네일 없을 경우
                 thumbnail = c.lectureidx.thumburl
@@ -145,7 +145,7 @@ def class_list(request):
 
                 classes.append(
                     dict([('classIdx', c.classidx), ('className', c.classname), ('thumbUrl', thumbnail),
-                          ('memberCount', member[0]['count']), ('tags', tag_list), ('password', c.password)]))
+                          ('memberCount', member[0]['count']+'명'), ('tags', tag_list), ('password', c.password)]))
 
 
 
