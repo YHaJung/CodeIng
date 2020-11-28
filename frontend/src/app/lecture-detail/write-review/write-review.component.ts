@@ -4,6 +4,7 @@ import { faStar} from '@fortawesome/free-solid-svg-icons';
 import {ApiService} from '../../api.service';
 import {ActivatedRoute} from '@angular/router';
 
+
 @Component({
   selector: 'app-write-review',
   templateUrl: './write-review.component.html',
@@ -21,7 +22,10 @@ export class WriteReviewComponent implements OnInit {
   pros = [];
   cons = [];
   */ 
-  constructor( private apiService: ApiService, private route: ActivatedRoute) { }
+  constructor(
+    private apiService: ApiService,
+    private route: ActivatedRoute,
+    ) { }
   lectureIdx : number;
   ngOnInit(): void {
     this.lectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');

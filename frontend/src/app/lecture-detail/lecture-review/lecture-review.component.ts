@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../../api.service';
 import {ActivatedRoute} from '@angular/router';
+import {CookieService} from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-lecture-review',
@@ -11,10 +12,12 @@ export class LectureReviewComponent implements OnInit {
 
   reviews: any = [];
   selectedReview = null;
+  token:string;
 
   constructor(
     private apiService: ApiService,
     private route: ActivatedRoute,
+    private cookieService: CookieService,
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +34,13 @@ export class LectureReviewComponent implements OnInit {
 
   write = false;
   goWriteReviewPage(){
-    this.write = true;
+    this.token = this.cookieService.get('token');
+    if(this.token){
+      this.write = true;
+    }else{
+      alert('로그인하셔야 이용할 수 있는 서비스입니다.');
+    }
+    
   }
   writeFinished(){
     this.write = false;

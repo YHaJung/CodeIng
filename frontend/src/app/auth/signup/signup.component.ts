@@ -61,7 +61,10 @@ export class SignupComponent implements OnInit {
       result => {
         console.log(result);
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        alert(error.error.message);
+      }
     );
   }
 

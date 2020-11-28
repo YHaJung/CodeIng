@@ -10,13 +10,11 @@ import {CookieService} from 'ngx-cookie-service';
 })
 export class ApiService {
   token = this.cookieService.get('token');
-  baseUrl = 'http://3.34.74.250/'; // 'http://127.0.0.1:8000/';
+  baseUrl = 'https://www.coconerd.tk/';//'http://3.34.74.250/';//  'http://127.0.0.1:8000/';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     Authorization: this.token
   });
-
-  private lectures = ['자료구조와 알고리즘', 'python 배우기'];
 
   constructor(
     private httpClient: HttpClient,
@@ -36,7 +34,7 @@ export class ApiService {
   /*for main-page*/
   // tslint:disable-next-line:typedef
   getRankingOverview(page) {
-    return this.httpClient.get(this.baseUrl + '/overall-ranking?page='+page, {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'overall-ranking?page='+page, {headers: this.headers});
   }
   // tslint:disable-next-line:typedef
   getRecommendOverview(page:number) {  // 나중에 api 바꾸기

@@ -1,11 +1,10 @@
 button{
-    background-color: var(--main-color);
+    background-color: #ffffff;
     border: 0;
     width: 100%;
     height: 40px;
     margin-top: 2px;
-    color: #ffffff;
 }
 .pointColor{
-    background-color: var(--point-color);
+    background-color: var(--main-color);
 }

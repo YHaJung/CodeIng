@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {FormGroup, FormControl} from '@angular/forms';
 import {ApiService} from '../../api.service';
 import {ActivatedRoute} from '@angular/router';
+import {CookieService} from 'ngx-cookie-service';
+
 
 @Component({
   selector: 'app-lecture-qna',
@@ -9,11 +10,22 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./lecture-qna.component.css']
 })
 export class LectureQnaComponent implements OnInit {
+  constructor(
+    private apiService: ApiService,
+    private route: ActivatedRoute,
+    private cookieService: CookieService,
+  ) { }
+
   lectureIdx : number;
+  token : string;
 
   page = 0;
   goWriteQnaPage(){
-    this.page = 1;
+    if(this.token){
+      this.page = 1;
+    }else{
+      alert('로그인하셔야 이용할 수 있는 서비스입니다.');
+    }
   }
   writeFinished(){
     this.page = 0;
@@ -22,10 +34,7 @@ export class LectureQnaComponent implements OnInit {
   qnas: any = [];
   selectedReview = null;
 
-  constructor(
-    private apiService: ApiService,
-    private route: ActivatedRoute,
-  ) { }
+  
 
   ngOnInit(): void {
     this.lectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
