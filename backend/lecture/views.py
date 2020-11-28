@@ -149,8 +149,7 @@ def lecture_list(request):
 
                 raise Exception
 
-            if input_keyword =='' or input_keyword =='""' or len(input_keyword.replce(' ','')) ==0:
-                print('sk!!!')
+            if input_keyword =='' or input_keyword =='""' or input_keyword.strip() == '':
 
                 # 쿼리문
                 if selected_level == 6:
@@ -169,6 +168,7 @@ def lecture_list(request):
 
             # 키워드가 있을 경우
             else:
+
 
                 #키워드 공백 단위로 분리
 
@@ -293,8 +293,6 @@ def subcategory_list(request):
             return for_exception()
 
 
-
-
 @api_view(['GET'])
 def lectures_ranking(request):
     if request.method == 'GET':
@@ -337,7 +335,7 @@ def lectures_ranking(request):
 
 
             category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename','lecture__rating',
-                                                           'lecture__lecturer', 'lecture__thumburl', 'lecture__price',
+                                                           'lecture__lecturer', 'lecture__thumburl', 'lecture__price', 'lecture__level__levelidx',
                                                            'lecture__level__levelname', 'lecture__siteinfo__sitename', 'lecture__siteinfo__logoimage').distinct()[page * 5 - 5:page * 5]
 
 
@@ -364,12 +362,10 @@ def lectures_ranking(request):
 
                     thumbnail = c['lecture__siteinfo__logoimage']
 
-
-
                 rank.append(
                     dict([('lectureIdx', c['lecture__lectureidx']), ('lectureName', c['lecture__lecturename']),
                           ('professor', c['lecture__lecturer']),('rating', c['lecture__rating']),
-                          ('price', price_sql), ('level', c['lecture__level__levelname']), ('thumbUrl', thumbnail),
+                          ('price', price_sql),('levelIdx', c['lecture__level__levelidx']), ('levelName', c['lecture__level__levelname']), ('thumbUrl', thumbnail),
                           ('siteName', c['lecture__siteinfo__sitename'])]))
 
 
@@ -382,6 +378,7 @@ def lectures_ranking(request):
         except Exception:
 
             return for_exception()
+
 
 
 @api_view(['GET'])
@@ -455,7 +452,7 @@ def overall_ranking(request):
                 dict([('lectureIdx', lec.lectureidx), ('lectureName', lec.lecturename),
                       ('siteName', lec.siteinfo.sitename),
                       ('price', price_sql), ('thumbUrl', thumbnail),
-                      ('rating', lec.rating), ('level', lec.level.levelname)]))
+                      ('rating', lec.rating), ('levelIdx', lec.level.levelidx), ('levelName', lec.level.levelname)]))
 
         overview_dict['result'] = overview_list
         return_value = json.dumps(overview_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -465,12 +462,6 @@ def overall_ranking(request):
     except Exception:
 
         return for_exception()
-
-
-
-
-
-
 
 
 
@@ -502,8 +493,8 @@ def lecture_detail(request, pk):
             thumbnail = lecture.siteinfo.logoimage
 
         detail_dict['result'] = dict([('lectureIdx', lecture.lectureidx), ('lectureName', lecture.lecturename),
-                                      ('lectureLink', lecture.lecturelink),
-                                      ('price', price_sql), ('level', lecture.level.levelname), ('rating', lecture.rating), ('thumbUrl', thumbnail),
+                                      ('lectureLink', lecture.lecturelink), ('levelIdx', lecture.level.levelidx),
+                                      ('price', price_sql), ('levelName', lecture.level.levelname), ('rating', lecture.rating), ('thumbUrl', thumbnail),
                                       ('siteIdx', lecture.siteinfo.siteidx), ('siteName', lecture.siteinfo.sitename)])
 
         return_value = json.dumps(detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -1398,7 +1389,7 @@ def favorite_lectures(request):
 
                 print(i.lecture.level.levelname)
                 favlectures_list.append(
-                    dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('level',i.lecture.level.levelname),
+                    dict([('lectureIdx', i.lecture.lectureidx), ('lectureName', i.lecture.lecturename), ('price', price_sql),('levelIdx',i.lecture.level.levelidx), ('levelName',i.lecture.level.levelname),
                           ('rating',i.lecture.rating),('thumbUrl',thumbnail),('siteinfo',{'siteIdx': i.lecture.siteinfo.siteidx,
                                                                                        'siteName': i.lecture.siteinfo.sitename}),('professor',i.lecture.lecturer)]))
 

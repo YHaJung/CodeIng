@@ -165,7 +165,7 @@ def CBRS(request):
         #               ]))
         # print(krecommend)
         for lectureidx in krecommend:
-            i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
+            i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                     'siteinfo', 'siteinfo__logoimage').distinct()
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -197,6 +197,8 @@ def CBRS(request):
                       ('price', price),
                       ('rating', i[0]['rating']),
                       ('siteinfo', sitename),
+                      ('levelIdx', i[0]['level__levelidx']),
+                      ('levelName', i[0]['level__levelname'])
                       ]))
         overview_dict['result'] = overview_list
         return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
@@ -212,7 +214,7 @@ def CBRS(request):
 @login_decorator
 def CBRSlist(request):
     pk = request.user.userinfo.useridx
-    data = picle.load(open('knn_models/data.pkl', 'rb'))
+    data = pickle.load(open('knn_models/data.pkl', 'rb'))
     querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
     nneigh = 25
@@ -242,7 +244,7 @@ def CBRSlist(request):
     #               ]))
     for lectureidx in krecommend:
         i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
-                                                                 'level', 'price', 'rating',
+                                                                 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                                                                  'siteinfo','siteinfo__logoimage').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -272,6 +274,8 @@ def CBRSlist(request):
                   ('price', price),
                   ('rating', i[0]['rating']),
                   ('siteName', sitename),
+                  ('levelIdx', i[0]['level__levelidx']),
+                  ('levelName', i[0]['level__levelname'])
                   ]))
     overview_dict['result'] = overview_list
     # use_decimal = True,
@@ -392,7 +396,7 @@ def Poprslist(request, pk=None):
     #               ]))
     for lectureidx in krecommend:
         i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
-                                                                 'level', 'price', 'rating',
+                                                                 'level', 'price', 'rating', 'level__levelname',
                                                                  'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -417,7 +421,8 @@ def Poprslist(request, pk=None):
                   ('lectureName', i[0]['lecturename']),
                   ('thumbUrl', thumbnail),
                   ('lecturer', i[0]['lecturer']),
-                  ('level', decimal.Decimal(i[0]['level'])),
+                  ('levelIdx', int(decimal.Decimal(i[0]['level']))),
+                  ('levelName', i[0]['level__levelname']),
                   ('price', price),
                   ('rating', i[0]['rating']),
                   ('siteName', sitename),
@@ -548,8 +553,8 @@ def KNN_IBCF(request, pk=None):
     #               ('level', decimal.Decimal(i[0]['level']))
     #               ]))
     for x in range(0, len(distances.flatten())):
-        i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
-                                                                 'level', 'price', 'rating',
+        i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('siteinfo__logoimage', 'thumburl', 'lecturer',
+                                                                 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                                                                  'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -620,7 +625,7 @@ def KNN_UBCF(request, pk=None):
     for x in range(0, len(distances.flatten())):
         i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl',
                                                                            'lecturer',
-                                                                           'level', 'price', 'rating',
+                                                                           'level', 'price', 'rating','level__levelidx',
                                                                            'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -651,6 +656,7 @@ def KNN_UBCF(request, pk=None):
                   ('price', price),
                   ('rating', i[0]['rating']),
                   ('siteName', sitename),
+                  ('levelIdx', i[0]['level__levelidx'])
                   ]))
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
