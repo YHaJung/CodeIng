@@ -7,18 +7,23 @@
 body{
   font-family: var(--main-font);
   color:var(--dark-gray);
+  margin-bottom: 40px;
+  font-weight: 500;
 }
 button{
   font-family: var(--main-font);
   color:var(--dark-gray);
+  font-weight: 500;
 }
 input{
   font-family: var(--main-font);
   color:var(--dark-gray);
+  font-weight: 500;
 }
 a{
   font-family: var(--main-font);
   color:var(--dark-gray);
+  font-weight: 500;
 }
 
 

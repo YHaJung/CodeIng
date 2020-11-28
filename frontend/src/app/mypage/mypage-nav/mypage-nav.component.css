@@ -1,11 +1,14 @@
 button{
-    background-color: var(--main-color);
-    border: 0;
+    background-color: #ffffff;
+    border: 0.5px solid var(--light-gray);
+    box-sizing: border-box;
+    border-radius: 5px;
     width: 100%;
     height: 40px;
     margin-top: 2px;
-    color: #ffffff;
 }
-.pointColor{
-    background-color: var(--point-color);
+.clickedColor{
+    background-color: var(--main-color);
+    color: #ffffff;
+    border: 0.5px;
 }

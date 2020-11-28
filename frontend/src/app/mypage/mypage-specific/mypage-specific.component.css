@@ -1,6 +1,6 @@
 .grid-layout{
     display:grid;
-    grid-template-columns: 1fr 1.6fr 3.7fr 2fr;
+    grid-template-columns: 1fr 1.6fr 4.1fr 1.6fr;
 }
 .left{
     text-align: center;
@@ -10,13 +10,7 @@
 #profile{
     margin-bottom: 30px;
 }
-#nav{
-    background: var(--main-color);
-    border-radius: 5px;
-    color: #FFFFFF;
-    padding: 5px 0px 10px 0px;
-    font-size: 1em;
-}
+
 
 h1{
     font-size: 1.5em;

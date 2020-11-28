@@ -35,8 +35,10 @@
         <a href="{{lectureDetail.lectureLink}}">수강하러 가기</a>
       </h3>
       <br/>
-      <div (click)="viewReviews()" [ngClass]="{'clicked-menu':reviewChecked==1}">리뷰</div>&nbsp;
-      <div (click)="viewQna()" [ngClass]="{'clicked-menu':qnaChecked==1}">QnA</div>
+      <div class="nav-div">
+        <div (click)="viewReviews()" [ngClass]="{'clicked-menu':reviewChecked==1}">리뷰</div>&nbsp;
+        <div (click)="viewQna()" [ngClass]="{'clicked-menu':qnaChecked==1}">QnA</div>
+      </div>
       <app-lecture-review *ngIf="reviewChecked==1"></app-lecture-review>
       <app-lecture-qna  *ngIf="qnaChecked==1"></app-lecture-qna>
 <!--      class="qna"-->

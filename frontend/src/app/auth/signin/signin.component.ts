@@ -32,7 +32,11 @@ export class SigninComponent implements OnInit {
         this.cookieService.set('token', result.token);
         window.location.href="/home/1";
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        alert(error.error.message);
+        //alert(error[message])
+      }
     );
     
   }
