@@ -13,10 +13,13 @@ export class LectureDetailComponent implements OnInit {
   star = faStar;
   bookmark = faBookmark;
   check = faCheck;
+
   favoriteLecture = 0 ;       //관심강의 여부
   favoriteSite = 0 ;       //관심사이트 여부
+
   lectureIdx : number;
   page : string;
+  
   lectureDetail: any=[];
   avg_rating = 0;
   level = 0;
