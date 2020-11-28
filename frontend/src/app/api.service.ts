@@ -64,7 +64,6 @@ export class ApiService {
     }else{
       return this.httpClient.get(this.baseUrl + 'api/recommendlist', {headers: this.headers});
     }
-    
   }
 
  //강의 상세

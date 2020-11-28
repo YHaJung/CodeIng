@@ -51,23 +51,13 @@ export class HomeComponent implements OnInit {
     );
   }
   callRecommendApi(){
-    if(this.token){
-      this.apiService.getRecommendOverview(this.recommendPage).subscribe(
-        data => {
-          this.recommendoverview = data['result'];
-          console.log(this.recommendoverview);
-        },
-        error => console.log(error)
-      );
-    }else{
-      this.apiService.getRecommendOverview(this.recommendPage).subscribe(
-        data => {
-          this.recommendoverview = data['result'];
-          console.log(this.recommendoverview);
-        },
-        error => console.log(error)
-      );
-    }
+    this.apiService.getRecommendOverview(this.recommendPage).subscribe(
+      data => {
+        this.recommendoverview = data['result'];
+        console.log(this.recommendoverview);
+      },
+      error => console.log(error)
+    );
   }
 
   // tslint:disable-next-line:typedef

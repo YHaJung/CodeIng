@@ -1,3 +1,24 @@
+.whole-section{
+    background-color: #ffffff;
+    padding: 36px;
+    border: 0.3px solid #DEDEDE;
+    border-radius: 5px;
+}
+
+.userinfo-div{
+    margin-bottom: 40px;
+}
+h1{
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 23px;
+}
+h2{
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+}
+
 .grid-layout{
     display:grid;
     grid-template-columns: 1fr 3fr;
@@ -13,4 +34,28 @@ fa-icon.orange{
 
 .grid-layout #right textarea{
     width: 100%;
+}
+
+
+
+label{
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 23px;
+}
+p{
+    font-size: 16px;
+}
+
+.button-section{
+    text-align: right;
+}
+button{
+    width: 90px;
+    height: 35px;
+    background: #34353A;
+    border-radius: 3px;
+    color: #ffffff;
+    border: 0;
+    margin: 2px;
 }

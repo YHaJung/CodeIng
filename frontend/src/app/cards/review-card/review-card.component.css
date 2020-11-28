@@ -3,17 +3,29 @@ article{
   padding:10px 20px 20px 20px;
   margin: 10px;
   border-radius: 5px;
-  border: 0.5px solid;
+  border: 0;
 }
 
+h3{
+  font-size: 16px;
+  line-height: 23px;
+  font-weight: 600;
+}
 h1{
-    font-size: 1.5em;
+  font-size: 16px;
+  line-height: 23px;
 }
 h2{
-    /*font-size: 1em;*/
-  font-size: 12px;
-  font-weight: bold;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
 }
+p{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+}
+
 p {
   font-size: 12px;
 }
@@ -21,10 +33,6 @@ fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
   color: var(--point-color);
 }
 /*--normal review*/
-.normal-review{
-  display: grid;
-  grid-template-columns: 1fr 6fr;
-}
 .userInfo{
   font-size: 16px;
   margin-bottom: 10px;

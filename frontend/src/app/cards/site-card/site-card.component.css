@@ -2,12 +2,13 @@ article{
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-gap : 5px;
-    padding: 5px;
+    padding: 21px;
 }
 img{
-    width: 6em;
-    height: 5em;
+    width: 87px;
+    height: 87px;
     border: 1px solid var(--light-gray);
+    border-radius: 5px;
 }
 
 .right-div{

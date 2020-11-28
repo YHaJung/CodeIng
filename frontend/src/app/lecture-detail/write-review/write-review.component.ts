@@ -27,8 +27,17 @@ export class WriteReviewComponent implements OnInit {
     private route: ActivatedRoute,
     ) { }
   lectureIdx : number;
+  user;
   ngOnInit(): void {
     this.lectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
+    //getPersonalInfo()
+    this.apiService.getPersonalInfo().subscribe(
+      data => {
+        this.user = data['result'];
+        console.log(this.user);
+      },
+      error => console.log(error)
+    );
   }
   star = faStar;
   clickedRate = 0;

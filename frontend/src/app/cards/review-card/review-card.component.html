@@ -1,10 +1,9 @@
 <article>
 
   <!--normal review-->
-  <div *ngIf="review.nickname" class="normal-review">  
-    <ngx-avatar class="user-avatar" size="40" name="{{review.nickname}}"></ngx-avatar>
+  <div *ngIf="review.nickname" class="normal-review">
     <div class="userInfo">
-      {{review.nickname}}
+      <h3>{{review.nickname}}</h3>
       <h2>{{review.job}}/{{review.userlevel}}</h2>
     </div>
   </div>
@@ -22,7 +21,7 @@
   <div class="main">
     <section>
       <div>
-        <h2>총점</h2>
+        <h1>총점</h1>
         <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 0}"></fa-icon>
         <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 1}"></fa-icon>
         <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 2}"></fa-icon>
@@ -31,7 +30,7 @@
       </div>
       <br/>
       <div>
-        <h2>강의력</h2>
+        <h1>강의력</h1>
         <fa-icon
           [icon]="star"
           *ngFor="let num of [0,1,2,3,4]"
@@ -40,7 +39,7 @@
       </div>
       <br/>
       <div>
-        <h2>가격</h2>
+        <h1>가격</h1>
         <fa-icon
           [icon]="star"
           *ngFor="let num of [0,1,2,3,4]"
@@ -50,17 +49,17 @@
     </section>
     <section>
       <div>
-        <h2>장점</h2>
+        <h1>장점</h1>
         <p>{{review.pros}}</p>
       </div>
       <br/>
       <div>
-        <h2>단점</h2>
+        <h1>단점</h1>
         <p>{{review.cons}}</p>
       </div>
       <br/>
       <div>
-        <h2>개선점</h2>
+        <h1>개선점</h1>
         <p>{{review.improvement}}</p>
       </div>
     </section>

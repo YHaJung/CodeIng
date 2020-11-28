@@ -38,6 +38,7 @@ export class LectureQnaComponent implements OnInit {
 
   ngOnInit(): void {
     this.lectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
+    this.token = this.cookieService.get('token');
 
     this.apiService.getLectureQnas(this.lectureIdx).subscribe(
       data => {
