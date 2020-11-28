@@ -1,11 +1,14 @@
-<div>
-    <section class="qna-write-section">
-        <form [formGroup]="wirteQnaForm" (submit)="creatQna()">
-            <label> 제목 </label>
-            <input type="text" formControlName="title"/><br/>
-            <textarea type="text" formControlName="description"></textarea><br/>
-            <button (click)="cancealWriting()">취소</button>
-            <button type="submit">등록</button>
-        </form>
-    </section>
-</div>
+<form
+    [formGroup]="wirteQnaForm"
+    (submit)="creatQna()"
+>
+    <div>
+        <input type="text" formControlName="title" placeholder="제목을 입력하세요."/>
+    </div>
+    <textarea type="text" formControlName="description"></textarea><br/>
+    <button class="write-button" type="submit">등록</button><br/>
+    <div class="canceal-button-div" >
+        <button class="canceal-button" (click)="cancealWriting()"><u>작성취소</u></button>
+    </div>
+    
+</form>

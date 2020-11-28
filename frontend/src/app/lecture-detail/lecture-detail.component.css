@@ -29,9 +29,14 @@ h3{
 }
 
 
+.nav-div{
+  margin-bottom: 10px;
+}
 #content .clicked-menu {
   border-bottom: 4px solid var(--dark-gray);
 }
 .col-sm-3 {
   font-weight: 600;
 }
+
+
