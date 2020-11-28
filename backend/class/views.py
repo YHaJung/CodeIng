@@ -137,15 +137,18 @@ def class_list(request):
                 for i in tag:
                     tag_list.append('#'+i.tagname)
 
-                # 강의 썸네일 없을 경우
+
+
+               # 강의 썸네일 없을 경우
                 thumbnail = c.lectureidx.thumburl
                 if not thumbnail:
                     thumbnail = c.lectureidx.siteinfo.logoimage
 
-
+                mem = str(member[0]['count'])+'명'
+                print(tag_list)
                 classes.append(
                     dict([('classIdx', c.classidx), ('className', c.classname), ('thumbUrl', thumbnail),
-                          ('memberCount', member[0]['count']+'명'), ('tags', tag_list), ('password', c.password)]))
+                          ('memberCount', mem), ('tags', tag_list), ('password', c.password)]))
 
 
 
@@ -186,17 +189,17 @@ def myclass_list(request):
                 tag = Classtag.objects.filter(classidx__classidx=c.classidx.classidx,isdeleted='N')
                 tag_list =[]
                 for i in tag:
-                    tag_list.append(i.tagname)
+                    tag_list.append('#'+i.tagname)
 
                 # 강의 썸네일 없을 경우
                 thumbnail = c.classidx.lectureidx.thumburl
                 if not thumbnail:
                     thumbnail = c.classidx.lectureidx.siteinfo.logoimage
 
-
+                mem = str(member[0]['count']) + '명'
                 classes.append(
                     dict([('classIdx', c.classidx.classidx), ('className', c.classidx.classname), ('thumbUrl', thumbnail),
-                          ('memberCount', member[0]['count']), ('tags', tag_list), ('password', c.classidx.password)]))
+                          ('memberCount', mem), ('tags', tag_list), ('password', c.classidx.password)]))
 
 
 
