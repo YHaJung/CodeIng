@@ -33,6 +33,7 @@ import { CookieService } from 'ngx-cookie-service';
 import {ReviewCardModule} from './cards/review-card/review-card.module';
 import {QnaCardModule} from './cards/qna-card/qna-card.module';
 import {LectureCardSmallModule} from './cards/lecture-card-small/lecture-card-small.module';
+import {LectureCardMiddleModule} from './cards/lecture-card-middle/lecture-card-middle.module';
 import {MainNavModule} from './nav/main-nav/main-nav.module';
 
 import { AvatarModule } from 'ngx-avatar';
@@ -78,6 +79,7 @@ const appRoutes: Routes = [
     ReviewCardModule,
     QnaCardModule,
     LectureCardSmallModule,
+    LectureCardMiddleModule,
     SiteCardModule,
     AvatarModule,
     SigninModule,

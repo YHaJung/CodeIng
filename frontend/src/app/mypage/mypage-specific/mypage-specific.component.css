@@ -1,6 +1,6 @@
 .grid-layout{
     display:grid;
-    grid-template-columns: 1fr 1.6fr 3.7fr 2fr;
+    grid-template-columns: 1fr 1.6fr 4.1fr 1.6fr;
 }
 .left{
     text-align: center;

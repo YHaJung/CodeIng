@@ -1,0 +1,41 @@
+article{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap : 5px;
+    padding: 21px;
+}
+img{
+    width: 87px;
+    height: 87px;
+    border: 1px solid var(--light-gray);
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.right-div{
+    padding: 5px;
+}
+
+h1{
+    font-size: 9px;
+    line-height: 12px;
+}
+h2{
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+}
+h3{
+    font-size: 9px;
+    line-height: 12px;
+}
+
+.likes-div{
+    text-align: right;
+    font-size: 10px;
+    line-height: 14px;
+}
+.heart-icon{
+    font-size: 0.8em;
+    color: #F3143C;
+}
