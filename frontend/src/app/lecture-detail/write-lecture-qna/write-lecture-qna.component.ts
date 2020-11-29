@@ -26,7 +26,7 @@ export class WriteLectureQnaComponent implements OnInit {
   cancealWriting(){
     this.wirteQnaForm.value.title = '';
     this.wirteQnaForm.value.description = '';
-    this.finish.emit();
+    window.location.href = "/lecturedetail/"+this.lectureIdx+"/qna/view";
   }
 
   creatQna(){                                         //
@@ -37,10 +37,12 @@ export class WriteLectureQnaComponent implements OnInit {
       this.wirteQnaForm.value.description,
       this.images
     ).subscribe(
-      result => console.log(result),
+      result => {
+        console.log(result);
+        window.location.href = "/lecturedetail/"+this.lectureIdx+"/qna/view";
+      },
       error => console.log(error)
     );
-    this.finish.emit();
   }
 
   ngOnInit(): void {

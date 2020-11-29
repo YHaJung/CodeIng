@@ -23,6 +23,8 @@ h3{   /*qna날짜*/
 }
 h1{       /*qna제목*/
   font-size: 1.3em;
+  font-weight: 600;
+  line-height: 2em;
 }
 h2{       /*qna내용*/
   font-size: 1.1em;

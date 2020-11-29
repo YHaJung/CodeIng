@@ -1,4 +1,4 @@
-<div *ngIf="write == false">
+<div *ngIf="subpage=='view'">
     <section id="write-review-div" >
         <a type="button" id="write-review" (click)="goWriteReviewPage()">리뷰 작성하기</a>
     </section>
@@ -8,9 +8,8 @@
             [review]="review"
         ></app-review-card>
     </section>
-    
 </div>
 
-<div *ngIf="write == true">
-    <app-write-review (finish)="writeFinished()"></app-write-review>
+<div *ngIf="subpage=='write'">
+    <app-write-review></app-write-review>
 </div>

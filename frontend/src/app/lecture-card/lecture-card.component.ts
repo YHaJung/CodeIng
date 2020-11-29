@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { faStar} from '@fortawesome/free-solid-svg-icons';
+import { faStar, faCircle} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-lecture-card',
@@ -8,6 +8,7 @@ import { faStar} from '@fortawesome/free-solid-svg-icons';
 })
 export class LectureCardComponent implements OnInit {
   star = faStar;
+  circle = faCircle;
   @Input() lecture;
 
 

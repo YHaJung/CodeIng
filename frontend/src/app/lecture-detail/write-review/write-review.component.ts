@@ -11,7 +11,6 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./write-review.component.css']
 })
 export class WriteReviewComponent implements OnInit {
-  @Output() finish = new EventEmitter();
   //보내야 하는 값
   /*
   totalrating : number;
@@ -27,10 +26,10 @@ export class WriteReviewComponent implements OnInit {
     private route: ActivatedRoute,
     ) { }
   lectureIdx : number;
-  user;
+  user :any =[];
   ngOnInit(): void {
     this.lectureIdx = +this.route.snapshot.paramMap.get('lectureIdx');
-    //getPersonalInfo()
+ 
     this.apiService.getPersonalInfo().subscribe(
       data => {
         this.user = data['result'];
@@ -40,9 +39,9 @@ export class WriteReviewComponent implements OnInit {
     );
   }
   star = faStar;
-  clickedRate = 0;
-  clickedLevel = 0;
-  clickedPrice = 0;
+  clickedRate :number;
+  clickedLevel :number;
+  clickedPrice :number;
   rateClicked(rate){
     this.clickedRate= rate;
   }
@@ -77,14 +76,7 @@ export class WriteReviewComponent implements OnInit {
   })
 
   cancealWriting(){
-    this.clickedRate = 0;
-    this.clickedLevel = 0;
-    this.clickedPrice = 0;
-    this.wirteReviewForm.value.recommend = '';
-    this.wirteReviewForm.value.improvement = '';
-    this.wirteReviewForm.value.pros = '';
-    this.wirteReviewForm.value.cons = '';
-    this.finish.emit();
+    window.location.href="/lecturedetail/"+this.lectureIdx+"/review/view";
   }
   creatReview(){
     if(this.wirteReviewForm.value.pro1) this.pros.push(1);
@@ -107,9 +99,12 @@ export class WriteReviewComponent implements OnInit {
       this.lectureIdx,this.clickedRate, this.clickedLevel, this.clickedPrice, this.wirteReviewForm.value.satisfy,
       this.wirteReviewForm.value.improvement, this.pros, this.cons
     ).subscribe(
-      result => console.log(result),
+      result => {
+        console.log(result);
+        window.location.href="/lecturedetail/"+this.lectureIdx+"/review/view";
+      },
       error => console.log(error)
     );
-    this.finish.emit();
+    
   }
 }

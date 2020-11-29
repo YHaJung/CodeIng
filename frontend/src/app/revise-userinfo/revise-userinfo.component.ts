@@ -17,6 +17,7 @@ export class ReviseUserinfoComponent implements OnInit {
   test = 1;
   constructor(private apiService: ApiService) { } 
 
+  level:number;
   reviseUserInfoForm = new FormGroup({
     /*page0*/
     //id-pw
@@ -39,9 +40,6 @@ export class ReviseUserinfoComponent implements OnInit {
     school:new FormControl(''),
     //belong
     job:new FormControl(''),
-    //interest
-    interestLanguage:new FormControl(''),
-    interestField:new FormControl(''),
   });
 
   profile : any =[];
@@ -57,17 +55,23 @@ export class ReviseUserinfoComponent implements OnInit {
     this.apiService.getPersonalInfo().subscribe(
       data => {
         this.personalInfo = data['result'];
-        console.log('personalInfo:');
-        console.log(this.personalInfo);
+        this.reviseUserInfoForm.value.id = this.personalInfo.email;
+        this.reviseUserInfoForm.value.name = this.personalInfo.name;
+        this.reviseUserInfoForm.value.phonenumber = this.personalInfo.phonenumber;
+        this.reviseUserInfoForm.value.nickname = this.personalInfo.nickname;
       },
       error => console.log(error)
     );
     this.apiService.getProfile().subscribe(
       data => {
         this.profile = data['result'];
-        //this.profile.category.push({categoryIdx:1, categoryName:'Ajsx'})
-        console.log('profile');
-        console.log( this.profile);
+        this.reviseUserInfoForm.value.birth = this.profile.birthday;
+        this.reviseUserInfoForm.value.school = this.profile.school;
+        //this.level = this.level;
+        this.reviseUserInfoForm.value.job = this.profile.job;
+        this.reviseUserInfoForm.value.gender = this.profile.gender;
+        //this.mysubcategoryIdxs = this.profile.subcategory;
+        //this.mycategoryIdxs = this.profile.category;
       },
       error => console.log(error)
     );
@@ -90,7 +94,6 @@ export class ReviseUserinfoComponent implements OnInit {
   }
   newcategory=[];
   addCategory(event){
-
     this.newcategory = event.target.value.split(',');
     this.profile.category.push({categoryIdx : Number(this.newcategory[0]), categoryName : this.newcategory[1]});
     this.mycategoryIdxs.push(Number(this.newcategory[0]));
@@ -101,6 +104,9 @@ export class ReviseUserinfoComponent implements OnInit {
     this.profile.subcategory.push({categoryIdx : Number(this.newcategory[0]), categoryName : this.newcategory[1]});
     this.mysubcategoryIdxs.push(Number(this.newcategory[0]));
     console.log(this.profile.subcategory);
+  }
+  setLevel(event){
+    this.level= event.target.value;
   }
 
   reviseUserInfo(){
@@ -119,14 +125,14 @@ export class ReviseUserinfoComponent implements OnInit {
     
     this.apiService.patchProfile(this.reviseUserInfoForm.value.birth,
                                   this.reviseUserInfoForm.value.school,
-                                  this.reviseUserInfoForm.value.level,
+                                  this.level,
                                   this.reviseUserInfoForm.value.job,
                                   this.reviseUserInfoForm.value.gender,
                                   this.mysubcategoryIdxs,
                                   this.mycategoryIdxs
                                   ).subscribe(
       result => {
-      console.log(result);
+        console.log(result);
       },
       error => console.log(error)
       );

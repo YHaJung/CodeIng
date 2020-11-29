@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LectureCardMiddleComponent } from './lecture-card-middle.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {RouterModule} from '@angular/router';
 
 
 
@@ -9,7 +10,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   declarations: [LectureCardMiddleComponent],
   imports: [
     CommonModule,
-    FontAwesomeModule 
+    FontAwesomeModule,
+    RouterModule
   ],
   exports:[
     LectureCardMiddleComponent
