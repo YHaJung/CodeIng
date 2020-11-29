@@ -10,7 +10,7 @@ from django.http import JsonResponse, HttpResponse, QueryDict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Lecture, Category, Siteinfo, Lecturecategory, Review, Userinfo, Profile, Reviewpros, Reviewcons, \
-    Likesforreview, Qna, Likesforqna, Qnaimage, Comment, Commentimage, Pros, Favoritesite, Favoritelecture
+    Likesforreview, Qna, Likesforqna, Qnaimage, Comment, Commentimage, Pros, Favoritesite, Favoritelecture, Subcategory
 from rest_framework import viewsets, status
 from .serializers import LectureSerializer, CategorySerializer, QnaSerializer, CommentSerializer, \
     CommentimageSerializer, QnaimageSerializer, ReviewSerializer, ReviewprosSerializer, ReviewconsSerializer, \
@@ -265,11 +265,19 @@ def lecture_list(request):
 def subcategory_list(request):
     if request.method == 'GET':
         try:
-            category_idx = int(request.GET.get('categoryIdx', '1'))
+            category_idx = int(request.GET.get('categoryIdx', '0'))
 
 
-            subcategorys = Lecturecategory.objects.filter(categoryidx=category_idx).values(
-            'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by('subcategory__subcategoryidx')
+            if category_idx == 0:
+                subcategorys = Lecturecategory.objects.values(
+                    'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by(
+                    'subcategory__subcategoryidx')
+            else:
+                subcategorys = Lecturecategory.objects.filter(categoryidx=category_idx).values(
+                    'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by(
+                    'subcategory__subcategoryidx')
+
+
 
             lec_dict = {}
             lec_dict['isSuccess'] = 'true'
@@ -654,7 +662,7 @@ def review_list(request, pk):
                 if serializer.is_valid():
                     serializer.save()
                 else:
-                    print('너너넌')
+
                     return JsonResponse({'isSuccess': 'false',
                                          'code': 400,
                                          'message': '리뷰형식에 맞지 않습니다'}, status=400)
@@ -674,7 +682,7 @@ def review_list(request, pk):
                 if serializer.is_valid():
                     serializer.save()
                 else:
-                    print('너')
+
                     return JsonResponse({'isSuccess': 'false',
                                          'code': 400,
                                          'message': '리뷰형식에 맞지 않습니다'}, status=400)
@@ -1765,6 +1773,8 @@ def category_list(request):
         return for_exception()
 
 
+
+
 @api_view(['GET'])
 @login_decorator
 def favorite_lecture_check(request, pk):
@@ -1843,19 +1853,6 @@ def favorite_site_check(request, pk):
 
     except Exception:
         return for_exception()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
