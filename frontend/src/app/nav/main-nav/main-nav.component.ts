@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-main-nav',
@@ -6,13 +7,11 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./main-nav.component.css']
 })
 export class MainNavComponent implements OnInit {
-  @Input() tab : string;
 
-  constructor() { }
-
+  constructor(private router: Router,) { }
+  tab:string;
   ngOnInit(): void {
-    console.log('tab');
-    console.log(this.tab);
+    this.tab = this.router.url.split('/')[1];
   }
 
 }

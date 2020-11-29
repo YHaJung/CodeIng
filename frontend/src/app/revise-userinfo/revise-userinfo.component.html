@@ -1,6 +1,8 @@
 <div class="whole">
-    <h1>개인정보 수정</h1>
+    <h1>회원 정보 수정</h1>
     <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
+        <h2>*입력하지 않을 시 기존의 값들이 유지됩니다.</h2>
+        <br/>
         <div>
             <p>아이디(이메일)<br/><input type="email" formControlName="id" placeholder="{{personalInfo.email}}"></p>
             <p>비밀번호<br/><input type="password " formControlName="pw" placeholder="비밀번호"></p>
@@ -10,8 +12,6 @@
         <div>
             <p>이름<br/><input type="text" formControlName="name" placeholder="{{personalInfo.name}}"></p>
             <p>닉네임<br/><input type="text" formControlName="nickname" placeholder="{{personalInfo.nickname}}"></p>
-        </div>
-        <div>
             <p>휴대전화 번호<br/><input type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" formControlName="phonenumber" placeholder="{{personalInfo.phonenumber}}"></p>
             <!--
             <button>인증번호 전송</button>
@@ -38,13 +38,13 @@
                 </select>
             </p>
             <p>
-                <input type="radio" formControlName="job" value='S'>초등학생
-                <input type="radio" formControlName="job" value='T'>중고등학생
+                <input type="radio" formControlName="job" value="S">초등학생
+                <input type="radio" formControlName="job" value="T">중고등학생
                 
-                <input type="radio" formControlName="job" value='D'>개발자/전공생
-                <input type="radio" formControlName="job" value='N'>비개발직군/비전공자
+                <input type="radio" formControlName="job" value="D">개발자/전공생
+                <input type="radio" formControlName="job" value="N">비개발직군/비전공자
             </p>
-            <p>학교<br/><input type="text" formControlName="school" placeholder="{{personalInfo.school}}"></p>
+            <p>학교<br/><input type="text" formControlName="school" placeholder="{{profile.school}}"></p>
         </div>
         
         <div>
@@ -57,7 +57,10 @@
                 </select>
                 <span>*복수선택가능</span>
                 <br/>
-                <span *ngFor="let category of profile.category">#{{category.categoryName}}</span>
+                <span *ngFor="let category of profile.category">
+                    <fa-icon [icon]="deleteIcon" type="button" (click)="deleteCategory(category)"></fa-icon>
+                    {{category.categoryName}}&nbsp;&nbsp;
+                </span>
             </p>
             <p>
                 관심있는 언어
@@ -66,11 +69,14 @@
                             value="{{subcategory.subcategoryIdx}},{{subcategory.subcategoryName}}"
                         >{{subcategory.subcategoryName}}</option>
                 </select>
-                <span>*복수선택가능</span>
-                <span *ngFor="let subcategory of profile.subcategory">#{{subcategory.categoryName}}</span>
+                <span>*복수선택가능</span><br/>
+                <span *ngFor="let subcategory of profile.subcategory">
+                    <fa-icon [icon]="deleteIcon" type="button" (click)="deleteSubCategory(subcategory)"></fa-icon>
+                    {{subcategory.subcategoryName}}&nbsp;&nbsp;
+                </span>
             </p>
         </div>
         <br/>
-        <button id="signup-button" type="submit">개인정보 수정</button>
+        <button id="signup-button" type="submit">회원 정보 수정</button>
     </form>
 </div>
