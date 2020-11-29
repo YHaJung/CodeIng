@@ -269,28 +269,42 @@ def subcategory_list(request):
 
 
             if category_idx == 0:
-                subcategorys = Lecturecategory.objects.values(
-                    'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by(
-                    'subcategory__subcategoryidx')
+                subcategorys = Subcategory.objects.all()
+
+                lec_dict = {}
+                lec_dict['isSuccess'] = 'true'
+                lec_dict['code'] = 200
+                lec_dict['message'] = '서브카테고리 목록 조회 성공'
+                info = []
+
+                for sub in subcategorys:
+                    info.append(
+                        dict([('subcategoryIdx', sub.subcategoryidx),
+                              ('subcategoryName', sub.subcategoryname)]))
+
+                lec_dict['result'] = info
+
             else:
                 subcategorys = Lecturecategory.objects.filter(categoryidx=category_idx).values(
                     'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by(
                     'subcategory__subcategoryidx')
 
+                lec_dict = {}
+                lec_dict['isSuccess'] = 'true'
+                lec_dict['code'] = 200
+                lec_dict['message'] = '서브카테고리 목록 조회 성공'
+                info = []
+
+                for sub in subcategorys:
+                    info.append(
+                        dict([('subcategoryIdx', sub['subcategory__subcategoryidx']),
+                              ('subcategoryName', sub['subcategory__subcategoryname'])]))
+
+                lec_dict['result'] = info
 
 
-            lec_dict = {}
-            lec_dict['isSuccess'] = 'true'
-            lec_dict['code'] = 200
-            lec_dict['message'] = '서브카테고리 목록 조회 성공'
-            info = []
 
-            for sub in subcategorys:
 
-                info.append(
-                    dict([('subcategoryIdx', sub['subcategory__subcategoryidx']), ('subcategoryName', sub['subcategory__subcategoryname'])]))
-
-            lec_dict['result'] = info
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
 
