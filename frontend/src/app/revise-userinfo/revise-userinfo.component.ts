@@ -1,6 +1,7 @@
 import { Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ApiService} from '../api.service';
+import {faMinusSquare } from '@fortawesome/free-regular-svg-icons';
 
 interface Category{
   categoryIdx : number,
@@ -14,10 +15,11 @@ interface Category{
 })
 
 export class ReviseUserinfoComponent implements OnInit {
-  test = 1;
+  ischecked = 1;
+  deleteIcon = faMinusSquare;
   constructor(private apiService: ApiService) { } 
 
-  level:number;
+  levelIdx:number;
   reviseUserInfoForm = new FormGroup({
     /*page0*/
     //id-pw
@@ -47,31 +49,21 @@ export class ReviseUserinfoComponent implements OnInit {
   mycategoryIdxs : Array<number> = [];
   mysubcategoryIdxs : Array<number> = [];
   
-  categories : any =[];
-  subcategories : any=[];
+  categories : any = [];
+  subcategories : any= [];
 
 
   ngOnInit(): void {
     this.apiService.getPersonalInfo().subscribe(
       data => {
         this.personalInfo = data['result'];
-        this.reviseUserInfoForm.value.id = this.personalInfo.email;
-        this.reviseUserInfoForm.value.name = this.personalInfo.name;
-        this.reviseUserInfoForm.value.phonenumber = this.personalInfo.phonenumber;
-        this.reviseUserInfoForm.value.nickname = this.personalInfo.nickname;
+        //console.log(this.reviseUserInfoForm.value.id, this.reviseUserInfoForm.value.name, this.reviseUserInfoForm.value.phonenumber, this.reviseUserInfoForm.value.nickname);
       },
       error => console.log(error)
     );
     this.apiService.getProfile().subscribe(
       data => {
         this.profile = data['result'];
-        this.reviseUserInfoForm.value.birth = this.profile.birthday;
-        this.reviseUserInfoForm.value.school = this.profile.school;
-        //this.level = this.level;
-        this.reviseUserInfoForm.value.job = this.profile.job;
-        this.reviseUserInfoForm.value.gender = this.profile.gender;
-        //this.mysubcategoryIdxs = this.profile.subcategory;
-        //this.mycategoryIdxs = this.profile.category;
       },
       error => console.log(error)
     );
@@ -96,38 +88,68 @@ export class ReviseUserinfoComponent implements OnInit {
   addCategory(event){
     this.newcategory = event.target.value.split(',');
     this.profile.category.push({categoryIdx : Number(this.newcategory[0]), categoryName : this.newcategory[1]});
-    this.mycategoryIdxs.push(Number(this.newcategory[0]));
     console.log(this.profile.category);
   }
   addSubCategory(event){
     this.newcategory = event.target.value.split(',');
     this.profile.subcategory.push({categoryIdx : Number(this.newcategory[0]), categoryName : this.newcategory[1]});
-    this.mysubcategoryIdxs.push(Number(this.newcategory[0]));
     console.log(this.profile.subcategory);
   }
+  index:string;
+  deleteCategory(category){
+    console.log(this.profile.category);
+    this.index = this.profile.category.indexOf(category);
+    this.profile.category.splice(this.index, 1);
+    console.log(this.profile.category);
+  }
+  deleteSubCategory(subcategory){
+    console.log(this.profile.subcategory);
+    this.index = this.profile.subcategory.indexOf(subcategory);
+    this.profile.subcategory.splice(this.index, 1);
+    console.log(this.profile.subcategory);
+  }
+
+
   setLevel(event){
-    this.level= event.target.value;
+    this.levelIdx= event.target.value;
   }
 
   reviseUserInfo(){
-    this.apiService.patchPersonalInfo(this.reviseUserInfoForm.value.id,
+    //회원정보
+    if(this.reviseUserInfoForm.value.id) this.personalInfo.email = this.reviseUserInfoForm.value.id;
+    if(this.reviseUserInfoForm.value.name) this.personalInfo.name = this.reviseUserInfoForm.value.name;
+    if(this.reviseUserInfoForm.value.phonenumber) this.personalInfo.phonenumber = this.reviseUserInfoForm.value.phonenumber;
+    if(this.reviseUserInfoForm.value.nickname) this.personalInfo.nickname = this.reviseUserInfoForm.value.nickname;
+    this.apiService.patchPersonalInfo(this.personalInfo.email,
                                       this.reviseUserInfoForm.value.pw,
                                       this.reviseUserInfoForm.value.pwCheck,
-                                      this.reviseUserInfoForm.value.name,
-                                      this.reviseUserInfoForm.value.phonenumber,
-                                      this.reviseUserInfoForm.value.nickname
+                                      this.personalInfo.name,
+                                      this.personalInfo.phonenumber,
+                                      this.personalInfo.nickname
                                       ).subscribe(
       result => {
         console.log(result);
       },
       error => console.log(error)
     );
-    
-    this.apiService.patchProfile(this.reviseUserInfoForm.value.birth,
-                                  this.reviseUserInfoForm.value.school,
-                                  this.level,
-                                  this.reviseUserInfoForm.value.job,
-                                  this.reviseUserInfoForm.value.gender,
+    //프로필
+    if(this.reviseUserInfoForm.value.birth) this.profile.birthday = this.reviseUserInfoForm.value.birth;
+    if(this.reviseUserInfoForm.value.school) this.profile.school = this.reviseUserInfoForm.value.school;
+    if(this.levelIdx) this.profile.levelIdx = this.levelIdx;
+    //if(this.reviseUserInfoForm.value.job) this.profile.job = this.reviseUserInfoForm.value.job;
+
+    if(this.reviseUserInfoForm.value.gender) this.profile.gender = this.reviseUserInfoForm.value.gender;
+    for(let category of this.profile.category){
+      this.mycategoryIdxs.push(category.categoryIdx);
+    }
+    for(let subcategory of this.profile.subcategory){
+      this.mysubcategoryIdxs.push(subcategory.subcategoryIdx);
+    }
+    this.apiService.patchProfile(this.profile.birthday,
+                                  this.profile.school,
+                                  this.profile.levelIdx,
+                                  this.profile.job,
+                                  this.profile.gender,
                                   this.mysubcategoryIdxs,
                                   this.mycategoryIdxs
                                   ).subscribe(

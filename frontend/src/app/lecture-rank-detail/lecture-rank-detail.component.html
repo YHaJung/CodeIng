@@ -1,19 +1,11 @@
 <app-main></app-main>
-<section id="main-menu">
-  <nav>
-    <div><a routerLink="/home">홈</a>&nbsp;</div>&nbsp;
-    <div class="clicked-menu"><a routerLink="/lecturerankdetail">프로그램 주제별 랭킹</a></div>&nbsp;
-    <div><a routerLink="/lecturerecommenddetail">추천 컨텐츠</a></div>&nbsp;
-    <div><a routerLink='/lecturesearch/""'>강의 검색</a></div>
-    <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
-  </nav>
-</section>
+<app-main-nav></app-main-nav>
 
 
 <!----main---->
 <div id="main-ranking">
   <div id="left">
-    <p>카테고리</p>
+    <h1>카테고리</h1>
     <div id="category-button-field">
       <button class = "category-button"
               [ngClass]="{'currentCategory':currentCategoryIdx==0}"
@@ -46,12 +38,15 @@
       <button class = "subcategory-button" (click)='getMoreSubcategory()'>...</button>
     </div>
     <!--lectures-->
-    <section id="lecture-card-section" *ngFor="let lecture of lectures ">
-      <span>{{ lectures.indexOf(lecture)+1 +(currentPage-1)*5}}</span>
-      <app-lecture-card [lecture]="lecture"></app-lecture-card>
+    <section class="lecture-card-section">
+      <article *ngFor="let lecture of lectures ">
+        <span> &nbsp;{{ lectures.indexOf(lecture)+1 +(currentPage-1)*5}}위</span>
+        <app-lecture-card [lecture]="lecture"></app-lecture-card>
+      </article>
     </section>
+    
     <!--page buttons-->
-    <div id="page-button-div">
+    <div class="page-button-div">
       <button  (click)="pageMinusJump()"> < </button>
       <button *ngFor="let page of pages" [ngClass]="{currentPageButton:page==currentPage}" (click)="selectPage(page)" > {{page}} </button>
       <button  (click)="pagePlusJump()"> > </button>

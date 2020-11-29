@@ -7,7 +7,7 @@ import {MainModule} from '../main/main.module';
 import {RouterModule, Routes} from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxSliderModule } from '@angular-slider/ngx-slider';
-
+import {MainNavModule} from '../nav/main-nav/main-nav.module';
 const routes: Routes = [
   {path: 'lecturesearch/:keyword', component: LectureSearchComponent },
   // {path: 'homenavbar', component: HomeNavBarComponent},
@@ -21,6 +21,7 @@ const routes: Routes = [
     FontAwesomeModule,
     LectureCardModule,
     MainModule,
+    MainNavModule,
     NgxSliderModule
   ],
   exports: [

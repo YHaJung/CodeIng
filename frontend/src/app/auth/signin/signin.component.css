@@ -1,15 +1,19 @@
 body{margin: 0; padding: 0;}
 #whole-page{
     background-color: var(--main-blue);
-    padding: 10vw 25vw 10vw 25vw;
+    padding: 10vw 30vw 10vw 30vw;
     height: 100vh;
 }
 
+.white-logo{
+  width: 250px;
+  height: 70px;
+  margin : 70px auto; /*Z*/
+}
+
 form {                                /*logo 제외 전체*/
-  text-align: center;
   display: grid;
   grid-template-columns: 4fr 1fr;
-  margin-top: 70px;
 }
 input{
   width: 100%;
@@ -31,8 +35,8 @@ button {                              /*'로그인' 버튼*/
 
 .singup-div{                      /*'회원가입'*/    
   text-align: left;
-  margin: 40px 0px 40px 0px;
+  margin-top: 40px;
 }
-  .singup-div a{
-    color: #FFFFFF;
-  }
+.singup-div a{
+  color: #FFFFFF;
+}

@@ -1,5 +1,5 @@
 #main-ranking{  /*전체*/
-  margin:var(--main-body-margin);
+  margin: 85px 230px 85px 85px;
   display: grid;
   
   grid-template-columns: 1fr 3fr;
@@ -9,56 +9,76 @@
  /*category field*/
 #left {    
   text-align: center;
-  width: 70%;
+  width: 170px;
+}
+h1{
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 35px;
 }
 #category-button-field{
   background: var(--main-color);
   border-radius: 5px;
   color: #FFFFFF;
-  padding: 5px 0px 10px 0px;
+  padding: 11px 0px 11px 0px;
+  width: 100%;
 }
 .category-button{
   width:100%;
-  height: 30px;
+  padding: 9px 0px 9px 0px;
   background: transparent;
   color:#ffffff;
   border: 0;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
 }
 
 
 /*subcategory field*/
-.subcategory-button{     
-  height: 30px;
+.subcategory-button{
+  min-width: 85px;
+  height: 36px;
   background: var(--main-color);
-  margin : 3px;
+  font-weight: 500;
+  font-size: 16px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
-  font-size: 12px;
+  border: 0;
+  margin : 3px;
   text-align: center;
   color: #FFFFFF;
-  border: 0;
+  
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 /*lecture card*/
-#lecture-card-section{
+.lecture-card-section{
+  margin: 30px 100px 50px 0px;
+}
+.lecture-card-section article{
   display: grid;
   grid-template-columns: 1fr 9fr;
 }
-#lecture-card-section span{
-  text-align: center;
-  padding-top: 80px;
+.lecture-card-section article span{
+  font-size: 26px;
+  line-height: 162px;
+  vertical-align: middle;
+  font-weight: 700;
+  min-width: 50px;
 }
 
 /*page button*/
-#page-button-div {
+.page-button-div {
   text-align: center;
 }
-#page-button-div button{
+.page-button-div button{
   background: transparent;
   border: 0;
+  font-size: 17px;
 }
-.currentPageButton{
-  font-weight: bold;
+.currentPageButton{/*select page*/
+  font-weight: 700;
 }
 
 

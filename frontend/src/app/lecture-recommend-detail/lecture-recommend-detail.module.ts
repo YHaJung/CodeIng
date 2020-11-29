@@ -6,7 +6,7 @@ import {LectureRecommendDetailComponent} from './lecture-recommend-detail.compon
 
 import {LectureCardModule} from '../lecture-card/lecture-card.module';
 import {MainModule} from '../main/main.module';
-
+import {MainNavModule} from '../nav/main-nav/main-nav.module';
 const routes: Routes = [
   {path: 'lecturerecommenddetail', component: LectureRecommendDetailComponent},
   // {path: 'homenavbar', component: HomeNavBarComponent},
@@ -20,7 +20,8 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     LectureCardModule,
-    MainModule
+    MainModule,
+    MainNavModule
   ],
   exports: [
     RouterModule

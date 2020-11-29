@@ -35,6 +35,8 @@
   min-height: 20px;
   font-size: 12px;
   vertical-align: bottom;
+  font-size: 12px;
+  line-height: 16px;
 }
 #top-bar #middle form button{
   width: 50px;
@@ -42,6 +44,7 @@
   vertical-align: bottom;
 
   font-size: 12px;
+
   border: 0px;
   /*background-color: var(--main-gray);*/
   background-color: var(--main-color);
