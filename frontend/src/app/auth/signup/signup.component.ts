@@ -60,6 +60,8 @@ export class SignupComponent implements OnInit {
       ).subscribe(
       result => {
         console.log(result);
+        alert('회원가입에 성공하셨습니다.');
+        window.location.href="/home";
       },
       error => {
         console.log(error);
