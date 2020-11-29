@@ -560,10 +560,25 @@ def profile(request):
             data.school = p_dict['school']
 
             data.gender = p_dict['gender']
+
+
+
             if p_dict['level'] =='' or p_dict['level'] ==' ' or p_dict['level'] == " " or int(p_dict['level']) <1:
                 p_dict['level'] = 6
 
-            data.level.levelidx = int(p_dict['level'])
+            #레벨은 따로 저장 -> 외래키때문에
+            level_dict={}
+            level_dict['level'] = p_dict['level']
+            levelQuery = QueryDict('', mutable=True)
+            levelQuery.update(level_dict)
+            serializer = ProfileSerializer(data, data=levelQuery, partial=True)
+
+            if serializer.is_valid():
+                serializer.save(isblocked='N')
+
+
+
+
             data.job = p_dict['job']
             data.save()
 
