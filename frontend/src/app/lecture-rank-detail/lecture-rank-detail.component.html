@@ -40,7 +40,7 @@
     <!--lectures-->
     <section class="lecture-card-section">
       <article *ngFor="let lecture of lectures ">
-        <span>{{ lectures.indexOf(lecture)+1 +(currentPage-1)*5}}위</span>
+        <span> &nbsp;{{ lectures.indexOf(lecture)+1 +(currentPage-1)*5}}위</span>
         <app-lecture-card [lecture]="lecture"></app-lecture-card>
       </article>
     </section>

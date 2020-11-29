@@ -62,9 +62,10 @@ h1{
 }
 .lecture-card-section article span{
   font-size: 26px;
-  line-height: 150px;
+  line-height: 162px;
   vertical-align: middle;
   font-weight: 700;
+  min-width: 50px;
 }
 
 /*page button*/

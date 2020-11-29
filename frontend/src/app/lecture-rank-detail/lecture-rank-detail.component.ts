@@ -36,14 +36,16 @@ export class LectureRankDetailComponent implements OnInit {
     this.apiService.getSubcategoryList().subscribe(
       data => {
         this.subcategories = data['result'];
-        console.log('sub categories :'+this.subcategories);
+        console.log('sub categories :');
+        console.log(this.subcategories);
       },
       error => console.log(error)
     );
     this.apiService.getCategoryList().subscribe(
       data => {
         this.categories= data['result'] ;
-        console.log('categories :'+this.categories);
+        console.log('categories :');
+        console.log(this.categories);
       },
       error => console.log(error)
     );
@@ -53,6 +55,8 @@ export class LectureRankDetailComponent implements OnInit {
     this.apiService.getALLLecturesRanking(this.currentPage, this.currentCategoryIdx , this.currentSubCategoryIdx).subscribe(
       data => {
         this.lectures = data['result'];
+        console.log('lectures :');
+        console.log(this.lectures);
       },
       error => console.log(error)
     );
