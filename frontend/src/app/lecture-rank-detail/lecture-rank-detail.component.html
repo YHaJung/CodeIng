@@ -1,20 +1,24 @@
 <app-main></app-main>
 <app-main-nav></app-main-nav>
 
+<div class="title">
+  <h1 *ngIf="currentSubCategoryName=='전체'">{{currentCategoryName}} 랭킹</h1>
+  <h1 *ngIf="currentSubCategoryName!='전체'">{{currentCategoryName}}({{currentSubCategoryName}}) 랭킹</h1>
+</div>
 
 <!----main---->
 <div id="main-ranking">
   <div id="left">
-    <h1>카테고리</h1>
+    <h2>카테고리</h2>
     <div id="category-button-field">
       <button class = "category-button"
               [ngClass]="{'currentCategory':currentCategoryIdx==0}"
-              (click)="selectCategory(0)"
+              (click)="selectCategory({categoryName:'전체', categoryIdx:0})"
        >전체</button>
       <button *ngFor = "let category of categories"
             class = "category-button"
              [ngClass]="{'currentCategory':category.categoryIdx==currentCategoryIdx}"
-             (click)="selectCategory(category.categoryIdx)"
+             (click)="selectCategory(category)"
       > {{category.categoryName}}</button>
     </div>
   </div>
@@ -24,14 +28,14 @@
     <div id="subcategory-button-field">
       <button class = "subcategory-button"
               [ngClass]="{'currentCategory':currentSubCategoryIdx==0}"
-              (click)="selectSubCategory(0)"
+              (click)="selectSubCategory({subcategoryName:'전체', subcategoryIdx:0})"
       >
         전체
       </button>
       <button *ngFor = "let subcategory of subcategories | slice:0:subcategoryNum; let i=index"
               class = "subcategory-button"
               [ngClass]="{'currentCategory':subcategory.subcategoryIdx==currentSubCategoryIdx}"
-              (click)="selectSubCategory(subcategory.subcategoryIdx)"
+              (click)="selectSubCategory(subcategory)"
       >
         {{subcategory.subcategoryName}}
       </button>

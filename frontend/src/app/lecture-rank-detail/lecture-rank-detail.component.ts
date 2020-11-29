@@ -17,6 +17,8 @@ export class LectureRankDetailComponent implements OnInit {
   currentPage = 1;
   currentCategoryIdx = 0;
   currentSubCategoryIdx = 0;
+  currentCategoryName = "전체";
+  currentSubCategoryName = "전체";
 
   allLectures: any = [];
   
@@ -62,13 +64,15 @@ export class LectureRankDetailComponent implements OnInit {
     );
   }
   //카테고리 선택
-  selectCategory(index:number){
-    this.currentCategoryIdx = index;
+  selectCategory(category){
+    this.currentCategoryIdx = category.categoryIdx;
+    this.currentCategoryName = category.categoryName;
     this.currentPage = 1;
     this.loadLectures();
   }
-  selectSubCategory(index:number){
-    this.currentSubCategoryIdx = index;
+  selectSubCategory(subcategory){
+    this.currentSubCategoryIdx = subcategory.subcategoryIdx;
+    this.currentSubCategoryName = subcategory.subcategoryName;
     this.currentPage = 1;
     this.loadLectures();
   }
