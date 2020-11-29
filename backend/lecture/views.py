@@ -630,6 +630,10 @@ def review_list(request, pk):
             if serializer.is_valid():
 
                serializer.save()
+            else:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '리뷰형식에 맞지 않습니다'}, status=400)
 
             # 문자열 ->
             #tmp = pros_list_dict['pros'][1:-1]
@@ -649,6 +653,11 @@ def review_list(request, pk):
                 serializer = ReviewprosSerializer(data=query_dict)
                 if serializer.is_valid():
                     serializer.save()
+                else:
+                    print('너너넌')
+                    return JsonResponse({'isSuccess': 'false',
+                                         'code': 400,
+                                         'message': '리뷰형식에 맞지 않습니다'}, status=400)
 
             for cons in cons_list_dict['cons']:
 
@@ -664,6 +673,11 @@ def review_list(request, pk):
                 serializer = ReviewconsSerializer(data=query_dict)
                 if serializer.is_valid():
                     serializer.save()
+                else:
+                    print('너')
+                    return JsonResponse({'isSuccess': 'false',
+                                         'code': 400,
+                                         'message': '리뷰형식에 맞지 않습니다'}, status=400)
 
             post_review = {}
             post_review['isSuccess'] = 'true'
