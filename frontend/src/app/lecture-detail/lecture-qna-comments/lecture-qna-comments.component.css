@@ -60,3 +60,11 @@ form button{
   border-radius: 5px;
   color: #ffffff;
 }
+
+
+/*돌아가기*/
+.goback-div{
+  margin-top: 10px;
+  text-decoration: underline;
+  text-align: right;
+}

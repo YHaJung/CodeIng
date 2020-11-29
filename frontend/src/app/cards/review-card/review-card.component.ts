@@ -8,15 +8,36 @@ import {ApiService} from '../../api.service';
   styleUrls: ['./review-card.component.css']
 })
 export class ReviewCardComponent implements OnInit {
+  constructor(private apiService: ApiService) { }
+  
   star=faStar;
   edit=faEdit;
   delete=faTrashAlt;
-  @Input() review;
 
-  constructor(
-    private apiService: ApiService) { }
+  @Input() review;
+  jobString :string;
+
 
   ngOnInit(): void {
+    switch(this.review.job){
+      case 'S' : {
+        this.jobString = '초등학생';
+        break;
+      }
+      case 'T' : {
+        this.jobString = '중고등학생';
+        break;
+      }
+      case 'D' : {
+        this.jobString = '개발자/전공생';
+        break;
+      }
+      case 'N' : {
+        this.jobString = '비개발자/비전공생';
+        break;
+      }
+
+    }
   }
   editReview(){
     console.log('edit');

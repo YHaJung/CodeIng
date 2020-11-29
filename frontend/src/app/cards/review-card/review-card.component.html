@@ -4,7 +4,10 @@
   <div *ngIf="review.nickname" class="normal-review">
     <div class="userInfo">
       <h3>{{review.nickname}}</h3>
-      <h2>{{review.job}}/{{review.userlevel}}</h2>
+      <h2>
+        <span *ngIf="review.userlevel">#{{review.userlevel}}</span>&nbsp;
+        <span *ngIf="jobString">#{{jobString}}</span>
+      </h2>
     </div>
   </div>
 
@@ -17,6 +20,7 @@
       <fa-icon [icon]="delete" (click)="deleteReview()"></fa-icon>
     </div>
   </div>
+
 
   <div class="main">
     <section>
