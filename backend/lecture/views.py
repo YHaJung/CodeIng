@@ -10,7 +10,7 @@ from django.http import JsonResponse, HttpResponse, QueryDict
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Lecture, Category, Siteinfo, Lecturecategory, Review, Userinfo, Profile, Reviewpros, Reviewcons, \
-    Likesforreview, Qna, Likesforqna, Qnaimage, Comment, Commentimage, Pros, Favoritesite, Favoritelecture
+    Likesforreview, Qna, Likesforqna, Qnaimage, Comment, Commentimage, Pros, Favoritesite, Favoritelecture, Subcategory
 from rest_framework import viewsets, status
 from .serializers import LectureSerializer, CategorySerializer, QnaSerializer, CommentSerializer, \
     CommentimageSerializer, QnaimageSerializer, ReviewSerializer, ReviewprosSerializer, ReviewconsSerializer, \
@@ -265,24 +265,46 @@ def lecture_list(request):
 def subcategory_list(request):
     if request.method == 'GET':
         try:
-            category_idx = int(request.GET.get('categoryIdx', '1'))
+            category_idx = int(request.GET.get('categoryIdx', '0'))
 
 
-            subcategorys = Lecturecategory.objects.filter(categoryidx=category_idx).values(
-            'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by('subcategory__subcategoryidx')
+            if category_idx == 0:
+                subcategorys = Subcategory.objects.all()
 
-            lec_dict = {}
-            lec_dict['isSuccess'] = 'true'
-            lec_dict['code'] = 200
-            lec_dict['message'] = '서브카테고리 목록 조회 성공'
-            info = []
+                lec_dict = {}
+                lec_dict['isSuccess'] = 'true'
+                lec_dict['code'] = 200
+                lec_dict['message'] = '서브카테고리 목록 조회 성공'
+                info = []
 
-            for sub in subcategorys:
+                for sub in subcategorys:
+                    info.append(
+                        dict([('subcategoryIdx', sub.subcategoryidx),
+                              ('subcategoryName', sub.subcategoryname)]))
 
-                info.append(
-                    dict([('subcategoryIdx', sub['subcategory__subcategoryidx']), ('subcategoryName', sub['subcategory__subcategoryname'])]))
+                lec_dict['result'] = info
 
-            lec_dict['result'] = info
+            else:
+                subcategorys = Lecturecategory.objects.filter(categoryidx=category_idx).values(
+                    'subcategory__subcategoryidx', 'subcategory__subcategoryname').distinct().order_by(
+                    'subcategory__subcategoryidx')
+
+                lec_dict = {}
+                lec_dict['isSuccess'] = 'true'
+                lec_dict['code'] = 200
+                lec_dict['message'] = '서브카테고리 목록 조회 성공'
+                info = []
+
+                for sub in subcategorys:
+                    info.append(
+                        dict([('subcategoryIdx', sub['subcategory__subcategoryidx']),
+                              ('subcategoryName', sub['subcategory__subcategoryname'])]))
+
+                lec_dict['result'] = info
+
+
+
+
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)
 
@@ -630,6 +652,10 @@ def review_list(request, pk):
             if serializer.is_valid():
 
                serializer.save()
+            else:
+                return JsonResponse({'isSuccess': 'false',
+                                     'code': 400,
+                                     'message': '리뷰형식에 맞지 않습니다'}, status=400)
 
             # 문자열 ->
             #tmp = pros_list_dict['pros'][1:-1]
@@ -649,6 +675,11 @@ def review_list(request, pk):
                 serializer = ReviewprosSerializer(data=query_dict)
                 if serializer.is_valid():
                     serializer.save()
+                else:
+
+                    return JsonResponse({'isSuccess': 'false',
+                                         'code': 400,
+                                         'message': '리뷰형식에 맞지 않습니다'}, status=400)
 
             for cons in cons_list_dict['cons']:
 
@@ -664,6 +695,11 @@ def review_list(request, pk):
                 serializer = ReviewconsSerializer(data=query_dict)
                 if serializer.is_valid():
                     serializer.save()
+                else:
+
+                    return JsonResponse({'isSuccess': 'false',
+                                         'code': 400,
+                                         'message': '리뷰형식에 맞지 않습니다'}, status=400)
 
             post_review = {}
             post_review['isSuccess'] = 'true'
@@ -1751,6 +1787,8 @@ def category_list(request):
         return for_exception()
 
 
+
+
 @api_view(['GET'])
 @login_decorator
 def favorite_lecture_check(request, pk):
@@ -1829,19 +1867,6 @@ def favorite_site_check(request, pk):
 
     except Exception:
         return for_exception()
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

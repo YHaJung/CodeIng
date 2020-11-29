@@ -1,7 +1,8 @@
 from django.urls import path, include
 from .views import lecture_list, lectures_ranking, ranking_overview, \
     lecture_detail, review_list, qna_list, qna_detail, comment_list, comment_detail, \
-    review_detail, favorite_sites, favorite_lectures, my_reviews, my_qnas, my_comments, subcategory_list, overall_ranking, \
+    review_detail, favorite_sites, favorite_lectures, my_reviews, my_qnas, my_comments, subcategory_list, \
+    overall_ranking, \
     category_list, favorite_lecture_check, favorite_site_check
 from rest_framework.authtoken.views import obtain_auth_token
 
@@ -27,7 +28,6 @@ urlpatterns = [
     path('my-comments', my_comments),
     path('subcategory-list',subcategory_list),
     path('category-list', category_list),
-
     path('auth/', obtain_auth_token),  #post로 아이디/비번을 보내면 해당 사용자의 토큰을 넘겨준다
 
 ]
