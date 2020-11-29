@@ -369,7 +369,7 @@ def Poprslist(request, pk=None):
     nneigh = 25
     krecommend = np.argsort(-recommend)[:nneigh]
     cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-    krecommend = cnt.most_common()[:10]
+    krecommend = cnt.most_common()[:25]
 
     krecommend = [x for x, _ in krecommend]
     overview_list = []
