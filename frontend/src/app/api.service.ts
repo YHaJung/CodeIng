@@ -141,6 +141,9 @@ export class ApiService {
     console.log(body);
     return this.httpClient.patch(this.baseUrl + 'profile', body, {headers: this.headers});
   }
+  withdrawal(){/*회원탈퇴 */
+    return this.httpClient.delete(this.baseUrl+'user', {headers: this.headers});
+  }
 
   //마이페이지 상세
   //관심 강의

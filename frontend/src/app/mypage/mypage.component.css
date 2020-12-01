@@ -1,10 +1,18 @@
 .middle{
     margin : 80px 343px 140px 343px;
 }
+/*회원탈퇴*/
+.withdraw-section{
+    text-align: right;
+}
+a{
+    font-weight: 600;
+    font-size: 12px;
+}
 
 /*유저 정보*/
 .user-info-section{
-    padding:20px;
+    padding:0px 20px 20px 20px;
 }
 h1{                     /*이름*/
     font-weight: bold;

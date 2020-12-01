@@ -1,6 +1,9 @@
 <app-main></app-main>
 <app-main-nav></app-main-nav>
 <div class="middle">
+    <section class="withdraw-section">
+        <a type="button" (click)="withdrawal()">회원탈퇴</a>
+    </section>
     <section class="user-info-section">
         <h1>{{personalInfo.name}}</h1>
         <h2>{{personalInfo.nickname}}</h2>
@@ -10,7 +13,7 @@
         </p>
     </section>
     <section class="edit-button-section">
-        <button class="edit-button" href="mypage-specific/4">회원정보 수정</button>
+        <button class="edit-button" routerLink="/mypage-specific/4">회원정보 수정</button>
     </section>
     <section class="nav-section">
         <app-mypage-nav [key]="0"></app-mypage-nav>

@@ -28,4 +28,18 @@ export class MypageComponent implements OnInit {
     );
   }
 
+  withdrawal(){
+    var withdrawCheck = confirm("회원탈퇴 시 개인화된 추천을 위한 정보가 모두 초기화됩니다.\n 정말 탈퇴하시겠습니까?");
+    if(withdrawCheck){
+      this.apiService.withdrawal().subscribe(
+      result => {
+        console.log(result);
+        alert('회원탈퇴를 완료하였습니다.');
+      },
+      error => console.log(error)
+    );
+    }
+    
+  }
+
 }
