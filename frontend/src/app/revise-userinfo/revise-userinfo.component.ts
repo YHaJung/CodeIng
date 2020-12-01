@@ -28,7 +28,13 @@ export class ReviseUserinfoComponent implements OnInit {
     phonenumber:new FormControl(''),
     nickname:new FormControl('')
   });
-
+  reviseProfileForm = new FormGroup({
+    birth:new FormControl(''),
+    gender:new FormControl(''),
+    school:new FormControl(''),
+    level:new FormControl(''),
+    job:new FormControl(''),
+  });
 
   reviseUserInfoForm = new FormGroup({
     /*page0*/

@@ -30,65 +30,98 @@
             </div>
         </form>
     </section>
-    <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
-        <div>
-            <p>생일<input type="date" formControlName="birth"></p>
-            <input type="radio" formControlName="gender" value="W" >여자
-            <input type="radio" formControlName="gender" value="M">남자
+    <section class="subtitle-section">
+        <h2>추가정보</h2>
+    </section>
+    <section class="personalInfo-section">
+        <div class="text-div">
+            <div class="block">생일</div>
+            <div class="block">성별</div>
+            <div class="block">학교</div>
+            <div class="block">수준</div>
+            <div class="block">소속/직군</div>
         </div>
-        <br/><br/>
+        <form class="input-div" [formGroup]="reviseProfileForm">
+            <div class="block division">
+                <span>{{profile.birthday}}</span>
+                <div><input type="date" formControlName="birth"></div>
+            </div>
+            <div class="block division">
+                <span>{{profile.gender}}</span>
+                <div>
+                    <input type="radio" formControlName="gender" value="W" >여성
+                    <input type="radio" formControlName="gender" value="M">남성
+                    <input type="radio" formControlName="gender">선택안함
+                </div>
+            </div>
+            <div class="block division">
+                <span>{{profile.school}}</span>
+                <div><input type="text" formControlName="school" placeholder="{{profile.school}}"></div>
+            </div>
+            <div class="block division">
+                <span>{{profile.levelName}}</span>
+                <div>
+                    <select name="level" (change)="setLevel($event)">
+                        <option value="0">미정</option>
+                        <option value="1">기초</option>
+                        <option value="2">초급</option>
+                        <option value="3">중급</option>
+                        <option value="4">고급</option>
+                        <option value="5">실무</option>
+                    </select>
+                </div>
+            </div>
+            <div class="block">
+                <div>
+                    <input type="radio" formControlName="job" value="S">초등학생
+                    <input type="radio" formControlName="job" value="T">중고등학생
+                    <input type="radio" formControlName="job" value="D">개발자/전공생
+                    <input type="radio" formControlName="job" value="N">비개발직군/비전공자
+                </div>
+            </div>
+        </form>
+    </section>
+    <section class="category-section">
         <div>
-            <p>
-                수준
-                <select name="level" (change)="setLevel($event)">
-                    <option value="0">미정</option>
-                    <option value="1">기초</option>
-                    <option value="2">초급</option>
-                    <option value="3">중급</option>
-                    <option value="4">고급</option>
-                    <option value="5">실무</option>
-                </select>
-            </p>
-            <p>
-                <input type="radio" formControlName="job" value="S">초등학생
-                <input type="radio" formControlName="job" value="T">중고등학생
-                
-                <input type="radio" formControlName="job" value="D">개발자/전공생
-                <input type="radio" formControlName="job" value="N">비개발직군/비전공자
-            </p>
-            <p>학교<br/><input type="text" formControlName="school" placeholder="{{profile.school}}"></p>
+            <span class="subject">관심 분야</span>
+            <span class="multiple-choice">*복수선택</span>
         </div>
-        
-        <div>
-            <p>
-                관심있는 분야
-                <select name="interestLanguage" (change)="addCategory($event)">
-                    <option *ngFor="let category of categories"
-                            value="{{category.categoryIdx}},{{category.categoryName}}"
-                        >{{category.categoryName}}</option>
-                </select>
-                <span>*복수선택가능</span>
-                <br/>
-                <span *ngFor="let category of profile.category">
-                    <fa-icon [icon]="deleteIcon" type="button" (click)="deleteCategory(category)"></fa-icon>
-                    {{category.categoryName}}&nbsp;&nbsp;
-                </span>
-            </p>
-            <p>
-                관심있는 언어
-                <select name="interestField" (change)="addSubCategory($event)">
-                    <option *ngFor="let subcategory of subcategories"
-                            value="{{subcategory.subcategoryIdx}},{{subcategory.subcategoryName}}"
-                        >{{subcategory.subcategoryName}}</option>
-                </select>
-                <span>*복수선택가능</span><br/>
-                <span *ngFor="let subcategory of profile.subcategory">
-                    <fa-icon [icon]="deleteIcon" type="button" (click)="deleteSubCategory(subcategory)"></fa-icon>
-                    {{subcategory.subcategoryName}}&nbsp;&nbsp;
-                </span>
-            </p>
+        <div class="selected-category-div">
+            <span *ngFor="let category of profile.category">
+                <fa-icon [icon]="deleteIcon" type="button" (click)="deleteCategory(category)"></fa-icon>
+                {{category.categoryName}}&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
         </div>
+        <select name="interestLanguage" (change)="addCategory($event)">
+            <option *ngFor="let category of categories"
+                    value="{{category.categoryIdx}},{{category.categoryName}}"
+                >&nbsp;&nbsp;{{category.categoryName}}</option>
+        </select>
         <br/>
+    </section>
+    <section class="category-section">
+        <div>
+            <span class="subject">관심 언어</span>
+            <span class="multiple-choice">*복수선택</span>
+        </div>
+        <div>
+            <span *ngFor="let subcategory of profile.subcategory">
+                <fa-icon [icon]="deleteIcon" type="button" (click)="deleteSubCategory(subcategory)"></fa-icon>
+                {{subcategory.subcategoryName}}&nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+        </div>
+        <select name="interestField" (change)="addSubCategory($event)">
+            <option *ngFor="let subcategory of subcategories"
+                    value="{{subcategory.subcategoryIdx}},{{subcategory.subcategoryName}}"
+                >&nbsp;&nbsp;{{subcategory.subcategoryName}}</option>
+        </select>
+    </section>
+    <section class="button-section">
         <button id="signup-button" type="submit">회원 정보 수정</button>
+    </section>
+
+    <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
+        
+        
     </form>
 </div>
