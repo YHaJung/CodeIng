@@ -90,6 +90,9 @@ h2{
 .currentPageButton{/*select page*/
   font-weight: 700;
 }
+.gray-page{
+  color:var(--light-gray);
+}
 
 
 /*select category*/

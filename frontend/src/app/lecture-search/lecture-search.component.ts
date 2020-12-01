@@ -68,9 +68,13 @@ export class LectureSearchComponent implements OnInit {
     this.searchLectures();
   }
 
+   //page 선택
+  maxPage = 100;/*임시 */
   selectPage(page){
-    this.currentPage = page;
-    this.searchLectures();
+    if(page<=this.maxPage){
+      this.currentPage = page;
+      this.searchLectures();
+    }
   }
   pageMinusJump(){
     if(this.pages[0]!=1){

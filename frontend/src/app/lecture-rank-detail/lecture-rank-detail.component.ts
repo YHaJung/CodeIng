@@ -8,6 +8,7 @@ import {ApiService} from '../api.service';
 })
 
 export class LectureRankDetailComponent implements OnInit {
+
   subcategories :any =[];
   categories :any=[];
   lectures:any=[];
@@ -77,9 +78,12 @@ export class LectureRankDetailComponent implements OnInit {
     this.loadLectures();
   }
   //page 선택
+  maxPage = 40;/*임시 */
   selectPage(page){
-    this.currentPage = page;
-    this.loadLectures();
+    if(page<=this.maxPage){
+      this.currentPage = page;
+      this.loadLectures();
+    }
   }
   pageMinusJump(){
     if(this.pages[0]!=1){
