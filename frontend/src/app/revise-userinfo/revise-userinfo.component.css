@@ -1,6 +1,7 @@
+
 .whole{
-    margin-left:70px;
-    min-width: 500px;
+    margin-left: 3%;
+    min-width: 550px;
 }
 
 /*제목*/
@@ -30,7 +31,7 @@ h2{
 /*기본정보*/
 .personalInfo-section{
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 4fr;
     border-top: 0.5px solid var(--dark-gray);
     border-bottom: 0.5px solid var(--dark-gray);
 }
@@ -50,7 +51,7 @@ h2{
 }
 .division{
     display: grid;
-    grid-template-columns: 1fr 1.6fr;
+    grid-template-columns: 1fr 2fr;
     line-height: 65px;
     vertical-align: middle;
 }
@@ -79,10 +80,15 @@ select{
     height: 36px;
     width: 100%;
 }
+/*소속*/
+.job-div-divition{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
 
+input[type="radio"]{
+    vertical-align: middle;
 
-input[type="radio"]:checked{
-    display: none;
 }
 
 
@@ -99,6 +105,7 @@ input[type="radio"]:checked{
 .multiple-choice{
     font-weight: 600;
     font-size: 11px;
+    line-height: 16px;
 }
 
 

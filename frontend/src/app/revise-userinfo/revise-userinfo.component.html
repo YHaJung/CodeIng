@@ -3,125 +3,128 @@
         <h1>회원 정보 수정</h1>
     </section>
     <h2>*입력하지 않을 시 기존의 값들이 유지됩니다.</h2>
-    <section class="personalInfo-section">
-        <div class="text-div">
-            <div class="block">아이디</div>
-            <div class="block">비밀번호</div>
-            <div class="block">비밀번호 확인</div>
-            <div class="block">이름</div>
-            <div class="block">닉네임</div>
-            <div class="block">휴대전화 번호</div>
-        </div>
-        <form class="input-div" [formGroup]="revisePersonalInfoForm">
-            <div class="block">{{personalInfo.email}}</div>
-            <div class="block"><input type="password " formControlName="pw" placeholder="비밀번호"></div>
-            <div class="block"><input type="password " formControlName="pwCheck" placeholder="비밀번호 확인"></div>
-            <div class="block division">
-                <span>{{personalInfo.name}}</span>
-                <div><input type="text" formControlName="name" placeholder="{{personalInfo.name}}"></div>
-            </div>
-            <div class="block division">
-                <span>{{personalInfo.nickname}}</span>
-                <div><input type="text" formControlName="nickname" placeholder="{{personalInfo.nickname}}"></div>
-            </div>
-            <div class="block division">
-                <span>{{personalInfo.phonenumber}}</span>
-                <div><input type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" formControlName="phonenumber" placeholder="{{personalInfo.phonenumber}}"></div>
-            </div>
-        </form>
-    </section>
-    <section class="subtitle-section">
-        <h2>추가정보</h2>
-    </section>
-    <section class="personalInfo-section">
-        <div class="text-div">
-            <div class="block">생일</div>
-            <div class="block">성별</div>
-            <div class="block">학교</div>
-            <div class="block">수준</div>
-            <div class="block">소속/직군</div>
-        </div>
-        <form class="input-div" [formGroup]="reviseProfileForm">
-            <div class="block division">
-                <span>{{profile.birthday}}</span>
-                <div><input type="date" formControlName="birth"></div>
-            </div>
-            <div class="block division">
-                <span>{{profile.gender}}</span>
-                <div>
-                    <input type="radio" formControlName="gender" value="W" >여성
-                    <input type="radio" formControlName="gender" value="M">남성
-                    <input type="radio" formControlName="gender">선택안함
-                </div>
-            </div>
-            <div class="block division">
-                <span>{{profile.school}}</span>
-                <div><input type="text" formControlName="school" placeholder="{{profile.school}}"></div>
-            </div>
-            <div class="block division">
-                <span>{{profile.levelName}}</span>
-                <div>
-                    <select name="level" (change)="setLevel($event)">
-                        <option value="0">미정</option>
-                        <option value="1">기초</option>
-                        <option value="2">초급</option>
-                        <option value="3">중급</option>
-                        <option value="4">고급</option>
-                        <option value="5">실무</option>
-                    </select>
-                </div>
-            </div>
-            <div class="block">
-                <div>
-                    <input type="radio" formControlName="job" value="S">초등학생
-                    <input type="radio" formControlName="job" value="T">중고등학생
-                    <input type="radio" formControlName="job" value="D">개발자/전공생
-                    <input type="radio" formControlName="job" value="N">비개발직군/비전공자
-                </div>
-            </div>
-        </form>
-    </section>
-    <section class="category-section">
-        <div>
-            <span class="subject">관심 분야</span>
-            <span class="multiple-choice">*복수선택</span>
-        </div>
-        <div class="selected-category-div">
-            <span *ngFor="let category of profile.category">
-                <fa-icon [icon]="deleteIcon" type="button" (click)="deleteCategory(category)"></fa-icon>
-                {{category.categoryName}}&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
-        </div>
-        <select name="interestLanguage" (change)="addCategory($event)">
-            <option *ngFor="let category of categories"
-                    value="{{category.categoryIdx}},{{category.categoryName}}"
-                >&nbsp;&nbsp;{{category.categoryName}}</option>
-        </select>
-        <br/>
-    </section>
-    <section class="category-section">
-        <div>
-            <span class="subject">관심 언어</span>
-            <span class="multiple-choice">*복수선택</span>
-        </div>
-        <div>
-            <span *ngFor="let subcategory of profile.subcategory">
-                <fa-icon [icon]="deleteIcon" type="button" (click)="deleteSubCategory(subcategory)"></fa-icon>
-                {{subcategory.subcategoryName}}&nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
-        </div>
-        <select name="interestField" (change)="addSubCategory($event)">
-            <option *ngFor="let subcategory of subcategories"
-                    value="{{subcategory.subcategoryIdx}},{{subcategory.subcategoryName}}"
-                >&nbsp;&nbsp;{{subcategory.subcategoryName}}</option>
-        </select>
-    </section>
-    <section class="button-section">
-        <button id="signup-button" type="submit">회원 정보 수정</button>
-    </section>
-
     <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
-        
-        
+        <section class="personalInfo-section">
+            <div class="text-div">
+                <div class="block">아이디</div>
+                <div class="block">비밀번호</div>
+                <div class="block">비밀번호 확인</div>
+                <div class="block">이름</div>
+                <div class="block">닉네임</div>
+                <div class="block">휴대전화 번호</div>
+            </div>
+            <div class="input-div">
+                <div class="block">{{personalInfo.email}}</div>
+                <div class="block"><input type="password"  secure="true" formControlName="pw" placeholder="비밀번호"></div>
+                <div class="block"><input type="password" formControlName="pwCheck" placeholder="비밀번호 확인"></div>
+                <div class="block division">
+                    <span>{{personalInfo.name}}</span>
+                    <div><input type="text" formControlName="name" placeholder="{{personalInfo.name}}"></div>
+                </div>
+                <div class="block division">
+                    <span>{{personalInfo.nickname}}</span>
+                    <div><input type="text" formControlName="nickname" placeholder="{{personalInfo.nickname}}"></div>
+                </div>
+                <div class="block division">
+                    <span>{{personalInfo.phonenumber}}</span>
+                    <div><input type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" formControlName="phonenumber" placeholder="{{personalInfo.phonenumber}}"></div>
+                </div>
+            </div>
+        </section>
+        <section class="subtitle-section">
+            <h2>추가정보</h2>
+        </section>
+        <section class="personalInfo-section" (change)="reviseAdditionalInfo()">
+            <div class="text-div">
+                <div class="block">생일</div>
+                <div class="block">성별</div>
+                <div class="block">학교</div>
+                <div class="block">수준</div>
+                <div class="block">소속/직군</div>
+            </div>
+            <div class="input-div">
+                <div class="block division">
+                    <span>{{profilePrint.birthday}}</span>
+                    <div><input type="date" formControlName="birth"></div>
+                </div>
+                <div class="block division">
+                    <span>{{profilePrint.gender}}</span>
+                    <div>
+                        <input type="radio" formControlName="gender" value="W" id='W'><label for="W">&nbsp;&nbsp;여성&nbsp;&nbsp;&nbsp;</label>
+                        <input type="radio" formControlName="gender" value="M" id='M'><label for="M">&nbsp;&nbsp;남성&nbsp;&nbsp;&nbsp;</label>
+                        <input type="radio" formControlName="gender" value="N" id='N'><label for="N">&nbsp;&nbsp;선택안함&nbsp;&nbsp;&nbsp;</label>
+                    </div>
+                </div>
+                <div class="block division">
+                    <span>{{profilePrint.school}}</span>
+                    <div><input type="text" formControlName="school" placeholder="{{profile.school}}"></div>
+                </div>
+                <div class="block division">
+                    <span>{{profile.levelName}}</span>
+                    <div>
+                        <select name="level" (change)="setLevel($event)">
+                            <option value="0">미정</option>
+                            <option value="1">기초</option>
+                            <option value="2">초급</option>
+                            <option value="3">중급</option>
+                            <option value="4">고급</option>
+                            <option value="5">실무</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="block  division">
+                    <span>{{profilePrint.job}}</span>
+                    <div class="job-div-divition">
+                        <div><input type="radio" formControlName="job" value="S"><label for="W">&nbsp;&nbsp;초등학생</label></div>
+                        <div><input type="radio" formControlName="job" value="T"><label for="W">&nbsp;&nbsp;중고등학생</label></div>
+                    </div>
+                </div>
+                <div class="block  division">
+                    <span></span>
+                    <div class="job-div-divition">
+                        <div><input type="radio" formControlName="job" value="D"><label for="W">&nbsp;&nbsp;전공생/개발직군</label></div>
+                        <div><input type="radio" formControlName="job" value="N"><label for="W">&nbsp;&nbsp;비전공생/비개발직군</label></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="category-section" (change)="reviseAdditionalInfo()">
+            <div>
+                <span class="subject">관심 분야</span>
+                <span class="multiple-choice">*복수선택</span>
+            </div>
+            <div class="selected-category-div">
+                <span *ngFor="let category of profile.category">
+                    <fa-icon [icon]="deleteIcon" type="button" (click)="deleteCategory(category)"></fa-icon>
+                    {{category.categoryName}}&nbsp;&nbsp;&nbsp;&nbsp;
+                </span>
+            </div>
+            <select name="interestLanguage" (change)="addCategory($event)">
+                <option *ngFor="let category of categories"
+                        value="{{category.categoryIdx}},{{category.categoryName}}"
+                    >&nbsp;&nbsp;{{category.categoryName}}</option>
+            </select>
+            <br/>
+        </section>
+        <section class="category-section"  (change)="reviseAdditionalInfo()">
+            <div>
+                <span class="subject">관심 언어</span>
+                <span class="multiple-choice">*복수선택</span>
+            </div>
+            <div>
+                <span *ngFor="let subcategory of profile.subcategory">
+                    <fa-icon [icon]="deleteIcon" type="button" (click)="deleteSubCategory(subcategory)"></fa-icon>
+                    {{subcategory.subcategoryName}}&nbsp;&nbsp;&nbsp;&nbsp;
+                </span>
+            </div>
+            <select name="interestField" (change)="addSubCategory($event)">
+                <option *ngFor="let subcategory of subcategories"
+                        value="{{subcategory.subcategoryIdx}},{{subcategory.subcategoryName}}"
+                    >&nbsp;&nbsp;{{subcategory.subcategoryName}}</option>
+            </select>
+        </section>
+        <section class="button-section">
+            <button id="signup-button" type="submit">회원 정보 수정</button>
+        </section>
     </form>
 </div>
