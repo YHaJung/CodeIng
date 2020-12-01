@@ -1,23 +1,19 @@
 <app-main></app-main>
-<div id="whole">
-    <div></div>
-    <div id="middle">
-        <section>
-            <a id="edit-button" href="mypage-specific/4">회원정보 수정</a>
-            <h1>{{personalInfo.nickname}}</h1>
-            <p></p>
-            <p>{{personalInfo.email}}</p>
-            <p *ngIf="profile.school">학교 : {{profile.school}}</p>
-            <p *ngIf="profile.job">직업 : {{profile.job}}</p>
-            <p *ngIf="profile.level != '미정'">level : {{profile.level}}</p>
-            <p *ngIf="profile.school">학교 : {{profile.school}}</p>
-            <p><span *ngFor="let favor-category of profile.category"> #{{favor-category}} </span> </p>
-            <p><span *ngFor="let favor-subcategory of profile.subcategory"> #{{favor-subcategory}} </span> </p>
-        </section>
-        <section id="nav">
-            <app-mypage-nav [key]="0"></app-mypage-nav>
-        </section>
-    </div>
-    <div></div>
+<app-main-nav></app-main-nav>
+<div class="middle">
+    <section class="user-info-section">
+        <h1>{{personalInfo.name}}</h1>
+        <h2>{{personalInfo.nickname}}</h2>
+        <p>
+            <span *ngFor="let category of profile.category"> #{{category.categoryName}} </span>
+            <span *ngFor="let subcategory of profile.subcategory"> #{{subcategory.subcategoryName}} </span> 
+        </p>
+    </section>
+    <section class="edit-button-section">
+        <button class="edit-button" href="mypage-specific/4">회원정보 수정</button>
+    </section>
+    <section class="nav-section">
+        <app-mypage-nav [key]="0"></app-mypage-nav>
+    </section>
 </div>
 
