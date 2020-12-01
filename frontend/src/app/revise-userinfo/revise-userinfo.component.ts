@@ -20,6 +20,16 @@ export class ReviseUserinfoComponent implements OnInit {
   constructor(private apiService: ApiService) { } 
 
   levelIdx:number;
+
+  revisePersonalInfoForm = new FormGroup({
+    pw: new FormControl(''),
+    pwCheck:new FormControl(''),
+    name:new FormControl(''),
+    phonenumber:new FormControl(''),
+    nickname:new FormControl('')
+  });
+
+
   reviseUserInfoForm = new FormGroup({
     /*page0*/
     //id-pw

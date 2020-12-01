@@ -1,25 +1,37 @@
 <div class="whole">
-    <h1>회원 정보 수정</h1>
-    <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
-        <h2>*입력하지 않을 시 기존의 값들이 유지됩니다.</h2>
-        <br/>
-        <div>
-            <p>아이디(이메일)<br/><input type="email" formControlName="id" placeholder="{{personalInfo.email}}"></p>
-            <p>비밀번호<br/><input type="password " formControlName="pw" placeholder="비밀번호"></p>
-            <p>비밀번호 확인<input type="password " formControlName="pwCheck" placeholder="비밀번호 확인"></p>
+    <section class="title-section">
+        <h1>회원 정보 수정</h1>
+    </section>
+    <h2>*입력하지 않을 시 기존의 값들이 유지됩니다.</h2>
+    <section class="personalInfo-section">
+        <div class="text-div">
+            <div class="block">아이디</div>
+            <div class="block">비밀번호</div>
+            <div class="block">비밀번호 확인</div>
+            <div class="block">이름</div>
+            <div class="block">닉네임</div>
+            <div class="block">휴대전화 번호</div>
         </div>
-        <br/>
+        <form class="input-div" [formGroup]="revisePersonalInfoForm">
+            <div class="block">{{personalInfo.email}}</div>
+            <div class="block"><input type="password " formControlName="pw" placeholder="비밀번호"></div>
+            <div class="block"><input type="password " formControlName="pwCheck" placeholder="비밀번호 확인"></div>
+            <div class="block division">
+                <span>{{personalInfo.name}}</span>
+                <div><input type="text" formControlName="name" placeholder="{{personalInfo.name}}"></div>
+            </div>
+            <div class="block division">
+                <span>{{personalInfo.nickname}}</span>
+                <div><input type="text" formControlName="nickname" placeholder="{{personalInfo.nickname}}"></div>
+            </div>
+            <div class="block division">
+                <span>{{personalInfo.phonenumber}}</span>
+                <div><input type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" formControlName="phonenumber" placeholder="{{personalInfo.phonenumber}}"></div>
+            </div>
+        </form>
+    </section>
+    <form [formGroup]="reviseUserInfoForm" (submit)="reviseUserInfo()">
         <div>
-            <p>이름<br/><input type="text" formControlName="name" placeholder="{{personalInfo.name}}"></p>
-            <p>닉네임<br/><input type="text" formControlName="nickname" placeholder="{{personalInfo.nickname}}"></p>
-            <p>휴대전화 번호<br/><input type="tel" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" formControlName="phonenumber" placeholder="{{personalInfo.phonenumber}}"></p>
-            <!--
-            <button>인증번호 전송</button>
-            <br/>
-            <input type="number" formControlName="certificationNum" placeholder="인증번호 입력">
-            <button>확인</button>
-            -->
-            
             <p>생일<input type="date" formControlName="birth"></p>
             <input type="radio" formControlName="gender" value="W" >여자
             <input type="radio" formControlName="gender" value="M">남자
