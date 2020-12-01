@@ -142,12 +142,15 @@ export class ReviseUserinfoComponent implements OnInit {
                                       ).subscribe(
       result => {
         console.log(result);
+        alert("회원정보를 수정하였습니다.");
+        window.location.href="/mypage";
       },
       error => console.log(error)
     );
     //프로필
     if(this.isReviseAdditionalInfo == 1){
       if(this.reviseUserInfoForm.value.birth) this.profile.birthday = this.reviseUserInfoForm.value.birth;
+      else this.profile.birthday = "";
       if(this.reviseUserInfoForm.value.school) this.profile.school = this.reviseUserInfoForm.value.school;
       if(this.levelIdx) this.profile.levelIdx = this.levelIdx;
       if(this.reviseUserInfoForm.value.job) this.profile.job = this.reviseUserInfoForm.value.job;

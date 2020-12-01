@@ -67,24 +67,38 @@ export class HomeComponent implements OnInit {
 
 
   //change page
+  rankingPageMax = 4;
   rankingPageMinus(){
     if(this.rankingPage>1){
       this.rankingPage -= 1;
-      this.callRankingApi();
+    }else{
+      this.rankingPage = this.rankingPageMax;
     }
-  }
-  rankingPagePuls(){
-    this.rankingPage += 1;
     this.callRankingApi();
   }
+  rankingPagePuls(){
+    if(this.rankingPage<this.rankingPageMax){
+      this.rankingPage += 1;
+    }else{
+      this.rankingPage = 1;
+    }
+    this.callRankingApi();
+  }
+  recommendPageMax = 2;
   recommendPageMinus(){
     if(this.recommendPage>1){
       this.recommendPage -= 1;
-      this.callRecommendApi();
+    }else{
+      this.recommendPage = this.recommendPageMax;
     }
+    this.callRecommendApi();
   }
   recommendPagePuls(){
-    this.recommendPage += 1;
+    if(this.recommendPage<this.recommendPageMax){
+      this.recommendPage += 1;
+    }else{
+      this.recommendPage = 1;
+    }
     this.callRecommendApi();
   }
 }

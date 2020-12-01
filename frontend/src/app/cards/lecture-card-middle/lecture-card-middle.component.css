@@ -2,7 +2,7 @@ article{
     display: grid;
     grid-template-columns: 1fr 2fr;
     grid-gap : 5px;
-    padding: 21px;
+    padding: 10px 21px 21px 21px;
 }
 img{
     width: 87px;
@@ -23,7 +23,13 @@ h1{
 h2{
     font-weight: 600;
     font-size: 14px;
+    overflow: hidden;
     line-height: 22px;
+    height:48px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;  /*초과시 말줄임표*/
+    word-break:break-all; /*문자 단위 줄바꿈*/
 }
 h3{
     font-size: 9px;

@@ -19,25 +19,14 @@ export class SignupComponent implements OnInit {
     pwCheck:new FormControl(''),
     //personal info
     name:new FormControl(''),
-    //gender:new FormControl(''),
-    //birth:new FormControl(''),
-    //email:new FormControl(''),
-
     //phone
     phoneNum:new FormControl(''),
     
-    //certificationNum:new FormControl(''),
 
     /*page1*/
     //nickname
     nickname:new FormControl(''),
     school:new FormControl(''),
-    //belong
-    //major:new FormControl(''),
-    //job:new FormControl(''),
-    //interest
-    //interestLanguage:new FormControl(''),
-    //interestField:new FormControl(''),
   });
 
   //phoneNumCheck(){}
@@ -60,8 +49,13 @@ export class SignupComponent implements OnInit {
       ).subscribe(
       result => {
         console.log(result);
-        alert('회원가입에 성공하셨습니다.');
-        window.location.href="/home";
+        var signin = confirm('회원가입에 성공하셨습니다. \n로그인하러 가시겠습니까?');
+        if(signin){
+          window.location.href="/signin";
+        }else{
+          window.location.href="/home";
+        }
+        
       },
       error => {
         console.log(error);

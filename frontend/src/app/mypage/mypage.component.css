@@ -1,5 +1,6 @@
 .middle{
     margin : 80px 343px 140px 343px;
+    min-width: 500px;
 }
 /*회원탈퇴*/
 .withdraw-section{

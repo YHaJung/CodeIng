@@ -1,9 +1,9 @@
+.whole{
+    min-width: 400px;
+}
 h1{
     font-weight: 600;
     font-size: 21px;
     line-height: 29px;
     margin-bottom: 46px;
-}
-.review-cards{
-    border:1px solid;
 }

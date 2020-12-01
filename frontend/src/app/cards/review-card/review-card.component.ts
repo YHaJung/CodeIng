@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { faStar, faEdit, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faEdit, faTrashAlt, faHeart } from '@fortawesome/free-solid-svg-icons';
 import {ApiService} from '../../api.service';
 
 @Component({
@@ -13,6 +13,7 @@ export class ReviewCardComponent implements OnInit {
   star=faStar;
   edit=faEdit;
   delete=faTrashAlt;
+  heart=faHeart;
 
   @Input() review;
   jobString :string;

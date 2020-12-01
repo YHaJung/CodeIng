@@ -15,7 +15,7 @@ export class LectureSearchComponent implements OnInit {
   keyword='';
   currentRate = 0;
   sendRate = 0;//반올림 별점으로 적용하기 위함
-  currentLevel = 0;
+  currentLevel = 6;
 
   lowPrice = 0;
   highPrice = 200000;

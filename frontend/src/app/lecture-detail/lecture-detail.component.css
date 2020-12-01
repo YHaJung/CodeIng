@@ -2,6 +2,7 @@
   margin: var(--main-body-margin);
   background-color: #F6F7FA;
   padding: 20px;
+  min-width: 600px;
 }
 
 /*side*/

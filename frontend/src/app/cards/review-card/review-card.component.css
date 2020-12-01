@@ -52,3 +52,12 @@ fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
+
+.likes-div{
+  text-align: right;
+  font-size: 12px;
+}
+.heart-icon{
+  font-size: 12px;
+  color: #F3143C;
+}

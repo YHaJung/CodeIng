@@ -9,6 +9,7 @@ h1{
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap:10px;
+    min-width: 550px;
 }
 .site-card{
     border: 0.15px solid #DEDEDE;
