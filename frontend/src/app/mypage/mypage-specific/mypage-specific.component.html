@@ -1,17 +1,19 @@
 <app-main></app-main>
-<div class="grid-layout">
-    <div></div>
-    <div class="left">
-        <section id="profile">
-            <h1>{{personalInfo.nickname}}</h1>
-            <p></p>
-            <h2>{{personalInfo.email}}</h2>
-            <h2><span *ngFor="let favor-category of profile.category"> #{{favor-category}} </span> </h2>
-            <h2><span *ngFor="let favor-subcategory of profile.subcategory"> #{{favor-subcategory}} </span> </h2>
+<app-main-nav></app-main-nav>
+<div class="whole">
+    <!--left-->
+    <div>
+        <section class="userInfo-section">
+            <h1>{{personalInfo.name}}</h1>
+            <h2>{{personalInfo.nickname}}</h2>
+            <p>
+                <span *ngFor="let category of profile.category"> #{{category.categoryName}} </span>
+                <span *ngFor="let subcategory of profile.subcategory"> #{{subcategory.subcategoryName}} </span> 
+            </p>
         </section>
-        <div class="nav">
-            <app-mypage-nav id="left" [key]="mypagekey"></app-mypage-nav>
-        </div>
+        <section class="nav-section">
+            <app-mypage-nav class="nav-button" [key]="mypagekey"></app-mypage-nav>
+        </section>
     </div>
     <div class="center">
         <app-favorite-lectures *ngIf="mypagekey==1"></app-favorite-lectures>
@@ -19,5 +21,4 @@
         <app-myreviews *ngIf="mypagekey==3"></app-myreviews>
         <app-revise-userinfo *ngIf="mypagekey==4"></app-revise-userinfo>
     </div>
-    <div></div>
 </div>

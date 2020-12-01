@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MypageSpecificComponent } from './mypage-specific.component';
 import { RouterModule, Routes } from '@angular/router';
 import {MainModule} from "../../main/main.module";
+import {MainNavModule} from "../../nav/main-nav/main-nav.module";
 import {MypageNavModule} from "../mypage-nav/mypage-nav.module";
 import {FavoriteLecturesModule} from '../favorite-lectures/favorite-lectures.module';
 import {FavoriteSitesModule} from '../favorite-sites/favorite-sites.module';
@@ -19,6 +20,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     MainModule,
+    MainNavModule,
     MypageNavModule,
     FavoriteLecturesModule,
     FavoriteSitesModule,

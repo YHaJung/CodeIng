@@ -1,4 +1,8 @@
-#whole{
+h1{
+    font-weight: 600;
+    font-size: 21px;
+    line-height: 29px;
+    margin-bottom: 46px;
 }
 
 .sites-section{
@@ -12,8 +16,4 @@
     border-radius: 5px;
 }
 
-h1{
-    font-size: 1.2em;
-    font-weight: 600;
-    margin: 20px;
-}
+

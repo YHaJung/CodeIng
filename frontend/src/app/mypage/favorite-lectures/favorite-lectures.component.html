@@ -1,9 +1,8 @@
-<div id="whole">
-    <h1>나의 관심 강의</h1>
-    <section class="lectures-section">
-        <app-lecture-card-middle *ngFor="let lecture of lectures"
-                        [lecture]="lecture"
-                        class="lecture-card"
-        ></app-lecture-card-middle>
-    </section>
-</div>
+
+<h1>나의 관심 강의</h1>
+<section class="lectures-section">
+    <app-lecture-card-middle *ngFor="let lecture of lectures"
+                    [lecture]="lecture"
+                    class="lecture-card"
+    ></app-lecture-card-middle>
+</section>

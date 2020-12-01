@@ -1,9 +1,10 @@
 article{
   text-align: left;
   padding:10px 20px 20px 20px;
-  margin: 10px;
+  margin-bottom: 10PX;
   border-radius: 5px;
-  border: 0;
+  border: 0.3px solid #DEDEDE;
+  background-color: #FFFFFF;
 }
 
 h3{
