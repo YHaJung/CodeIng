@@ -67,8 +67,15 @@ def decimal_default(obj):
 
 
 def generate_binary():
-    all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
+    # .userinfo
+    # print(Profile.objects.only("userinfo"))
+    # print(Profile.objects.filter(userinfo=1)[0].userinfo)
+    # only("userinfo") .userinfo only("userinfo")
+    # print(list(map(lambda x: x.userinfo, Profile.objects.all().only("userinfo") )))
+    all_user_names = list(map(lambda x: x.userinfo.useridx, Profile.objects.all()))
+    print(all_user_names)
     all_category_ids = list(map(lambda x: x.categoryidx, Category.objects.all()))
+
     all_subcategory_ids = list(map(lambda x: x.subcategoryidx, Subcategory.objects.all()))
     all_lectures = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
     all_categorys = len(all_category_ids) + len(all_subcategory_ids)
