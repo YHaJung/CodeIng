@@ -294,7 +294,7 @@ def CBRSlist(request):
     querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
     nneigh = 25
-    krecommend = np.argsort(-recommend[int(pk)])[:nneigh]
+
     overview_list = []
     overview_dict = {}
     overview_dict['isSuccess'] = 'true'
@@ -303,7 +303,7 @@ def CBRSlist(request):
 
     r,c = recommend.shape
     if pk <= r:
-
+        krecommend = np.argsort(-recommend[int(pk)])[:nneigh]
     # .flatten()[x]
     # overview2 = list(map(
     #     lambda x: Lecture.objects.filter(lectureidx=x)
