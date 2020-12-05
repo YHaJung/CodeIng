@@ -54,7 +54,7 @@ from celery.task import periodic_task
 
 # 이후 코드
 from lecture.models import Lecture, Review, Profile, Lecturecategory, Categoryinterest, Subcategoryinterest, Category, \
-    Subcategory, Siteinfo
+    Subcategory, Siteinfo, Userinfo
 
 # 데이터 저장
 from lecture.views import for_exception, login_decorator
@@ -72,7 +72,9 @@ def generate_binary():
     # print(Profile.objects.filter(userinfo=1)[0].userinfo)
     # only("userinfo") .userinfo only("userinfo")
     # print(list(map(lambda x: x.userinfo, Profile.objects.all().only("userinfo") )))
-    all_user_names = list(map(lambda x: x.userinfo, Profile.objects.all()))
+    all_user_ids = list(map(lambda x: x.userinfo.useridx, Profile.objects.all()))
+    # print(all_user_names)
+    # all_user_ids = list(map(lambda x: x.useridx, all_user_names))
     # print(all_user_names)
     # all_user_names = []
     # for i in Profile.objects.all():
@@ -87,19 +89,22 @@ def generate_binary():
     all_lectures = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
     all_categorys = len(all_category_ids) + len(all_subcategory_ids)
     # print(all_categorys)
-    num_users = len(list(all_user_names))
+    # num_users = len(list(all_user_names))
+    # print(1,all_user_names)
+    num_users = max(all_user_ids)
+    # print(max_users)
     num_lectures = len(list(all_lectures))
     # userInterest = np.zeros([num_users, all_categorys])
-    userInterest = -np.ones([num_users, all_categorys+2])
+    userInterest = -np.ones([num_users+1, all_categorys+2])
     # print(all_categorys)
     lectureData = -np.ones([num_lectures, all_categorys+2])
     # np.zeros([num_lectures, all_categorys])
 
-    for i in range(num_users):
-        user_subcategory_interests = Subcategoryinterest.objects.filter(useridx=all_user_names[i].useridx)
-        user_category_interests = Categoryinterest.objects.filter(useridx=all_user_names[i].useridx)
-        userInterest[i, 82] = Profile.objects.get(userinfo=all_user_names[i]).level.levelidx
-        userInterest[i, 83] = 0.8
+    for i in all_user_ids:
+        user_subcategory_interests = Subcategoryinterest.objects.filter(useridx=i)
+        user_category_interests = Categoryinterest.objects.filter(useridx=i)
+        userInterest[i, 82] = 0.5
+        userInterest[i, 83] = Profile.objects.get(userinfo=Userinfo.objects.get(useridx=i)).level.levelidx* 0.5
         for user_category_interest in user_category_interests:
             # userInterest_m[i, user_category_interest.categoryidx-1] = 1
             userInterest[i, user_category_interest.categoryidx.categoryidx - 1] = 1
@@ -111,8 +116,8 @@ def generate_binary():
 
     for i in range(num_lectures):
         all_lecturecategory_ids = Lecturecategory.objects.filter(lecture=all_lectures[i])
-        lectureData[i, 82] = Lecture.objects.get(lectureidx=all_lectures[i]).level.levelidx
-        lectureData[i, 83] = Lecture.objects.get(lectureidx=all_lectures[i]).rating
+        lectureData[i, 82] = Lecture.objects.get(lectureidx=all_lectures[i]).rating
+        lectureData[i, 83] = Lecture.objects.get(lectureidx=all_lectures[i]).level.levelidx * 0.5
         for lecturecategory in all_lecturecategory_ids:
             lectureData[i, lecturecategory.categoryidx - 1] = 1
             lectureData[i, 11 + lecturecategory.subcategory.subcategoryidx] = 2
@@ -147,6 +152,7 @@ def recommend_save(request):
 def CBRS(request):
     try:
         pk = request.user.userinfo.useridx
+        # print(pk)
         data = pickle.load(open('knn_models/data.pkl', 'rb'))
         querys = pickle.load(open('knn_models/query.pkl', 'rb'))
 
@@ -164,6 +170,7 @@ def CBRS(request):
         overview_dict['code'] = 200
         overview_dict['message'] = '추천컨텐츠 조회 성공'
         r, c = recommend.shape
+        # print(r)
         if pk <=r :
 
             krecommend = np.argsort(-recommend[pk])[5 * selectIdx - 5:nneigh * selectIdx]
