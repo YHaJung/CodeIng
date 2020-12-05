@@ -72,8 +72,15 @@ def generate_binary():
     # print(Profile.objects.filter(userinfo=1)[0].userinfo)
     # only("userinfo") .userinfo only("userinfo")
     # print(list(map(lambda x: x.userinfo, Profile.objects.all().only("userinfo") )))
-    all_user_names = list(map(lambda x: x.userinfo.useridx, Profile.objects.all()))
-    print(all_user_names)
+    all_user_names = list(map(lambda x: x.userinfo, Profile.objects.all()))
+    # print(all_user_names)
+    # all_user_names = []
+    # for i in Profile.objects.all():
+    #     # print(i.userinfo.useridx)
+    #     print(i,i.userinfo.useridx)
+    #     all_user_names.append(i.userinfo.useridx)
+        # print(all_user_names)
+    # print(all_user_names)
     all_category_ids = list(map(lambda x: x.categoryidx, Category.objects.all()))
 
     all_subcategory_ids = list(map(lambda x: x.subcategoryidx, Subcategory.objects.all()))
@@ -83,16 +90,18 @@ def generate_binary():
     num_users = len(list(all_user_names))
     num_lectures = len(list(all_lectures))
     # userInterest = np.zeros([num_users, all_categorys])
-    userInterest = -np.ones([num_users, all_categorys])
-    lectureData = -np.ones([num_lectures, all_categorys])
+    userInterest = -np.ones([num_users, all_categorys+2])
+    # print(all_categorys)
+    lectureData = -np.ones([num_lectures, all_categorys+2])
     # np.zeros([num_lectures, all_categorys])
 
     for i in range(num_users):
         user_subcategory_interests = Subcategoryinterest.objects.filter(useridx=all_user_names[i].useridx)
         user_category_interests = Categoryinterest.objects.filter(useridx=all_user_names[i].useridx)
+        userInterest[i, 82] = Profile.objects.get(userinfo=all_user_names[i]).level.levelidx
+        userInterest[i, 83] = 0.5
         for user_category_interest in user_category_interests:
             # userInterest_m[i, user_category_interest.categoryidx-1] = 1
-
             userInterest[i, user_category_interest.categoryidx.categoryidx - 1] = 1
         for user_subcategory_interest in user_subcategory_interests:
             # userInterest_m[i, 11+ user_subcategory_interest.subcategoryidx] = 1
@@ -102,6 +111,8 @@ def generate_binary():
 
     for i in range(num_lectures):
         all_lecturecategory_ids = Lecturecategory.objects.filter(lecture=all_lectures[i])
+        lectureData[i, 82] = Lecture.objects.get(lectureidx=all_lectures[i]).level.levelidx
+        lectureData[i, 83] = Lecture.objects.get(lectureidx=all_lectures[i]).rating
         for lecturecategory in all_lecturecategory_ids:
             lectureData[i, lecturecategory.categoryidx - 1] = 1
             lectureData[i, 11 + lecturecategory.subcategory.subcategoryidx] = 2
