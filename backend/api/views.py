@@ -95,16 +95,49 @@ def generate_binary():
     # print(max_users)
     num_lectures = len(list(all_lectures))
     # userInterest = np.zeros([num_users, all_categorys])
-    userInterest = -np.ones([num_users+1, all_categorys+2])
+    userInterest = -np.ones([num_users+1, all_categorys+7])
     # print(all_categorys)
-    lectureData = -np.ones([num_lectures, all_categorys+2])
+    lectureData = -np.ones([num_lectures, all_categorys+7])
     # np.zeros([num_lectures, all_categorys])
 
     for i in all_user_ids:
         user_subcategory_interests = Subcategoryinterest.objects.filter(useridx=i)
         user_category_interests = Categoryinterest.objects.filter(useridx=i)
-        userInterest[i, 82] = 0.5
-        userInterest[i, 83] = Profile.objects.get(userinfo=Userinfo.objects.get(useridx=i)).level.levelidx* 0.5
+        userInterest[i, 82] = 0.2
+        l = Profile.objects.get(userinfo=Userinfo.objects.get(useridx=i)).level.levelidx
+        lectureData[i, 83] = 0
+        lectureData[i, 84] = 0
+        lectureData[i, 85] = 0
+        lectureData[i, 86] = 0
+        lectureData[i, 87] = 0
+        lectureData[i, 88] = 0
+        if l == 6:
+            userInterest[i, 82 + l] = 1
+            userInterest[i, 81 + l] = 0.8
+            userInterest[i, 80 + l] = 0.5
+            userInterest[i, 79 + l] = 0.2
+        elif l == 5:
+            userInterest[i, 83 + l] = 0.8
+            userInterest[i, 82 + l] = 1
+            userInterest[i, 81 + l] = 0.8
+            userInterest[i, 80 + l] = 0.5
+        elif l == 4 or l ==3:
+            userInterest[i, 84 + l] = 0.5
+            userInterest[i, 83 + l] = 0.8
+            userInterest[i, 82 + l] = 1
+            userInterest[i, 81 + l] = 0.8
+            userInterest[i, 80 + l] = 0.5
+        elif l == 2:
+            userInterest[i, 84 + l] = 0.5
+            userInterest[i, 83 + l] = 0.8
+            userInterest[i, 82 + l] = 1
+            userInterest[i, 81 + l] = 0.8
+        else:
+            userInterest[i, 82 + l] = 1
+            userInterest[i, 83 + l] = 0.8
+            userInterest[i, 84 + l] = 0.5
+            userInterest[i, 85 + l] = 0.2
+
         for user_category_interest in user_category_interests:
             # userInterest_m[i, user_category_interest.categoryidx-1] = 1
             userInterest[i, user_category_interest.categoryidx.categoryidx - 1] = 1
@@ -117,9 +150,10 @@ def generate_binary():
     for i in range(num_lectures):
         all_lecturecategory_ids = Lecturecategory.objects.filter(lecture=all_lectures[i])
         lectureData[i, 82] = Lecture.objects.get(lectureidx=all_lectures[i]).rating
-        lectureData[i, 83] = Lecture.objects.get(lectureidx=all_lectures[i]).level.levelidx * 0.5
+        l = Lecture.objects.get(lectureidx=all_lectures[i]).level.levelidx
+        lectureData[i, 82+l] = 1
         for lecturecategory in all_lecturecategory_ids:
-            lectureData[i, lecturecategory.categoryidx - 1] = 1
+            lectureData[i, lecturecategory.categoryidx - 1] = 1.5
             lectureData[i, 11 + lecturecategory.subcategory.subcategoryidx] = 2
     filename = 'knn_models/data.pkl'
     pickle.dump(lectureData, open(filename, 'wb'))
@@ -171,8 +205,7 @@ def CBRS(request):
         overview_dict['message'] = '추천컨텐츠 조회 성공'
         r, c = recommend.shape
         # print(r)
-        if pk <=r :
-
+        if pk <r :
             krecommend = np.argsort(-recommend[pk])[5 * selectIdx - 5:nneigh * selectIdx]
         # .flatten()[x]
         # overview2 = list(map(
@@ -301,6 +334,7 @@ def CBRSlist(request):
     querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
     nneigh = 25
+    # print('query',querys[pk])
 
     overview_list = []
     overview_dict = {}
@@ -309,7 +343,7 @@ def CBRSlist(request):
     overview_dict['message'] = '추천컨텐츠 조회 성공'
 
     r,c = recommend.shape
-    if pk <= r:
+    if pk < r:
         krecommend = np.argsort(-recommend[int(pk)])[:nneigh]
     # .flatten()[x]
     # overview2 = list(map(
@@ -329,6 +363,7 @@ def CBRSlist(request):
     #               ('siteinfo', i[0]['siteinfo']),
     #               ]))
         for lectureidx in krecommend:
+            # print(data[lectureidx+1])
             i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                      'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                                                                      'siteinfo','siteinfo__logoimage').distinct()
