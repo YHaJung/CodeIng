@@ -1,11 +1,11 @@
 <div id="whole-page">
     <div class="logo" routerLink="/"></div>
     <form [formGroup]="signupForm" (submit)="singup()">
-        <section id="createAccount" *ngIf="page==0">    
+        <section id="createAccount" *ngIf="page==0">
             <h1>계정 생성</h1>
             <input type="email" formControlName="id" placeholder="아이디(이메일)"><br/><br/>
-            <input type="password " formControlName="pw" placeholder="비밀번호"><br/><br/>
-            <input type="password " formControlName="pwCheck" placeholder="비밀번호 확인"><br/><br/>
+            <input type="password" formControlName="pw" placeholder="비밀번호"><br/><br/>
+            <input type="password" formControlName="pwCheck" placeholder="비밀번호 확인"><br/><br/>
             <input type="text" formControlName="name" placeholder="이름"><br/><br/>
             <input type="string" formControlName="phoneNum" placeholder="휴대전화 번호"><br/><br/>
                 <!--
@@ -17,7 +17,7 @@
             <button id="next-button"(click)="next()">다음</button>
         </section>
 
-        <section id="createProfile" *ngIf="page==1">    
+        <section id="createProfile" *ngIf="page==1">
             <h1>프로필 생성</h1>
                 <div>
                     <input type="text" formControlName="nickname" placeholder="닉네임">
