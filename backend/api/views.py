@@ -99,7 +99,7 @@ def generate_binary():
         user_subcategory_interests = Subcategoryinterest.objects.filter(useridx=all_user_names[i].useridx)
         user_category_interests = Categoryinterest.objects.filter(useridx=all_user_names[i].useridx)
         userInterest[i, 82] = Profile.objects.get(userinfo=all_user_names[i]).level.levelidx
-        userInterest[i, 83] = 0.5
+        userInterest[i, 83] = 0.8
         for user_category_interest in user_category_interests:
             # userInterest_m[i, user_category_interest.categoryidx-1] = 1
             userInterest[i, user_category_interest.categoryidx.categoryidx - 1] = 1
