@@ -93,11 +93,13 @@ def generate_binary():
     # print(1,all_user_names)
     num_users = max(all_user_ids)
     # print(max_users)
-    num_lectures = len(list(all_lectures))
+    # num_lectures = len(list(all_lectures))
+    num_lectures = max(all_lectures)
     # userInterest = np.zeros([num_users, all_categorys])
     userInterest = -np.ones([num_users+1, all_categorys+7])
     # print(all_categorys)
-    lectureData = -np.ones([num_lectures, all_categorys+7])
+    lectureData = -np.ones([num_lectures+1, all_categorys+7])
+    lectureData2 = -np.ones([num_lectures+1, all_categorys+7])
     # np.zeros([num_lectures, all_categorys])
 
     for i in all_user_ids:
@@ -147,27 +149,68 @@ def generate_binary():
     filename = 'knn_models/query.pkl'
     pickle.dump(userInterest, open(filename, 'wb'))
 
-    for i in range(num_lectures):
-        all_lecturecategory_ids = Lecturecategory.objects.filter(lecture=all_lectures[i])
-        lectureData[i, 82] = Lecture.objects.get(lectureidx=all_lectures[i]).rating
-        l = Lecture.objects.get(lectureidx=all_lectures[i]).level.levelidx
-        lectureData[i, 82+l] = 1
+    for i in all_lectures:
+        all_lecturecategory_ids = Lecturecategory.objects.filter(lecture=i)
+        lectureData[i, 82] = Lecture.objects.get(lectureidx=i).rating
+        lectureData2[i, 82] = 0.2
+        l = Lecture.objects.get(lectureidx=i).level.levelidx
+        lectureData2[i, 82] = 0.2
+        lectureData2[i, 83] = 0
+        lectureData2[i, 84] = 0
+        lectureData2[i, 85] = 0
+        lectureData2[i, 86] = 0
+        lectureData2[i, 87] = 0
+        lectureData2[i, 88] = 0
+        if l == 6:
+            lectureData2[i, 82 + l] = 1
+            lectureData2[i, 81 + l] = 0.8
+            lectureData2[i, 80 + l] = 0.5
+            lectureData2[i, 79 + l] = 0.2
+        elif l == 5:
+            lectureData2[i, 83 + l] = 0.8
+            lectureData2[i, 82 + l] = 1
+            lectureData2[i, 81 + l] = 0.8
+            lectureData2[i, 80 + l] = 0.5
+        elif l == 4 or l == 3:
+            lectureData2[i, 84 + l] = 0.5
+            lectureData2[i, 83 + l] = 0.8
+            lectureData2[i, 82 + l] = 1
+            lectureData2[i, 81 + l] = 0.8
+            lectureData2[i, 80 + l] = 0.5
+        elif l == 2:
+            lectureData2[i, 84 + l] = 0.5
+            lectureData2[i, 83 + l] = 0.8
+            lectureData2[i, 82 + l] = 1
+            lectureData2[i, 81 + l] = 0.8
+        else:
+            lectureData2[i, 82 + l] = 1
+            lectureData2[i, 83 + l] = 0.8
+            lectureData2[i, 84 + l] = 0.5
+            lectureData2[i, 85 + l] = 0.2
+
         for lecturecategory in all_lecturecategory_ids:
             lectureData[i, lecturecategory.categoryidx - 1] = 1.5
             lectureData[i, 11 + lecturecategory.subcategory.subcategoryidx] = 2
+            lectureData2[i, lecturecategory.categoryidx - 1] = 1.5
+            lectureData2[i, 11 + lecturecategory.subcategory.subcategoryidx] = 2
+
     filename = 'knn_models/data.pkl'
     pickle.dump(lectureData, open(filename, 'wb'))
+    filename = 'knn_models/data2.pkl'
+    pickle.dump(lectureData2, open(filename, 'wb'))
 
 
 @api_view(['GET'])
 def recommend_save(request):
     generate_binary()
     data = pickle.load(open('knn_models/data.pkl', 'rb'))
+    data2 = pickle.load(open('knn_models/data2.pkl', 'rb'))
     querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     num_users, _ = querys.shape
     num_lectures, _ = data.shape
     nneigh = 10
     recommend = np.dot(querys, data.T)
+    drecommend = np.dot(data2, data.T)
     # recommend = np.zeros([num_users, nneigh])
 
     # for queryidx, query in enumerate(querys):
@@ -176,6 +219,9 @@ def recommend_save(request):
 
     filename = 'knn_models/recommend.pkl'
     pickle.dump(recommend, open(filename, 'wb'))
+
+    # filename = 'knn_models/drecommend.pkl'
+    # pickle.dump(drecommend, open(filename, 'wb'))
     print('recommend_saved')
     response = {'message': 'recommend saved'}
     return JsonResponse(response, safe=False)
@@ -226,7 +272,7 @@ def CBRS(request):
         #               ]))
         # print(krecommend)
             for lectureidx in krecommend:
-                i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
+                i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                         'siteinfo', 'siteinfo__logoimage').distinct()
                 # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -364,7 +410,7 @@ def CBRSlist(request):
     #               ]))
         for lectureidx in krecommend:
             # print(data[lectureidx+1])
-            i = Lecture.objects.filter(lectureidx=lectureidx+1).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
+            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                      'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                                                                      'siteinfo','siteinfo__logoimage').distinct()
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])

@@ -22,9 +22,7 @@
     <list default="true" id="da958ffc-8557-4fea-b41e-32e3bf85737b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/api/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/api/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/knn_models/data.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/knn_models/data.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/knn_models/query.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/knn_models/query.pkl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/knn_models/recommend.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/knn_models/recommend.pkl" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -251,9 +249,10 @@
       <screen x="0" y="23" width="1280" height="728" />
     </state>
     <state x="328" y="185" key="#com.intellij.fileTypes.FileTypeChooser/0.23.1280.728@0.23.1280.728" timestamp="1603525010320" />
-    <state x="427" y="148" key="FileChooserDialogImpl" timestamp="1603346471943">
-      <screen x="0" y="23" width="1280" height="727" />
+    <state x="512" y="142" key="FileChooserDialogImpl" timestamp="1607233395493">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
+    <state x="512" y="142" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1607233395493" />
     <state x="427" y="148" key="FileChooserDialogImpl/0.23.1280.727@0.23.1280.727" timestamp="1603346471943" />
     <state width="746" height="229" key="GridCell.Tab.0.bottom" timestamp="1607182576345">
       <screen x="0" y="0" width="1536" height="824" />
