@@ -105,8 +105,8 @@ export class ApiService {
   //유사한 다른 강의 추천
   getSimilarLectures(lectureIdx : number){
     ///api/:lectureIdx/item_recommend
-    return this.httpClient.get(this.baseUrl + 'overall-ranking?page=1', {headers: this.headers});
-    //return this.httpClient.get(this.baseUrl + 'api/'+lectureIdx+'/item_recommend', {headers: this.headers});
+    //return this.httpClient.get(this.baseUrl + 'overall-ranking?page=1', {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'api/'+lectureIdx+'/item_recommend', {headers: this.headers});
   }
 
 
