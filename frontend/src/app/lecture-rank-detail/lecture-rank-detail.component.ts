@@ -78,7 +78,7 @@ export class LectureRankDetailComponent implements OnInit {
     this.loadLectures();
   }
   //page 선택
-  maxPage = 200;/*임시 */
+  maxPage = 100;/*임시 */
   selectPage(page){
     if(page<=this.maxPage){
       this.currentPage = page;
