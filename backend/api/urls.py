@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^api/matrixfactorization_model', views.create_matrixFactorization_IBCF),
     path('api/<int:pk>/matrixfactorization_IBCF', views.sim_movies_to),
     path('api/<int:pk>/matrixfactorization_UBCF', views.recommend_movies_to),
+    path('api/<int:pk>/item_recommend', views.itemcbs),
+
 ]

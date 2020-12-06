@@ -87,6 +87,9 @@ def generate_binary():
 
     all_subcategory_ids = list(map(lambda x: x.subcategoryidx, Subcategory.objects.all()))
     all_lectures = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
+    filename = 'knn_models/lectures.pkl'
+    pickle.dump(set(all_lectures), open(filename, 'wb'))
+    # print(all_lectures)
     all_categorys = len(all_category_ids) + len(all_subcategory_ids)
     # print(all_categorys)
     # num_users = len(list(all_user_names))
@@ -107,12 +110,12 @@ def generate_binary():
         user_category_interests = Categoryinterest.objects.filter(useridx=i)
         userInterest[i, 82] = 0.2
         l = Profile.objects.get(userinfo=Userinfo.objects.get(useridx=i)).level.levelidx
-        lectureData[i, 83] = 0
-        lectureData[i, 84] = 0
-        lectureData[i, 85] = 0
-        lectureData[i, 86] = 0
-        lectureData[i, 87] = 0
-        lectureData[i, 88] = 0
+        userInterest[i, 83] = 0
+        userInterest[i, 84] = 0
+        userInterest[i, 85] = 0
+        userInterest[i, 86] = 0
+        userInterest[i, 87] = 0
+        userInterest[i, 88] = 0
         if l == 6:
             userInterest[i, 82 + l] = 1
             userInterest[i, 81 + l] = 0.8
@@ -204,22 +207,29 @@ def generate_binary():
 def recommend_save(request):
     generate_binary()
     data = pickle.load(open('knn_models/data.pkl', 'rb'))
-    data2 = pickle.load(open('knn_models/data2.pkl', 'rb'))
     querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     num_users, _ = querys.shape
     num_lectures, _ = data.shape
+    d = sp.sparse.csc_matrix(data.T)
+    q = sp.sparse.csc_matrix(querys)
     nneigh = 10
-    recommend = np.dot(querys, data.T)
-    drecommend = np.dot(data2, data.T)
+
     # recommend = np.zeros([num_users, nneigh])
 
     # for queryidx, query in enumerate(querys):
     #     # print(findkneigh(query, data))
     #     recommend[queryidx] = findkneigh(query, data)[:nneigh]
 
+    recommend = np.dot(querys, data.T)
     filename = 'knn_models/recommend.pkl'
     pickle.dump(recommend, open(filename, 'wb'))
 
+    srecommend = q*d
+    filename = 'knn_models/srecommend.pkl'
+    pickle.dump(srecommend, open(filename, 'wb'))
+
+    # data2 = pickle.load(open('knn_models/data2.pkl', 'rb'))
+    # drecommend = np.dot(data2, data.T)
     # filename = 'knn_models/drecommend.pkl'
     # pickle.dump(drecommend, open(filename, 'wb'))
     print('recommend_saved')
@@ -509,6 +519,57 @@ def CBRSlist(request):
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def itemcbs(request, pk = None):
+    data = pickle.load(open('knn_models/data.pkl', 'rb'))
+    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+    recommend = pickle.load(open('knn_models/drecommend.pkl', 'rb'))
+    nneigh = 5
+
+    overview_list = []
+    overview_dict = {}
+    overview_dict['isSuccess'] = 'true'
+    overview_dict['code'] = 200
+    overview_dict['message'] = '추천컨텐츠 조회 성공'
+
+    r, c = recommend.shape
+    if pk < r:
+        krecommend = np.argsort(-recommend[int(pk)])[1:nneigh+1]
+        for lectureidx in krecommend:
+            # print(data[lectureidx+1])
+            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl',
+                                                                         'lecturer',
+                                                                         'level', 'price', 'rating', 'level__levelidx',
+                                                                         'level__levelname',
+                                                                         'siteinfo', 'siteinfo__logoimage').distinct()
+            # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
+            sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
+            price = i[0]['price']
+            if price == 0:
+                price = 'free'
+            elif price == -1:
+                price = 'membership'
+
+            # 강의 썸네일 없을 경우
+            thumbnail = i[0]['thumburl']
+            if not thumbnail:
+                thumbnail = i[0]['siteinfo__logoimage']
+
+            overview_list.append(
+                dict([('lectureIdx', i[0]['lectureidx']),
+                      ('lectureName', i[0]['lecturename']),
+                      ('thumbUrl', thumbnail),
+                      ('lecturer', i[0]['lecturer']),
+                      ('levelIdx', int(decimal.Decimal(i[0]['level']))),
+                      ('levelName', i[0]['level__levelname']),
+                      ('price', price),
+                      ('rating', i[0]['rating']),
+                      ('siteName', sitename),
+                      ]))
+        overview_dict['result'] = overview_list
+
+    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
+    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def Poprs(request, pk=None):
@@ -516,17 +577,24 @@ def Poprs(request, pk=None):
         # data = pickle.load(open('knn_models/data.pkl', 'rb'))
         # querys = pickle.load(open('knn_models/query.pkl', 'rb'))
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-        selectIdx = int(request.GET.get('selectIdx', '1'))
         nneigh = 5
         page = int(request.GET.get('page', '1'))
-        if page <1:
-            page =1
+        # page = int(request.GET.get('page', '1'))
+        if page < 1:
+            page = 1
+        elif page > 4:
+            page = 1
+        # print(recommend.flatten())
+        krecommend = np.argsort(-recommend)[5 * page - 5:5 * page]
+        # [5 * selectIdx - 5:nneigh * selectIdx]
 
-        krecommend = np.argsort(-recommend)[5 * selectIdx - 5:nneigh * selectIdx]
-
+        # [5:10]
+        # [5 * selectIdx - 5:nneigh * selectIdx]
+        # print(krecommend.shape)
+        # print(krecommend.flatten())
         cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-        krecommend = cnt.most_common()[:10]
-        # print(krecommend)
+        # # print(cnt) [5:50]
+        krecommend = cnt.most_common()[10:510:100]
         krecommend = [x for x, _ in krecommend]
 
         overview_list = []
@@ -542,11 +610,12 @@ def Poprs(request, pk=None):
         #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
         #                 'siteinfo').distinct()
         #     , krecommend))
-
-
-        for lectureidx in krecommend[page * 5 - 5:page * 5]:
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level','level__levelname', 'price', 'rating',
-                    'siteinfo').distinct()
+        # [page * 5 - 5: page * 5]
+        for lectureidx in krecommend:
+            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx', 'lecturename',
+                                                                     'thumburl', 'lecturer', 'level',
+                                                                     'level__levelname', 'price', 'rating',
+                                                                     'siteinfo').distinct()
 
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
@@ -595,7 +664,7 @@ def Poprslist(request, pk=None):
     nneigh = 25
     krecommend = np.argsort(-recommend)[:nneigh]
     cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-    krecommend = cnt.most_common()[:25]
+    krecommend = cnt.most_common()[100:2500:100]
 
     krecommend = [x for x, _ in krecommend]
     overview_list = []
@@ -620,7 +689,7 @@ def Poprslist(request, pk=None):
     #               ('rating', i[0]['rating']),
     #               ('siteinfo', i[0]['siteinfo']),
     #               ]))
-    for lectureidx in krecommend:
+    for lectureidx in krecommend[1:]:
         i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                  'level', 'price', 'rating', 'level__levelname',
                                                                  'siteinfo').distinct()
