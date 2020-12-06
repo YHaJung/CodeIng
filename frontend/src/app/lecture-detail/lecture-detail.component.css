@@ -11,8 +11,14 @@
 }
 
 /*side*/
+.side{
+  padding: 10%;
+  padding-top: 40%;
+}
 .side div {
   margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 15px;
 }
 
 fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
