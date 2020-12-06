@@ -1,5 +1,5 @@
 body{margin: 0; padding: 0;}
-#whole-page{
+.whole-page{
     background-color: var(--main-blue);
     padding: 10vw 30vw 10vw 30vw;
     height: 100vh;
@@ -15,21 +15,24 @@ form {                                /*logo 제외 전체*/
   display: grid;
   grid-template-columns: 4fr 1fr;
 }
+
 input{
   width: 100%;
   height: 40px;
-
-  background: linear-gradient(180deg, #FFFFFF 0%, rgba(255, 255, 255, 0) 100%), #FFFFFF;
-  border: 0.5px solid #7F8080;
-  box-sizing: border-box;
+  border: 0.5px solid var(--light-gray);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+input::placeholder{
 }
 button {                              /*'로그인' 버튼*/
   width: 100%;
   height: 80px;
 
   background: #FFFFFF;
-  border: 0.5px solid #7F8080;
-  box-sizing: border-box;
+  border: 0.5px solid var(--light-gray);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-weight: 600;
+  font-size: 15px;
 }
 
 
@@ -49,23 +52,5 @@ button {                              /*'로그인' 버튼*/
   font-weight: 500;
   font-size: 15px;
   line-height: 15px;
-
-}
-
-.login {
-  background-color: #FFFFFF;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(4px);
-  color: #0155FB;
-  font-family: Noto Sans;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 15px;
-  line-height: 16px;
-}
-.idpwd {
-  background-color: #FFFFFF;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(4px);
 
 }

@@ -1,12 +1,17 @@
-#main-search {
+.main-search {
   margin: var(--main-body-margin);
   background-color: #F6F7FA;
   padding: 20px;
   min-width: 600px;
+  
+}
+.upper-div{
+  display:grid;
+  grid-template-columns: 1fr 3fr;
 }
 
 /*side*/
-#side div {
+.side div {
   margin-bottom: 15px;
 }
 
@@ -15,9 +20,6 @@ fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
 }
 
 /*search-main*/
-#content div {
-  display: inline-block;
-}
 
 h1{
   font-size: 1.1em;
@@ -35,11 +37,24 @@ h3{
 .nav-div{
   margin-bottom: 10px;
 }
-#content .clicked-menu {
+.content .clicked-menu {
   border-bottom: 4px solid var(--dark-gray);
 }
-.col-sm-3 {
+
+
+
+/*유사한 강의 추천*/
+.downer-div{
+  margin:20px;
+}
+.recommend-recture-card{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap : 10px;
+  margin-top: 20px;
+}
+h4{
+  font-size: 20px;
   font-weight: 600;
 }
-
 

@@ -17,6 +17,7 @@ import { NgxSliderModule } from '@angular-slider/ngx-slider';
 import { WriteReviewComponent } from './write-review/write-review.component';
 import { LectureQnaCommentsComponent } from './lecture-qna-comments/lecture-qna-comments.component';
 
+import {LectureCardSmallModule} from '../cards/lecture-card-small/lecture-card-small.module';
 
 const routes: Routes = [
   {path: 'lecturedetail/:lectureIdx/:page/:subpage', component: LectureDetailComponent },
@@ -40,7 +41,8 @@ const routes: Routes = [
     ReviewCardModule,
     QnaCardModule,
     ReactiveFormsModule,
-    NgxSliderModule 
+    NgxSliderModule,
+    LectureCardSmallModule
   ],
   exports: [
     RouterModule

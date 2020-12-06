@@ -1,6 +1,7 @@
 <app-main></app-main>
-<div class="row "id="main-search">
-    <section class="col-sm-3"  id="side">
+<div class="main-search">
+  <div class="upper-div">
+    <section class="side">
       <div>
         평점<br/><!-- class="orange" -->
         <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 0}"></fa-icon>
@@ -21,7 +22,8 @@
         
       </div>
     </section>
-    <section class="col-sm-9" id="content">
+
+    <section class="content">
       <h1>
         {{lectureDetail.siteName}}
         <fa-icon [icon]="check" [ngClass]="{'orange': favoriteSite==1}" type="button" (click)="setFavoriteSite()"></fa-icon>
@@ -42,5 +44,16 @@
       <app-lecture-review *ngIf="page=='review'"></app-lecture-review>
       <app-lecture-qna  *ngIf="page=='qna'"></app-lecture-qna>
     </section>
-
   </div>
+  <div class="downer-div">
+      <h4>유사한 강의 추천</h4>
+      <div class="recommend-recture-card">
+        <app-lecture-card-small
+       *ngFor="let lecture of similarLectures"
+        [lecture]="lecture"
+        >
+      </app-lecture-card-small>
+      </div>
+  </div>
+    
+</div>
