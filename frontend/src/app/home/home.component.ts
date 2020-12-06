@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../api.service';
 import {CookieService} from 'ngx-cookie-service';
-import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -15,14 +14,12 @@ export class HomeComponent implements OnInit {
   lectures: any = [];
   rankingdoverview: any = [];
   recommendoverview: any = [];
-  selectedLecture = null;
 
   token : string;
   nickname : string;
 
   constructor(private apiService: ApiService,
-             private cookieService: CookieService,
-             private route: ActivatedRoute 
+             private cookieService: CookieService
   ) { }
 
   ngOnInit(): void {
@@ -58,11 +55,6 @@ export class HomeComponent implements OnInit {
       },
       error => console.log(error)
     );
-  }
-
-  // tslint:disable-next-line:typedef
-  selectLecture(lecture){
-    this.selectedLecture = lecture;
   }
 
 

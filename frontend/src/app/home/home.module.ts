@@ -7,7 +7,7 @@ import {SigninComponent } from '../auth/signin/signin.component';
 // import {HomeNavBarComponent} from '../home-nav-bar/home-nav-bar.component';
 import {FormsModule} from '@angular/forms';
 
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {HttpClientModule} from "@angular/common/http";
 import {MainModule} from "../main/main.module";
 import {LectureCardSmallModule} from '../cards/lecture-card-small/lecture-card-small.module';
 import {MainNavModule} from '../nav/main-nav/main-nav.module';
