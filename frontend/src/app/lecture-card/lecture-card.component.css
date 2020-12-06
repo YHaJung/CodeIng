@@ -35,7 +35,7 @@ h2{
 h1{
     font-size: 14px;
     overflow: hidden;
-    height: 14px;
+    height: 16px;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     display: -webkit-box;  /*초과시 말줄임표*/
