@@ -213,13 +213,6 @@ def recommend_save(request):
     d = sp.sparse.csc_matrix(data.T)
     q = sp.sparse.csc_matrix(querys)
     nneigh = 10
-
-    # recommend = np.zeros([num_users, nneigh])
-
-    # for queryidx, query in enumerate(querys):
-    #     # print(findkneigh(query, data))
-    #     recommend[queryidx] = findkneigh(query, data)[:nneigh]
-
     recommend = np.dot(querys, data.T)
     filename = 'knn_models/recommend.pkl'
     pickle.dump(recommend, open(filename, 'wb'))
@@ -248,7 +241,7 @@ def CBRS(request):
 
 
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-        selectIdx = int(request.GET.get('selectIdx', '1'))
+        page = int(request.GET.get('page', '1'))
         nneigh = 5
         # print(pk)
         # print(recommend[pk])
@@ -261,36 +254,12 @@ def CBRS(request):
         overview_dict['message'] = '추천컨텐츠 조회 성공'
         r, c = recommend.shape
         # print(r)
-        if pk <r :
-            krecommend = np.argsort(-recommend[pk])[5 * selectIdx - 5:nneigh * selectIdx]
-        # .flatten()[x]
-        # overview2 = list(map(
-        #     lambda x: Lecture.objects.filter(lectureidx=x)
-        #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-        #                 'siteinfo').distinct()
-        #     , krecommend))
-        # for i in overview2:
-        #     overview_list.append(
-        #         dict([('lectureIdx', i[0]['lectureidx']),
-        #               ('lectureName', i[0]['lecturename']),
-        #               ('thumbUrl', i[0]['thumburl']),
-        #               ('lecturer', i[0]['lecturer']),
-        #               ('level', decimal.Decimal(i[0]['level'])),
-        #               ('price', decimal.Decimal(i[0]['price'])),
-        #               ('rating', i[0]['rating']),
-        #               ('siteinfo', i[0]['siteinfo']),
-        #               ]))
-        # print(krecommend)
+        if pk < r:
+            krecommend = np.argsort(-recommend[pk])[5 * page - 5:nneigh * page]
             for lectureidx in krecommend:
                 i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                         'siteinfo', 'siteinfo__logoimage').distinct()
-                # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-                # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-                # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-                # # .values('sitename')
-                # print(sitename)
-                # decimal.Decimal(i[0]['price'])
                 price = i[0]['price']
                 if price == 0:
                     price = 'free'
@@ -319,35 +288,39 @@ def CBRS(request):
                           ]))
             overview_dict['result'] = overview_list
         else:
-            krecommend = np.argsort(-recommend)[5 * selectIdx - 5:nneigh * selectIdx]
+            if page < 1:
+                page = 1
+            elif page > 4:
+                page = 1
+            # print(recommend.flatten())
+            krecommend = np.argsort(-recommend)[5 * page - 5:5 * page]
+            # [5 * selectIdx - 5:nneigh * selectIdx]
 
+            # [5:10]
+            # [5 * selectIdx - 5:nneigh * selectIdx]
+            # print(krecommend.shape)
+            # print(krecommend.flatten())
             cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-            krecommend = cnt.most_common()[:10]
-            # print(krecommend)
+            # # print(cnt) [5:50]
+            krecommend = cnt.most_common()[10:510:100]
             krecommend = [x for x, _ in krecommend]
 
-            # .flatten()[x]
-            # category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx).select_related(
-            #     'lecture').order_by('-lecture__rating')
-            # overview2 = list(map(
-            #     lambda x: Lecture.objects.filter(lectureidx=x)
-            #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-            #                 'siteinfo').distinct()
-            #     , krecommend))
+            overview_list = []
+            overview_dict = {}
+            overview_dict['isSuccess'] = 'true'
+            overview_dict['code'] = 200
+            overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
 
-            for lectureidx in krecommend[selectIdx * 5 - 5:selectIdx * 5]:
+            for lectureidx in krecommend:
                 i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx',
-                                                                         'lecturename', 'thumburl', 'lecturer', 'level',
+                                                                         'lecturename',
+                                                                         'thumburl', 'lecturer', 'level',
                                                                          'level__levelname', 'price', 'rating',
                                                                          'siteinfo').distinct()
 
                 # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-                # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-                # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-                # # .values('sitename')
-                # print(sitename)
-                # decimal.Decimal(i[0]['price'])
+
                 price = i[0]['price']
                 if price == 0:
                     price = 'free'
@@ -401,23 +374,6 @@ def CBRSlist(request):
     r,c = recommend.shape
     if pk < r:
         krecommend = np.argsort(-recommend[int(pk)])[:nneigh]
-    # .flatten()[x]
-    # overview2 = list(map(
-    #     lambda x: Lecture.objects.filter(lectureidx=x)
-    #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-    #                 'siteinfo').distinct()
-    #     , krecommend))
-    # for i in overview2:
-    #     overview_list.append(
-    #         dict([('lectureIdx', i[0]['lectureidx']),
-    #               ('lectureName', i[0]['lecturename']),
-    #               ('thumbUrl', i[0]['thumburl']),
-    #               ('lecturer', i[0]['lecturer']),
-    #               ('level', decimal.Decimal(i[0]['level'])),
-    #               ('price', decimal.Decimal(i[0]['price'])),
-    #               ('rating', i[0]['rating']),
-    #               ('siteinfo', i[0]['siteinfo']),
-    #               ]))
         for lectureidx in krecommend:
             # print(data[lectureidx+1])
             i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
@@ -425,11 +381,6 @@ def CBRSlist(request):
                                                                      'siteinfo','siteinfo__logoimage').distinct()
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-            # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-            # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-            # # .values('sitename')
-            # print(sitename)
-            # decimal.Decimal(i[0]['price'])
             price = i[0]['price']
             if price == 0:
                 price = 'free'
@@ -456,29 +407,19 @@ def CBRSlist(request):
                       ]))
         overview_dict['result'] = overview_list
     else:
+        recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+        nneigh = 25
         krecommend = np.argsort(-recommend)[:nneigh]
         cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-        krecommend = cnt.most_common()[:25]
+        krecommend = cnt.most_common()[100:2400:100]
 
         krecommend = [x for x, _ in krecommend]
+        overview_list = []
+        overview_dict = {}
+        overview_dict['isSuccess'] = 'true'
+        overview_dict['code'] = 200
+        overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
 
-        # .flatten()[x]
-        # overview2 = list(map(
-        #     lambda x: Lecture.objects.filter(lectureidx=x)
-        #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-        #                 'siteinfo').distinct()
-        #     , krecommend))
-        # for i in overview2:
-        #     overview_list.append(
-        #         dict([('lectureIdx', i[0]['lectureidx']),
-        #               ('lectureName', i[0]['lecturename']),
-        #               ('thumbUrl', i[0]['thumburl']),
-        #               ('lecturer', i[0]['lecturer']),
-        #               ('level', decimal.Decimal(i[0]['level'])),
-        #               ('price', decimal.Decimal(i[0]['price'])),
-        #               ('rating', i[0]['rating']),
-        #               ('siteinfo', i[0]['siteinfo']),
-        #               ]))
         for lectureidx in krecommend:
             i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx', 'lecturename',
                                                                      'thumburl', 'lecturer',
@@ -486,11 +427,6 @@ def CBRSlist(request):
                                                                      'siteinfo').distinct()
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-            # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-            # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-            # # .values('sitename')
-            # print(sitename)
-            # decimal.Decimal(i[0]['price'])
             price = i[0]['price']
             if price == 0:
                 price = 'free'
@@ -514,8 +450,7 @@ def CBRSlist(request):
                       ('siteName', sitename),
                       ]))
         overview_dict['result'] = overview_list
-    # use_decimal = True,
-    # print(overview_dict)
+
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
 
@@ -586,14 +521,7 @@ def Poprs(request, pk=None):
             page = 1
         # print(recommend.flatten())
         krecommend = np.argsort(-recommend)[5 * page - 5:5 * page]
-        # [5 * selectIdx - 5:nneigh * selectIdx]
-
-        # [5:10]
-        # [5 * selectIdx - 5:nneigh * selectIdx]
-        # print(krecommend.shape)
-        # print(krecommend.flatten())
         cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-        # # print(cnt) [5:50]
         krecommend = cnt.most_common()[10:510:100]
         krecommend = [x for x, _ in krecommend]
 
@@ -602,15 +530,7 @@ def Poprs(request, pk=None):
         overview_dict['isSuccess'] = 'true'
         overview_dict['code'] = 200
         overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
-        # .flatten()[x]
-        # category_ranking = Lecturecategory.objects.filter(categoryidx=categoryIdx).select_related(
-        #     'lecture').order_by('-lecture__rating')
-        # overview2 = list(map(
-        #     lambda x: Lecture.objects.filter(lectureidx=x)
-        #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-        #                 'siteinfo').distinct()
-        #     , krecommend))
-        # [page * 5 - 5: page * 5]
+
         for lectureidx in krecommend:
             i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx', 'lecturename',
                                                                      'thumburl', 'lecturer', 'level',
@@ -619,11 +539,6 @@ def Poprs(request, pk=None):
 
             # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
             sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-            # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-            # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-            # # .values('sitename')
-            # print(sitename)
-            # decimal.Decimal(i[0]['price'])
             price = i[0]['price']
             if price == 0:
                 price = 'free'
@@ -664,7 +579,7 @@ def Poprslist(request, pk=None):
     nneigh = 25
     krecommend = np.argsort(-recommend)[:nneigh]
     cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-    krecommend = cnt.most_common()[100:2500:100]
+    krecommend = cnt.most_common()[100:2400:100]
 
     krecommend = [x for x, _ in krecommend]
     overview_list = []
@@ -672,34 +587,11 @@ def Poprslist(request, pk=None):
     overview_dict['isSuccess'] = 'true'
     overview_dict['code'] = 200
     overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
-    # .flatten()[x]
-    # overview2 = list(map(
-    #     lambda x: Lecture.objects.filter(lectureidx=x)
-    #         .values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating',
-    #                 'siteinfo').distinct()
-    #     , krecommend))
-    # for i in overview2:
-    #     overview_list.append(
-    #         dict([('lectureIdx', i[0]['lectureidx']),
-    #               ('lectureName', i[0]['lecturename']),
-    #               ('thumbUrl', i[0]['thumburl']),
-    #               ('lecturer', i[0]['lecturer']),
-    #               ('level', decimal.Decimal(i[0]['level'])),
-    #               ('price', decimal.Decimal(i[0]['price'])),
-    #               ('rating', i[0]['rating']),
-    #               ('siteinfo', i[0]['siteinfo']),
-    #               ]))
-    for lectureidx in krecommend[1:]:
+    for lectureidx in krecommend:
         i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
                                                                  'level', 'price', 'rating', 'level__levelname',
                                                                  'siteinfo').distinct()
-        # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-        # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-        # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-        # # .values('sitename')
-        # print(sitename)
-        # decimal.Decimal(i[0]['price'])
         price = i[0]['price']
         if price == 0:
             price = 'free'
@@ -832,32 +724,14 @@ def KNN_IBCF(request, pk=None):
     overview_dict['isSuccess'] = 'true'
     overview_dict['code'] = 200
     overview_dict['message'] = '추천컨텐츠 조회 성공'
-    # print('ok2')
-    # overview2 = list(map(
-    #     lambda x: Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('lectureidx', 'lecturename',
-    #                                                                              'thumburl', 'lecturer',
-    #                                                                              'level')
-    #     , range(0, len(distances.flatten()))))
-    # # .distinct().order_by('lectureidx')
-    # for i in overview2:
-    #     overview_list.append(
-    #         dict([('lectureIdx', i[0]['lectureidx']),
-    #               ('lectureName', i[0]['lecturename']),
-    #               ('thumbUrl', i[0]['thumburl']),
-    #               ('lecturer', i[0]['lecturer']),
-    #               ('level', decimal.Decimal(i[0]['level']))
-    #               ]))
+
     for x in range(0, len(distances.flatten())):
         i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('siteinfo__logoimage', 'thumburl', 'lecturer',
                                                                  'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
                                                                  'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-        # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-        # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-        # # .values('sitename')
-        # print(sitename)
-        # decimal.Decimal(i[0]['price'])
+
         price = i[0]['price']
         if price == 0:
             price = 'free'
@@ -902,21 +776,7 @@ def KNN_UBCF(request, pk=None):
     overview_dict['isSuccess'] = 'true'
     overview_dict['code'] = 200
     overview_dict['message'] = '추천컨텐츠 조회 성공'
-    # print('ok2')
-    # overview2 = list(map(
-    #     lambda x: Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('lectureidx', 'lecturename',
-    #                                                                              'thumburl', 'lecturer',
-    #                                                                              'level')
-    #     , range(0, len(distances.flatten()))))
-    # # .distinct().order_by('lectureidx')
-    # for i in overview2:
-    #     overview_list.append(
-    #         dict([('lectureIdx', i[0]['lectureidx']),
-    #               ('lectureName', i[0]['lecturename']),
-    #               ('thumbUrl', i[0]['thumburl']),
-    #               ('lecturer', i[0]['lecturer']),
-    #               ('level', decimal.Decimal(i[0]['level']))
-    #               ]))
+
     for x in range(0, len(distances.flatten())):
         i = Lecture.objects.filter(lectureidx=indices.flatten()[x]).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl',
                                                                            'lecturer',
@@ -924,11 +784,7 @@ def KNN_UBCF(request, pk=None):
                                                                            'siteinfo').distinct()
         # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
         sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-        # print('sitename',Lecture.objects.select_related('siteinfo').filter(lectureidx=lectureidx))
-        # sitename = Lecture.objects.select_related('siteinfo').get(lectureidx=lectureidx).sitename
-        # # .values('sitename')
-        # print(sitename)
-        # decimal.Decimal(i[0]['price'])
+
         price = i[0]['price']
         if price == 0:
             price = 'free'
