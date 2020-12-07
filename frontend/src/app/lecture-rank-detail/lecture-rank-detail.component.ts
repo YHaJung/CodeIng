@@ -8,31 +8,30 @@ import {ApiService} from '../api.service';
 })
 
 export class LectureRankDetailComponent implements OnInit {
-
-  subcategories :any =[];
-  categories :any=[];
+  constructor(private apiService: ApiService) { }
+  
   lectures:any=[];
-  lectureIdxs=[1, 2, 3, 4, 5];
-
+  
+  //page
   pages = [1, 2, 3 ,4, 5];
   currentPage = 1;
+  maxPage=1;
+  
+  //category
+  subcategories :any =[];
+  categories :any=[];
   currentCategoryIdx = 0;
   currentSubCategoryIdx = 0;
   currentCategoryName = "전체";
   currentSubCategoryName = "전체";
 
-  allLectures: any = [];
-  
-  categoryLectures:any=[];
-  selectedLecture = null;
-
+  //...눌러서 언어 개수 늘리기에 사용
   subcategoryNum = 10;
 
+  //...눌러서 언어 개수 늘리기
   getMoreSubcategory(){
     this.subcategoryNum += 10;
   }
-
-  constructor(private apiService: ApiService) { }
 
   ngOnInit(): void {
     this.loadLectures();
@@ -57,9 +56,13 @@ export class LectureRankDetailComponent implements OnInit {
   loadLectures(){
     this.apiService.getALLLecturesRanking(this.currentPage, this.currentCategoryIdx , this.currentSubCategoryIdx).subscribe(
       data => {
+        //강의 불러오기
         this.lectures = data['result'];
-        console.log('lectures :');
         console.log(this.lectures);
+        //maxpage 불러오기
+        this.maxPage = data['maxPage'];
+        console.log('maxPage :');
+        console.log( this.maxPage );
       },
       error => console.log(error)
     );
@@ -68,6 +71,7 @@ export class LectureRankDetailComponent implements OnInit {
   selectCategory(category){
     this.currentCategoryIdx = category.categoryIdx;
     this.currentCategoryName = category.categoryName;
+    this.pages=[1,2,3,4,5];
     this.currentPage = 1;
     this.loadLectures();
   }
@@ -75,10 +79,10 @@ export class LectureRankDetailComponent implements OnInit {
     this.currentSubCategoryIdx = subcategory.subcategoryIdx;
     this.currentSubCategoryName = subcategory.subcategoryName;
     this.currentPage = 1;
+    this.pages=[1,2,3,4,5];
     this.loadLectures();
   }
   //page 선택
-  maxPage = 100;/*임시 */
   selectPage(page){
     if(page<=this.maxPage){
       this.currentPage = page;

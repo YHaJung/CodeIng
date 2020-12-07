@@ -26,6 +26,7 @@ export class LectureSearchComponent implements OnInit {
 
   pages = [1, 2, 3 ,4, 5];
   currentPage = 1;
+  maxPage :number ;/*임시 */
 
   constructor(
     private route: ActivatedRoute,
@@ -59,6 +60,9 @@ export class LectureSearchComponent implements OnInit {
       data => {
         this.lectures = data['result'];
        // console.log(this.lectures);
+        this.maxPage = data['maxPage'];
+        console.log('maxPage :');
+        console.log( this.maxPage );
       },
       error => console.log(error)
     );
@@ -69,7 +73,6 @@ export class LectureSearchComponent implements OnInit {
   }
 
    //page 선택
-  maxPage = 100;/*임시 */
   selectPage(page){
     if(page<=this.maxPage){
       this.currentPage = page;

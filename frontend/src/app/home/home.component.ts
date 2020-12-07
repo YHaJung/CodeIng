@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
 
   token : string;
   nickname : string;
+  maxPage:number;//
 
   constructor(private apiService: ApiService,
              private cookieService: CookieService
@@ -43,6 +44,10 @@ export class HomeComponent implements OnInit {
       data => {
         this.rankingdoverview = data['result'];
         console.log(this.rankingdoverview);
+
+        console.log('maxPage:');
+        this.maxPage = data['maxPage'];
+        console.log(data);
       },
       error => console.log(error)
     );
