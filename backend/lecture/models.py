@@ -36,6 +36,8 @@ class Lecture(models.Model):
     createdat = models.DateTimeField(db_column='createdAt')  # Field name made lowercase.
     updatedat = models.DateTimeField(db_column='updatedAt', blank=True, null=True)  # Field name made lowercase.
     isdeleted = models.CharField(db_column='isDeleted', max_length=1)  # Field name made lowercase.
+    intro = models.TextField(blank=True, null=True)
+    contents = models.TextField(blank=True, null=True)
 
     siteinfo = models.ForeignKey(Siteinfo, on_delete=models.CASCADE,
                                  db_column='siteidx')  # Field name made lowercase.

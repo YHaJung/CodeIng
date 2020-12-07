@@ -542,10 +542,12 @@ def lecture_detail(request, pk):
         if not thumbnail:
             thumbnail = lecture.siteinfo.logoimage
 
+        print(lecture.intro)
+
         detail_dict['result'] = dict([('lectureIdx', lecture.lectureidx), ('lectureName', lecture.lecturename),
                                       ('lectureLink', lecture.lecturelink), ('levelIdx', lecture.level.levelidx),
                                       ('price', price_sql), ('levelName', lecture.level.levelname), ('rating', lecture.rating), ('thumbUrl', thumbnail),
-                                      ('siteIdx', lecture.siteinfo.siteidx), ('siteName', lecture.siteinfo.sitename)])
+                                      ('siteIdx', lecture.siteinfo.siteidx), ('siteName', lecture.siteinfo.sitename), ('intro', lecture.intro), ('contents', lecture.contents)])
 
         return_value = json.dumps(detail_dict, indent=4, use_decimal=True, ensure_ascii=False)
         return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
@@ -1542,7 +1544,7 @@ def my_reviews(request):
 
 
         my_review_list=[]
-        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N')
+        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N').order_by('-reviewIdx')
         cnt = len(my_review) // 6
         if len(my_review) % 6 != 0:
             cnt = cnt + 1
