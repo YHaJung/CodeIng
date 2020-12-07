@@ -25,7 +25,7 @@ export class LectureRankDetailComponent implements OnInit {
   currentCategoryName = "전체";
   currentSubCategoryName = "전체";
 
- //...눌러서 언어 개수 늘리기에 사용
+  //...눌러서 언어 개수 늘리기에 사용
   subcategoryNum = 10;
 
   //...눌러서 언어 개수 늘리기
@@ -56,9 +56,10 @@ export class LectureRankDetailComponent implements OnInit {
   loadLectures(){
     this.apiService.getALLLecturesRanking(this.currentPage, this.currentCategoryIdx , this.currentSubCategoryIdx).subscribe(
       data => {
+        //강의 불러오기
         this.lectures = data['result'];
         console.log(this.lectures);
-
+        //maxpage 불러오기
         this.maxPage = data['maxPage'];
         console.log('maxPage :');
         console.log( this.maxPage );

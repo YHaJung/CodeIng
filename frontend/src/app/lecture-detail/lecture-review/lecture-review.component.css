@@ -7,3 +7,24 @@
     text-align: right;
     font-size: 0.8em;
 }
+
+
+/*page button*/
+.page-button-div {
+    text-align: center;
+    margin : 20px;
+  }
+  .page-button-div button{
+    background: transparent;
+    border: 0px solid;
+    font-size: 15px;
+    width: 28px;
+    text-align: center;
+  }
+  
+  .currentPageButton{/*select page*/
+    font-weight: 700;
+  }
+  .gray-page{
+    color:var(--light-gray);
+  }

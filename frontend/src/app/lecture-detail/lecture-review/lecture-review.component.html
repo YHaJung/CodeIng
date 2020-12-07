@@ -8,6 +8,16 @@
             [review]="review"
         ></app-review-card>
     </section>
+    <!--page buttons-->
+    <div class="page-button-div">
+        <button *ngIf="pages[0]==1"></button> <!--<버튼 없어도 배열 맞추기-->
+        <button *ngIf="pages[0]!=1" (click)="pageMinusJump()"><</button>
+        <button *ngFor="let page of pages" [ngClass]="{currentPageButton:page==currentPage}" (click)="selectPage(page)" >
+            <span  *ngIf="page<=maxPage">{{page}}</span>
+        </button>
+        <button *ngIf="pages[4]<maxPage" (click)="pagePlusJump()">></button>
+        <button *ngIf="pages[4]>=maxPage"></button> <!--<버튼 없어도 배열 맞추기-->
+    </div>
 </div>
 
 <div *ngIf="subpage=='write'">
