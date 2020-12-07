@@ -22,7 +22,7 @@ img{
     padding: 10px 10px 0px 10px;
     background-color: var(--main-color);
     color: #FFFFFF;
-    height: 59px;
+    min-height: 59px;
 }
 #downer{
   padding: 10px 10px 0px 10px;
@@ -35,7 +35,7 @@ h2{
 h1{
     font-size: 14px;
     overflow: hidden;
-    height: 20px;
+    height: 16px;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     display: -webkit-box;  /*초과시 말줄임표*/

@@ -84,9 +84,12 @@ h2{
 }
 .page-button-div button{
   background: transparent;
-  border: 0;
+  border: 0px solid;
   font-size: 15px;
+  width: 28px;
+  text-align: center;
 }
+
 .currentPageButton{/*select page*/
   font-weight: 700;
 }

@@ -11,5 +11,8 @@ export class LectureCardSmallComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  move(){
+    window.location.href="/lecturedetail/"+this.lecture.lectureIdx+"/review/view";
+  }
 
 }

@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~bootstrap/dist/css/bootstrap.min.css';
-@import url('https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Noto+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Noto+Sans&family=Noto+Sans+KR&display=swap');
 /*font다운로드 경로(구글 폰트) https://fonts.google.com/specimen/Noto+Sans?selection.family=Lily+Script+One|Noto+Sans&query=Noto+Sans&sidebar.open=true*/
 body{
   font-family: var(--main-font);
@@ -9,17 +9,9 @@ body{
   font-weight: 500;
 }
 button{
-  font-family: var(--main-font);
   color:var(--dark-gray);
-  font-weight: 500;
-}
-input{
-  font-family: var(--main-font);
-  color:var(--dark-gray);
-  font-weight: 500;
 }
 a{
-  font-family: var(--main-font);
   color:var(--dark-gray);
   font-weight: 500;
 }
@@ -39,7 +31,12 @@ a{
   
   --main-body-margin:4vh 12vw 4vh 12vw;
 
-  --main-font:'Noto Sans';
+  --main-font:'Noto Sans', sans-serif;
+  /* 적용가능 글씨채
+  font-family: 'Lily Script One', cursive;
+  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
+  */
 }
 
 /*logo*/

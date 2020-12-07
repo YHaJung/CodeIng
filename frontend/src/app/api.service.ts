@@ -75,7 +75,7 @@ export class ApiService {
   
   // tslint:disable-next-line:typedef
   getLectureReviews(lectureIdx : number){
-    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review', {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review?page='+2, {headers: this.headers});
   }
   createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:Array<number>, cons:Array<number>){              //
     const body = JSON.stringify({totalrating, teachingpowerrating, pricerating, recommend, improvement, pros, cons});
@@ -101,6 +101,12 @@ export class ApiService {
   createLectureQnaComments(lectureIdx : number, qnaIdx : number, commentdes:string){
     const body = JSON.stringify({commentdes});
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/qna/'+qnaIdx+'/comment', body, {headers: this.headers});
+  }
+  //유사한 다른 강의 추천
+  getSimilarLectures(lectureIdx : number){
+    ///api/:lectureIdx/item_recommend
+    //return this.httpClient.get(this.baseUrl + 'overall-ranking?page=1', {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'api/'+lectureIdx+'/item_recommend', {headers: this.headers});
   }
 
 

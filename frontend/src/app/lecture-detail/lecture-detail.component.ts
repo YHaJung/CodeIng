@@ -28,6 +28,9 @@ export class LectureDetailComponent implements OnInit {
   reviews: any = [];
   recommendoverview: any = [];
 
+  //유사한 다른 강의
+  similarLectures:[];
+
 
   constructor(
     private route: ActivatedRoute,
@@ -54,7 +57,7 @@ export class LectureDetailComponent implements OnInit {
         this.avg_rating = this.lectureDetail.rating;
         this.level = this.lectureDetail.level;
 
-        
+  
         if(this.token){
           //관심 사이트 여부
           this.apiService.isFavoriteSites(this.lectureDetail.siteIdx).subscribe(
@@ -90,6 +93,16 @@ export class LectureDetailComponent implements OnInit {
       error => console.log(error)
     );
 
+    //유사한 다른 강의들 불러오기
+    //getSimilarLectures
+    this.apiService.getSimilarLectures(this.lectureIdx).subscribe(
+      data => {
+        this.similarLectures = data['result'];
+        console.log('similar-lectures:');
+        console.log(this.similarLectures);
+      },
+      error => {console.log(error)}
+    );
     
     
 

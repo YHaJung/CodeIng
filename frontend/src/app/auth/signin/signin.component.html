@@ -1,15 +1,15 @@
-<div id="whole-page">
+<div class="whole-page">
   <div class="white-logo" routerLink="/"></div>
   <form class="middle" [formGroup]="signinForm" (submit)="login()">
     <div>
-      <input type="email" formControlName="id" placeholder="아이디(이메일)">
+      <input class = "idpwd" type="email" formControlName="id" placeholder="아이디(이메일)">
       <br/>
-      <input type="password " formControlName="pw" placeholder="비밀번호">
+      <input class = "idpwd" type="password" formControlName="pw" placeholder="비밀번호">
       <div class="singup-div">
         <a href="/signup">회원가입</a>
       </div>
     </div>
-    <button type="submit">로그인</button>
+    <button class="login" type="submit">로그인</button>
   </form>
 </div>
 
