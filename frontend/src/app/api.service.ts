@@ -21,7 +21,7 @@ export class ApiService {
     private cookieService: CookieService
   ) { }
 
-  // tslint:disable-next-line:typedef
+  //ranking
   getLectures() {
     return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
   }
@@ -31,12 +31,10 @@ export class ApiService {
   }
 
 
-  /*for main-page*/
-  // tslint:disable-next-line:typedef
+  //home
   getRankingOverview(page) {
     return this.httpClient.get(this.baseUrl + 'overall-ranking?page='+page, {headers: this.headers});
   }
-  // tslint:disable-next-line:typedef
   getRecommendOverview(page:number) {  // 나중에 api 바꾸기
     if(this.token){
       return this.httpClient.get(this.baseUrl + 'api/user_recommend?page='+page, {headers: this.headers});
@@ -46,7 +44,6 @@ export class ApiService {
   }
 
   // 프로그램 주제별 랭킹
-  // tslint:disable-next-line:typedef
   getALLLecturesRanking(page:number, categoryIdx:number, subCategoryIdx:number) {
     return this.httpClient.get(this.baseUrl + 'lectures-ranking?page='+page+'&categoryIdx='+categoryIdx+'&subcategoryIdx='+subCategoryIdx, {headers: this.headers});
   }
@@ -70,19 +67,16 @@ export class ApiService {
   getLectureDetail(lectureIdx){
     return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx);
   }
-  // 강의별 리뷰 목록
-  // tslint:disable-next-line:typedef
-  
-  // tslint:disable-next-line:typedef
-  getLectureReviews(lectureIdx : number){
-    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review', {headers: this.headers});
+  //review
+  getLectureReviews(lectureIdx : number, page:number){
+    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review?page='+page, {headers: this.headers});
   }
   createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:Array<number>, cons:Array<number>){              //
     const body = JSON.stringify({totalrating, teachingpowerrating, pricerating, recommend, improvement, pros, cons});
     console.log(body);
     return this.httpClient.post(this.baseUrl + 'lectures/'+lectureIdx+'/review', body, {headers: this.headers});
   }
-  // tslint:disable-next-line:typedef
+  //qna
   getLectureQnas(lectureIdx : number){
     return this.httpClient.get(this.baseUrl + 'lectures/'+lectureIdx+'/qna', {headers: this.headers});
   }
@@ -109,23 +103,16 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl + 'api/'+lectureIdx+'/item_recommend', {headers: this.headers});
   }
 
-
-  /*
-  getLectureDetail(){
-    return this.httpClient.get(this.baseUrl + 'lectures/:lectureIdx', {headers: this.headers});
-  }
-  */
+  //auth
   signin(email:string, userpwd:string){
     const body = JSON.stringify({email, userpwd});
     console.log(body);
     return this.httpClient.post(this.baseUrl + 'login', body, {headers: this.headers});
-    //return this.httpClient.get(this.baseUrl + 'user', {params: new HttpParams([email, userpwd])};
   }
   signup(email:string, userpwd:string, userpwdConfirm:string, name:string, phonenumber:string, nickname:string){
     const body = JSON.stringify({email, userpwd, userpwdConfirm, name, phonenumber, nickname});
     console.log(body);
     return this.httpClient.post(this.baseUrl + 'user', body, {headers: this.headers});
-    //return this.httpClient.get(this.baseUrl + 'user', {params: new HttpParams([email, userpwd])};
   }
 
   //mypage
@@ -179,16 +166,4 @@ export class ApiService {
   deleteMyReview(lectureIdx:number, reviewIdx:number){
     return this.httpClient.delete(this.baseUrl +'lectures/'+lectureIdx+'/review/'+reviewIdx, {headers: this.headers});
   }
-  
-  
-  
-  
-
-  //개인정보조회
-  /*
-  getPersonalInfo(){
-    return this.httpClient.get(this.baseUrl+'personalInfo', {headers: this.headers});
-  }
-  */
-
 }

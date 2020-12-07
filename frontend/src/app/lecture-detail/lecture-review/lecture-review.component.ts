@@ -35,7 +35,7 @@ export class LectureReviewComponent implements OnInit {
     this.loadReviews();
   }
   loadReviews(){
-    this.apiService.getLectureReviews(this.lectureIdx).subscribe(
+    this.apiService.getLectureReviews(this.lectureIdx, this.currentPage).subscribe(
       data => {
         this.reviews = data['result'];
         console.log(this.reviews);
