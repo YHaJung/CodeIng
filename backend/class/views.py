@@ -128,7 +128,13 @@ def class_list(request):
 
             classes =[]
 
-            class_list = Study.objects.filter(isdeleted='N')[page * 6 - 6:page * 6]
+            class_list = Study.objects.filter(isdeleted='N')
+            cnt = len(class_list) // 6
+            if len(class_list) % 6 != 0:
+                cnt = cnt + 1
+            class_list = class_list[page * 6 - 6:page * 6]
+
+
             for c in class_list:
 
                 member = Classmember.objects.filter(classidx__classidx=c.classidx,isdeleted='N').values('classidx__classidx').annotate(count=Count('classidx__classidx'))
@@ -157,6 +163,7 @@ def class_list(request):
             lec_dict['isSuccess'] = 'true'
             lec_dict['code'] = 200
             lec_dict['message'] = '전체 클래스 목록 조회 성공'
+            lec_dict['maxPage'] = cnt
             lec_dict['result'] = classes
 
             return_value = json.dumps(lec_dict, indent=4, use_decimal=True, ensure_ascii=False)

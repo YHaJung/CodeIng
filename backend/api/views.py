@@ -437,8 +437,15 @@ def Poprs(request, pk=None):
         #                 'siteinfo').distinct()
         #     , krecommend))
 
+        cnt = len(krecommend) // 6
+        if len(krecommend) % 6 != 0:
+            cnt = cnt + 1
 
-        for lectureidx in krecommend[page * 5 - 5:page * 5]:
+        overview_dict['maxPage'] = cnt
+
+
+
+        for lectureidx in krecommend[page * 6 - 6:page * 6]:
             i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level','level__levelname', 'price', 'rating',
                     'siteinfo').distinct()
 
@@ -599,7 +606,7 @@ def generate_rating():
 # @periodic_task(run_every=crontab(hour=4, minute=30))
 @periodic_task(run_every=crontab(hour=11, minute=22))
 def create_model(request, pk=None):
-    all_user_names = list(map(lambda x: x.userinfo, Profile.objects.only("userinfo")))
+    all_user_names = list(map(lambda x: x.userinfo, Profile("userinfo")))
     all_lecture_ids = list(map(lambda x: x.lectureidx, Lecture.objects.all()))
     num_users = len(list(all_user_names))
     num_lectures = max(all_lecture_ids)

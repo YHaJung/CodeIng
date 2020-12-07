@@ -557,6 +557,8 @@ def profile(request):
                 validateBirth(p_dict['birthday'])
                 data.birthday = p_dict['birthday']
 
+
+
             data.school = p_dict['school']
 
             data.gender = p_dict['gender']

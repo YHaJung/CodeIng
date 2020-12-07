@@ -155,7 +155,12 @@ def lecture_list(request):
                 if selected_level == 6:
 
                     result = Lecture.objects.filter(price__lte=upper_price, price__gte=lower_price,
-                                                      rating__gte=selected_rating)[page * 6 - 6:page * 6]
+                                                      rating__gte=selected_rating)
+                    cnt = len(result)//6
+                    if len(result)%6 !=0:
+                        cnt = cnt+1
+
+                    result = result[page * 6 - 6:page * 6]
 
 
 
@@ -163,8 +168,13 @@ def lecture_list(request):
                    result = Lecture.objects.filter(
                         level__levelidx=selected_level, rating__gte=selected_rating, price__gte=lower_price,
                         price__lte=upper_price).select_related(
-                        'siteinfo')[page * 6 - 6:page * 6]
+                        'siteinfo')
 
+                   cnt = len(result) // 6
+                   if len(result) % 6 != 0:
+                       cnt = cnt + 1
+
+                   result = result[page * 6 - 6:page * 6]
 
             # 키워드가 있을 경우
             else:
@@ -188,6 +198,7 @@ def lecture_list(request):
                                                           ).select_related('siteinfo')
 
 
+
                     else:
                         lectures = Lecture.objects.filter(lecturename__icontains=ele, price__gte=lower_price,
                                                           level__levelidx=selected_level, rating__gte=selected_rating,
@@ -199,6 +210,10 @@ def lecture_list(request):
 
                 if len(input_keyword) == 1:
                    result = key[0][page * 6 - 6:page * 6]
+
+                   cnt = len(key[0]) // 6
+                   if len(result) % 6 != 0:
+                       cnt = cnt + 1
 
                 else:
                     # a+b
@@ -218,11 +233,15 @@ def lecture_list(request):
                     minus = set(sum).difference(set(inter))
 
                     result = (list(inter) + list(minus))[page * 6 - 6:page * 6]
+                    cnt = len((list(inter) + list(minus))) // 6
+                    if len(result) % 6 != 0:
+                        cnt = cnt + 1
 
             lec_dict = {}
             lec_dict['isSuccess'] = 'true'
             lec_dict['code'] = 200
             lec_dict['message'] = '강의 목록 조회 성공'
+            lec_dict['maxPage'] = cnt
             info = []
 
 
@@ -358,13 +377,22 @@ def lectures_ranking(request):
 
             category_ranking_all = category_ranking.values('lecture__lectureidx', 'lecture__lecturename','lecture__rating',
                                                            'lecture__lecturer', 'lecture__thumburl', 'lecture__price', 'lecture__level__levelidx',
-                                                           'lecture__level__levelname', 'lecture__siteinfo__sitename', 'lecture__siteinfo__logoimage').distinct()[page * 5 - 5:page * 5]
+                                                           'lecture__level__levelname', 'lecture__siteinfo__sitename', 'lecture__siteinfo__logoimage').distinct()
+
+            cnt = len(category_ranking_all) // 6
+            if len(category_ranking_all) % 6 != 0:
+                cnt = cnt + 1
+
+            category_ranking_all = category_ranking_all[page * 6 - 6:page * 6]
+
+
 
 
             lec_rank_dict = {}
             lec_rank_dict['isSuccess'] = 'true'
             lec_rank_dict['code'] = 200
             lec_rank_dict['message'] = '카테고리 별 랭킹 조회 성공'
+            lec_rank_dict['maxPage'] = cnt
 
             rank = []
 
@@ -537,7 +565,12 @@ def review_list(request, pk):
             review_dict['code'] = 200
             review_dict['message'] = '강의 리뷰 목록 조회 성공'
 
-            review_userinfo = Review.objects.filter(lectureidx=pk, isdeleted='N').select_related('profile')[page * 5 - 5:page * 5]
+            review_userinfo = Review.objects.filter(lectureidx=pk, isdeleted='N').select_related('profile').order_by('-reviewidx')
+            cnt = len(review_userinfo) // 6
+            if len(review_userinfo) % 6 != 0:
+                cnt = cnt + 1
+
+            review_userinfo = review_userinfo[page * 6 - 6:page * 6]
 
             pros = Reviewpros.objects.filter(review__lectureidx=pk, isdeleted='N').select_related('review')
 
@@ -591,7 +624,7 @@ def review_list(request, pk):
                      ('recommend', r.recommend), ('improvement', r.improvement),
                      ('likesCount', likes_count), ('pros', pros_list), ('cons', cons_list)
                      ]))
-
+            review_dict['maxPage'] = cnt
             review_dict['result'] = review_list
             return_value = json.dumps(review_dict, indent=4, use_decimal=True, ensure_ascii=False)
             return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
@@ -909,7 +942,13 @@ def qna_list(request, pk):
             qna_dict['message'] = 'qna 목록 조회 성공'
 
             qna = Qna.objects.filter(lecture__lectureidx=pk, isblocked='N', isdeleted='N').select_related('userinfo',
-            'lecture').order_by('-qnaidx')[page * 5 - 5:page * 5]
+            'lecture').order_by('-qnaidx')
+
+            cnt = len(qna) // 6
+            if len(qna) % 6 != 0:
+                cnt = cnt + 1
+            qna = qna[page * 6 - 6:page * 6]
+
 
             likes = Likesforqna.objects.filter(qna__lecture__lectureidx=pk).select_related('qna').values(
                 'qna').annotate(count=Count('qna'))
@@ -932,7 +971,7 @@ def qna_list(request, pk):
                      ('profileImg', r.userinfo.profileimg),
                      ('likesCount', likes_count), ('createdAt',time )
                      ]))
-
+            qna_dict['maxPage'] = cnt
             qna_dict['result'] = qna_list
 
             return_value = json.dumps(qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -1406,7 +1445,11 @@ def favorite_lectures(request):
             if page <= 0:
                 page = 1
             favlectures_list=[]
-            fav_lectures = Favoritelecture.objects.filter(user=userIdx, isdeleted='N')[page * 5 - 5:page * 5]
+            fav_lectures = Favoritelecture.objects.filter(user=userIdx, isdeleted='N')
+            cnt = len(fav_lectures) // 6
+            if len(fav_lectures) % 6 != 0:
+                cnt = cnt + 1
+            fav_lectures = fav_lectures[page * 6 - 6:page * 6]
 
             for i in fav_lectures:
 
@@ -1434,6 +1477,7 @@ def favorite_lectures(request):
             favlecture_dict['isSuccess'] = 'true'
             favlecture_dict['code'] = 200
             favlecture_dict['message'] = '즐겨찾기한 강의 조회 성공'
+            favlecture_dict['maxPage'] = cnt
             favlecture_dict['result'] = favlectures_list
 
             return_value = json.dumps(favlecture_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -1498,7 +1542,11 @@ def my_reviews(request):
 
 
         my_review_list=[]
-        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N')[page * 5 - 5:page * 5]
+        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N')
+        cnt = len(my_review) // 6
+        if len(my_review) % 6 != 0:
+            cnt = cnt + 1
+        my_review = my_review[page * 6 - 6:page * 6]
 
         pros = Reviewpros.objects.filter(review__profile__userinfo__useridx=userIdx, isdeleted='N')
 
@@ -1543,6 +1591,7 @@ def my_reviews(request):
         my_review_dict['isSuccess'] = 'true'
         my_review_dict['code'] = 200
         my_review_dict['message'] = '내가 쓴 리뷰 조회 성공'
+        my_review_dict['maxPage'] = cnt
         my_review_dict['result'] = my_review_list
 
         return_value = json.dumps(my_review_dict, indent=4, use_decimal=True, ensure_ascii=False)
@@ -1566,7 +1615,11 @@ def my_qnas(request):
 
 
         my_qna_list=[]
-        my_qna = Qna.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
+        my_qna = Qna.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N')
+        cnt = len(my_qna) // 6
+        if len(my_qna) % 6 != 0:
+            cnt = cnt + 1
+        my_qna = my_qna[page * 6 - 6:page * 6]
 
         likes = Likesforqna.objects.filter(qna__userinfo=userIdx).values('qna').annotate(count=Count('qna'))
 
@@ -1591,107 +1644,8 @@ def my_qnas(request):
         my_qna_dict={}
         my_qna_dict['isSuccess'] = 'true'
         my_qna_dict['code'] = 200
-        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
-        my_qna_dict['result'] = my_qna_list
-
-        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-
-    except Review.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return for_exception()
-
-@api_view(['GET'])
-@login_decorator
-def my_qnas(request):
-    try:
-        userIdx = request.user.userinfo.useridx
-
-        page = int(request.GET.get('page', '1'))
-        if page <= 0:
-            page = 1
-
-
-        my_qna_list=[]
-        my_qna = Qna.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
-
-        likes = Likesforqna.objects.filter(qna__userinfo=userIdx).values('qna').annotate(count=Count('qna'))
-
-        for i in my_qna:
-
-            likes_dict = {}
-
-            for k in likes:
-                likes_dict[k['qna']] = k['count']
-
-                try:
-                    likes_count = likes_dict[i.qnaidx]
-                except Exception:
-                    likes_count = 0
-                    pass
-
-
-            my_qna_list.append(
-                dict([('qnaIdx', i.qnaidx),('qnaTitle',i.title),('qnaDes',i.qnades),('likesCount', likes_count)]))
-
-
-        my_qna_dict={}
-        my_qna_dict['isSuccess'] = 'true'
-        my_qna_dict['code'] = 200
-        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
-        my_qna_dict['result'] = my_qna_list
-
-        return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-
-    except Review.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    except Exception:
-        return for_exception()
-
-
-@api_view(['GET'])
-@login_decorator
-def my_qnas(request):
-    try:
-
-        userIdx = request.user.userinfo.useridx
-
-        page = int(request.GET.get('page', '1'))
-        if page <= 0:
-            page = 1
-
-
-        my_qna_list=[]
-        my_qna = Qna.objects.filter(userinfo=userIdx, isdeleted='N', isblocked='N')[page * 5 - 5:page * 5]
-
-        likes = Likesforqna.objects.filter(qna__userinfo=userIdx).values('qna').annotate(count=Count('qna'))
-
-        for i in my_qna:
-
-            likes_dict = {}
-
-            for k in likes:
-                likes_dict[k['qna']] = k['count']
-
-                try:
-                    likes_count = likes_dict[i.qnaidx]
-                except Exception:
-                    likes_count = 0
-                    pass
-
-
-            my_qna_list.append(
-                dict([('qnaIdx', i.qnaidx),('qnaTitle',i.title),('qnaDes',i.qnades),('likesCount', likes_count)]))
-
-
-        my_qna_dict={}
-        my_qna_dict['isSuccess'] = 'true'
-        my_qna_dict['code'] = 200
-        my_qna_dict['message'] = '내가 쓴 리뷰 조회 성공'
+        my_qna_dict['message'] = '내가 쓴 qna 목록 조회 성공'
+        my_qna_dict['maxPage'] = cnt
         my_qna_dict['result'] = my_qna_list
 
         return_value = json.dumps(my_qna_dict, indent=4, use_decimal=True, ensure_ascii=False)
