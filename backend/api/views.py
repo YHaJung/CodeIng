@@ -520,6 +520,9 @@ def Poprs(request, pk=None):
         elif page > 4:
             page = 1
         # print(recommend.flatten())
+
+
+
         krecommend = np.argsort(-recommend)[5 * page - 5:5 * page]
         cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
         krecommend = cnt.most_common()[10:510:100]
