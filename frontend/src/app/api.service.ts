@@ -75,7 +75,7 @@ export class ApiService {
   
   // tslint:disable-next-line:typedef
   getLectureReviews(lectureIdx : number){
-    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review?page='+2, {headers: this.headers});
+    return this.httpClient.get(this.baseUrl + 'lectures/' + lectureIdx + '/review', {headers: this.headers});
   }
   createLectureReviews(lectureIdx, totalrating:number, teachingpowerrating:number, pricerating:number, recommend:CharacterData, improvement:string, pros:Array<number>, cons:Array<number>){              //
     const body = JSON.stringify({totalrating, teachingpowerrating, pricerating, recommend, improvement, pros, cons});
