@@ -238,15 +238,14 @@ def CBRS(request):
         # print(pk)
         data = pickle.load(open('knn_models/data.pkl', 'rb'))
         querys = pickle.load(open('knn_models/query.pkl', 'rb'))
-
+        lectures = pickle.load(open('knn_models/lectures.pkl', 'rb'))
 
         recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
         page = int(request.GET.get('page', '1'))
         nneigh = 5
-        # print(pk)
-        # print(recommend[pk])
-        # print(np.argsort(-recommend[int(pk)])[:5] )
-        # print(recommend.row)
+        if page >4:
+            page = 1
+
         overview_list = []
         overview_dict = {}
         overview_dict['isSuccess'] = 'true'
@@ -255,24 +254,159 @@ def CBRS(request):
         r, c = recommend.shape
         # print(r)
         if pk < r:
-            krecommend = np.argsort(-recommend[pk])[5 * page - 5:nneigh * page]
+            krecommend = np.argsort(-recommend[pk])[50 * page - 50: 50 * page:5]
+            # [5 * page - 5:nneigh * page]
+            num = 0
             for lectureidx in krecommend:
-                i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
-                        'siteinfo', 'siteinfo__logoimage').distinct()
+                if num == 5:
+                    break
+                if lectureidx in lectures:
+                    num += 1
+                    i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer', 'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
+                            'siteinfo', 'siteinfo__logoimage').distinct()
+                    sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
+                    price = i[0]['price']
+                    if price == 0:
+                        price = 'free'
+                    elif price == -1:
+                        price = 'membership'
+                    else:
+                        price = format(price, ',')
+
+                    # 강의 썸네일 없을 경우
+                    thumbnail = i[0]['thumburl']
+                    if not thumbnail:
+                        thumbnail = i[0]['siteinfo__logoimage']
+
+
+                    overview_list.append(
+                        dict([('lectureIdx', i[0]['lectureidx']),
+                              ('lectureName', i[0]['lecturename']),
+                              ('thumbUrl', thumbnail),
+                              ('lecturer', i[0]['lecturer']),
+                              ('level', decimal.Decimal(i[0]['level'])),
+                              ('price', price),
+                              ('rating', i[0]['rating']),
+                              ('siteinfo', sitename),
+                              ('levelIdx', i[0]['level__levelidx']),
+                              ('levelName', i[0]['level__levelname'])
+                              ]))
+            overview_dict['result'] = overview_list
+        else:
+            if page < 1:
+                page = 1
+            elif page > 4:
+                page = 1
+            # print(recommend.flatten())
+            krecommend = np.argsort(-recommend)[50 * page - 50: 50 * page:5]
+            # [5 * selectIdx - 5:nneigh * selectIdx]
+
+            # [5:10]
+            # [5 * selectIdx - 5:nneigh * selectIdx]
+            # print(krecommend.shape)
+            # print(krecommend.flatten())
+            cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
+            # # print(cnt) [5:50]
+            krecommend = cnt.most_common()
+            krecommend = [x for x, _ in krecommend]
+
+            overview_list = []
+            overview_dict = {}
+            overview_dict['isSuccess'] = 'true'
+            overview_dict['code'] = 200
+            overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
+            num = 5
+            for lectureidx in krecommend:
+                if num == 5:
+                    break
+                if lectureidx in lectures:
+                    num +=1
+                    i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx',
+                                                                             'lecturename',
+                                                                             'thumburl', 'lecturer', 'level',
+                                                                             'level__levelname', 'price', 'rating',
+                                                                             'siteinfo').distinct()
+
+                    # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
+                    sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
+
+                    price = i[0]['price']
+                    if price == 0:
+                        price = 'free'
+                    elif price == -1:
+                        price = 'membership'
+
+                    # 강의 썸네일 없을 경우
+                    thumbnail = i[0]['thumburl']
+                    if not thumbnail:
+                        thumbnail = i[0]['siteinfo__logoimage']
+
+                    overview_list.append(
+                        dict([('lectureIdx', i[0]['lectureidx']),
+                              ('lectureName', i[0]['lecturename']),
+                              ('thumbUrl', thumbnail),
+                              ('lecturer', i[0]['lecturer']),
+                              ('levelIdx', int(decimal.Decimal(i[0]['level']))),
+                              ('levelName', i[0]['level__levelname']),
+                              ('price', price),
+                              ('rating', i[0]['rating']),
+                              ('siteName', sitename),
+                              ]))
+
+            overview_dict['result'] = overview_list
+
+        return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+
+    except Exception:
+
+        return for_exception()
+
+
+@api_view(['GET'])
+@login_decorator
+def CBRSlist(request):
+    pk = request.user.userinfo.useridx
+    data = pickle.load(open('knn_models/data.pkl', 'rb'))
+    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+    lectures = pickle.load(open('knn_models/lectures.pkl', 'rb'))
+    nneigh = 25
+    # print('query',querys[pk])
+
+    overview_list = []
+    overview_dict = {}
+    overview_dict['isSuccess'] = 'true'
+    overview_dict['code'] = 200
+    overview_dict['message'] = '추천컨텐츠 조회 성공'
+
+    r,c = recommend.shape
+    if pk < r:
+        krecommend = np.argsort(-recommend[int(pk)])[:240:5]
+        num = 0
+        for lectureidx in krecommend:
+            # print(data[lectureidx+1])
+            if num == 24:
+                break
+            if lectureidx in lectures:
+                num += 1
+                i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
+                                                                         'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
+                                                                         'siteinfo','siteinfo__logoimage').distinct()
+                # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
                 price = i[0]['price']
                 if price == 0:
                     price = 'free'
                 elif price == -1:
                     price = 'membership'
-                else:
-                    price = format(price, ',')
+
 
                 # 강의 썸네일 없을 경우
                 thumbnail = i[0]['thumburl']
                 if not thumbnail:
                     thumbnail = i[0]['siteinfo__logoimage']
-
 
                 overview_list.append(
                     dict([('lectureIdx', i[0]['lectureidx']),
@@ -282,45 +416,162 @@ def CBRS(request):
                           ('level', decimal.Decimal(i[0]['level'])),
                           ('price', price),
                           ('rating', i[0]['rating']),
-                          ('siteinfo', sitename),
+                          ('siteName', sitename),
                           ('levelIdx', i[0]['level__levelidx']),
                           ('levelName', i[0]['level__levelname'])
                           ]))
-            overview_dict['result'] = overview_list
-        else:
-            if page < 1:
-                page = 1
-            elif page > 4:
-                page = 1
-            # print(recommend.flatten())
-            krecommend = np.argsort(-recommend)[5 * page - 5:5 * page]
-            # [5 * selectIdx - 5:nneigh * selectIdx]
+        overview_dict['result'] = overview_list
+    else:
+        recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+        nneigh = 25
+        krecommend = np.argsort(-recommend)[:240:5]
+        cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
+        krecommend = cnt.most_common()
 
-            # [5:10]
-            # [5 * selectIdx - 5:nneigh * selectIdx]
-            # print(krecommend.shape)
-            # print(krecommend.flatten())
-            cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-            # # print(cnt) [5:50]
-            krecommend = cnt.most_common()[10:510:100]
-            krecommend = [x for x, _ in krecommend]
+        krecommend = [x for x, _ in krecommend]
+        overview_list = []
+        overview_dict = {}
+        overview_dict['isSuccess'] = 'true'
+        overview_dict['code'] = 200
+        overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
+        num = 0
+        for lectureidx in krecommend:
+            if num == 24:
+                break
+            if lectureidx in lectures:
+                num += 1
+                i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx', 'lecturename',
+                                                                         'thumburl', 'lecturer',
+                                                                         'level', 'price', 'rating', 'level__levelname',
+                                                                         'siteinfo').distinct()
+                # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
+                sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
+                price = i[0]['price']
+                if price == 0:
+                    price = 'free'
+                elif price == -1:
+                    price = 'membership'
 
-            overview_list = []
-            overview_dict = {}
-            overview_dict['isSuccess'] = 'true'
-            overview_dict['code'] = 200
-            overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
+                # 강의 썸네일 없을 경우
+                thumbnail = i[0]['thumburl']
+                if not thumbnail:
+                    thumbnail = i[0]['siteinfo__logoimage']
 
-            for lectureidx in krecommend:
-                i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx',
-                                                                         'lecturename',
+                overview_list.append(
+                    dict([('lectureIdx', i[0]['lectureidx']),
+                          ('lectureName', i[0]['lecturename']),
+                          ('thumbUrl', thumbnail),
+                          ('lecturer', i[0]['lecturer']),
+                          ('levelIdx', int(decimal.Decimal(i[0]['level']))),
+                          ('levelName', i[0]['level__levelname']),
+                          ('price', price),
+                          ('rating', i[0]['rating']),
+                          ('siteName', sitename),
+                          ]))
+        overview_dict['result'] = overview_list
+
+    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
+    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def itemcbs(request, pk = None):
+    data = pickle.load(open('knn_models/data.pkl', 'rb'))
+    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+    recommend = pickle.load(open('knn_models/drecommend.pkl', 'rb'))
+    lectures = pickle.load(open('knn_models/lectures.pkl', 'rb'))
+
+    nneigh = 5
+
+    overview_list = []
+    overview_dict = {}
+    overview_dict['isSuccess'] = 'true'
+    overview_dict['code'] = 200
+    overview_dict['message'] = '추천컨텐츠 조회 성공'
+
+    r, c = recommend.shape
+    if pk < r:
+        krecommend = np.argsort(-recommend[int(pk)])[:100:5]
+        num = 0
+        for lectureidx in krecommend:
+            # print(data[lectureidx+1])
+            if num == 5:
+                break
+            if lectureidx in lectures:
+                num +=1
+                i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl',
+                                                                             'lecturer',
+                                                                             'level', 'price', 'rating', 'level__levelidx',
+                                                                             'level__levelname',
+                                                                             'siteinfo', 'siteinfo__logoimage').distinct()
+                # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
+                sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
+                price = i[0]['price']
+                if price == 0:
+                    price = 'free'
+                elif price == -1:
+                    price = 'membership'
+
+                # 강의 썸네일 없을 경우
+                thumbnail = i[0]['thumburl']
+                if not thumbnail:
+                    thumbnail = i[0]['siteinfo__logoimage']
+
+                overview_list.append(
+                    dict([('lectureIdx', i[0]['lectureidx']),
+                          ('lectureName', i[0]['lecturename']),
+                          ('thumbUrl', thumbnail),
+                          ('lecturer', i[0]['lecturer']),
+                          ('levelIdx', int(decimal.Decimal(i[0]['level']))),
+                          ('levelName', i[0]['level__levelname']),
+                          ('price', price),
+                          ('rating', i[0]['rating']),
+                          ('siteName', sitename),
+                          ]))
+        overview_dict['result'] = overview_list
+
+    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
+    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def Poprs(request, pk=None):
+    try:
+        # data = pickle.load(open('knn_models/data.pkl', 'rb'))
+        # querys = pickle.load(open('knn_models/query.pkl', 'rb'))
+        recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+        lectures = pickle.load(open('knn_models/lectures.pkl', 'rb'))
+
+        nneigh = 5
+        page = int(request.GET.get('page', '1'))
+        # page = int(request.GET.get('page', '1'))
+        if page < 1:
+            page = 1
+        elif page > 4:
+            page = 1
+        # print(recommend.flatten())
+
+        krecommend = np.argsort(-recommend)[50 * page - 50: 50 * page:5]
+        cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
+        krecommend = cnt.most_common()
+        krecommend = [x for x, _ in krecommend]
+
+        overview_list = []
+        overview_dict = {}
+        overview_dict['isSuccess'] = 'true'
+        overview_dict['code'] = 200
+        overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
+        num = 0
+        for lectureidx in krecommend:
+            if num == 5:
+                break
+            if lectureidx in lectures:
+                num +=1
+                i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx', 'lecturename',
                                                                          'thumburl', 'lecturer', 'level',
                                                                          'level__levelname', 'price', 'rating',
                                                                          'siteinfo').distinct()
 
                 # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-
                 price = i[0]['price']
                 if price == 0:
                     price = 'free'
@@ -344,227 +595,6 @@ def CBRS(request):
                           ('siteName', sitename),
                           ]))
 
-            overview_dict['result'] = overview_list
-
-        return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
-        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-
-    except Exception:
-
-        return for_exception()
-
-
-@api_view(['GET'])
-@login_decorator
-def CBRSlist(request):
-    pk = request.user.userinfo.useridx
-    data = pickle.load(open('knn_models/data.pkl', 'rb'))
-    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
-    recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-    nneigh = 25
-    # print('query',querys[pk])
-
-    overview_list = []
-    overview_dict = {}
-    overview_dict['isSuccess'] = 'true'
-    overview_dict['code'] = 200
-    overview_dict['message'] = '추천컨텐츠 조회 성공'
-
-    r,c = recommend.shape
-    if pk < r:
-        krecommend = np.argsort(-recommend[int(pk)])[:nneigh]
-        for lectureidx in krecommend:
-            # print(data[lectureidx+1])
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl', 'lecturer',
-                                                                     'level', 'price', 'rating', 'level__levelidx', 'level__levelname',
-                                                                     'siteinfo','siteinfo__logoimage').distinct()
-            # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
-            sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-            price = i[0]['price']
-            if price == 0:
-                price = 'free'
-            elif price == -1:
-                price = 'membership'
-
-
-            # 강의 썸네일 없을 경우
-            thumbnail = i[0]['thumburl']
-            if not thumbnail:
-                thumbnail = i[0]['siteinfo__logoimage']
-
-            overview_list.append(
-                dict([('lectureIdx', i[0]['lectureidx']),
-                      ('lectureName', i[0]['lecturename']),
-                      ('thumbUrl', thumbnail),
-                      ('lecturer', i[0]['lecturer']),
-                      ('level', decimal.Decimal(i[0]['level'])),
-                      ('price', price),
-                      ('rating', i[0]['rating']),
-                      ('siteName', sitename),
-                      ('levelIdx', i[0]['level__levelidx']),
-                      ('levelName', i[0]['level__levelname'])
-                      ]))
-        overview_dict['result'] = overview_list
-    else:
-        recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-        nneigh = 25
-        krecommend = np.argsort(-recommend)[:nneigh]
-        cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-        krecommend = cnt.most_common()[100:2400:100]
-
-        krecommend = [x for x, _ in krecommend]
-        overview_list = []
-        overview_dict = {}
-        overview_dict['isSuccess'] = 'true'
-        overview_dict['code'] = 200
-        overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
-
-        for lectureidx in krecommend:
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx', 'lecturename',
-                                                                     'thumburl', 'lecturer',
-                                                                     'level', 'price', 'rating', 'level__levelname',
-                                                                     'siteinfo').distinct()
-            # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
-            sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-            price = i[0]['price']
-            if price == 0:
-                price = 'free'
-            elif price == -1:
-                price = 'membership'
-
-            # 강의 썸네일 없을 경우
-            thumbnail = i[0]['thumburl']
-            if not thumbnail:
-                thumbnail = i[0]['siteinfo__logoimage']
-
-            overview_list.append(
-                dict([('lectureIdx', i[0]['lectureidx']),
-                      ('lectureName', i[0]['lecturename']),
-                      ('thumbUrl', thumbnail),
-                      ('lecturer', i[0]['lecturer']),
-                      ('levelIdx', int(decimal.Decimal(i[0]['level']))),
-                      ('levelName', i[0]['level__levelname']),
-                      ('price', price),
-                      ('rating', i[0]['rating']),
-                      ('siteName', sitename),
-                      ]))
-        overview_dict['result'] = overview_list
-
-    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
-    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def itemcbs(request, pk = None):
-    data = pickle.load(open('knn_models/data.pkl', 'rb'))
-    querys = pickle.load(open('knn_models/query.pkl', 'rb'))
-    recommend = pickle.load(open('knn_models/drecommend.pkl', 'rb'))
-    nneigh = 5
-
-    overview_list = []
-    overview_dict = {}
-    overview_dict['isSuccess'] = 'true'
-    overview_dict['code'] = 200
-    overview_dict['message'] = '추천컨텐츠 조회 성공'
-
-    r, c = recommend.shape
-    if pk < r:
-        krecommend = np.argsort(-recommend[int(pk)])[1:nneigh+1]
-        for lectureidx in krecommend:
-            # print(data[lectureidx+1])
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('lectureidx', 'lecturename', 'thumburl',
-                                                                         'lecturer',
-                                                                         'level', 'price', 'rating', 'level__levelidx',
-                                                                         'level__levelname',
-                                                                         'siteinfo', 'siteinfo__logoimage').distinct()
-            # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
-            sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-            price = i[0]['price']
-            if price == 0:
-                price = 'free'
-            elif price == -1:
-                price = 'membership'
-
-            # 강의 썸네일 없을 경우
-            thumbnail = i[0]['thumburl']
-            if not thumbnail:
-                thumbnail = i[0]['siteinfo__logoimage']
-
-            overview_list.append(
-                dict([('lectureIdx', i[0]['lectureidx']),
-                      ('lectureName', i[0]['lecturename']),
-                      ('thumbUrl', thumbnail),
-                      ('lecturer', i[0]['lecturer']),
-                      ('levelIdx', int(decimal.Decimal(i[0]['level']))),
-                      ('levelName', i[0]['level__levelname']),
-                      ('price', price),
-                      ('rating', i[0]['rating']),
-                      ('siteName', sitename),
-                      ]))
-        overview_dict['result'] = overview_list
-
-    return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
-    return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def Poprs(request, pk=None):
-    try:
-        # data = pickle.load(open('knn_models/data.pkl', 'rb'))
-        # querys = pickle.load(open('knn_models/query.pkl', 'rb'))
-        recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
-        nneigh = 5
-        page = int(request.GET.get('page', '1'))
-        # page = int(request.GET.get('page', '1'))
-        if page < 1:
-            page = 1
-        elif page > 4:
-            page = 1
-        # print(recommend.flatten())
-
-
-
-        krecommend = np.argsort(-recommend)[5 * page - 5:5 * page]
-        cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-        krecommend = cnt.most_common()[10:510:100]
-        krecommend = [x for x, _ in krecommend]
-
-        overview_list = []
-        overview_dict = {}
-        overview_dict['isSuccess'] = 'true'
-        overview_dict['code'] = 200
-        overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
-
-        for lectureidx in krecommend:
-            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage', 'lectureidx', 'lecturename',
-                                                                     'thumburl', 'lecturer', 'level',
-                                                                     'level__levelname', 'price', 'rating',
-                                                                     'siteinfo').distinct()
-
-            # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
-            sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-            price = i[0]['price']
-            if price == 0:
-                price = 'free'
-            elif price == -1:
-                price = 'membership'
-
-            # 강의 썸네일 없을 경우
-            thumbnail = i[0]['thumburl']
-            if not thumbnail:
-                thumbnail = i[0]['siteinfo__logoimage']
-
-            overview_list.append(
-                dict([('lectureIdx', i[0]['lectureidx']),
-                      ('lectureName', i[0]['lecturename']),
-                      ('thumbUrl', thumbnail),
-                      ('lecturer', i[0]['lecturer']),
-                      ('levelIdx', int(decimal.Decimal(i[0]['level']))),
-                      ('levelName', i[0]['level__levelname']),
-                      ('price', price),
-                      ('rating', i[0]['rating']),
-                      ('siteName', sitename),
-                      ]))
-
         overview_dict['result'] = overview_list
         return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
 
@@ -579,10 +609,12 @@ def Poprslist(request, pk=None):
     # data = pickle.load(open('knn_models/data.pkl', 'rb'))
     # querys = pickle.load(open('knn_models/query.pkl', 'rb'))
     recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
+    lectures = pickle.load(open('knn_models/lectures.pkl', 'rb'))
+
     nneigh = 25
-    krecommend = np.argsort(-recommend)[:nneigh]
+    krecommend = np.argsort(-recommend)[:240:5]
     cnt = Counter(krecommend.flatten())  # age_C데이터를 카운트한다.
-    krecommend = cnt.most_common()[100:2400:100]
+    krecommend = cnt.most_common()
 
     krecommend = [x for x, _ in krecommend]
     overview_list = []
@@ -590,33 +622,37 @@ def Poprslist(request, pk=None):
     overview_dict['isSuccess'] = 'true'
     overview_dict['code'] = 200
     overview_dict['message'] = '초기 추천컨텐츠 조회 성공'
+    num = 0
     for lectureidx in krecommend:
-        i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
-                                                                 'level', 'price', 'rating', 'level__levelname',
-                                                                 'siteinfo').distinct()
-        sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
-        price = i[0]['price']
-        if price == 0:
-            price = 'free'
-        elif price == -1:
-            price = 'membership'
+        if num == 24:
+            break
+        if lectureidx in lectures:
+            i = Lecture.objects.filter(lectureidx=lectureidx).values('siteinfo__logoimage','lectureidx', 'lecturename', 'thumburl', 'lecturer',
+                                                                     'level', 'price', 'rating', 'level__levelname',
+                                                                     'siteinfo').distinct()
+            sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
+            price = i[0]['price']
+            if price == 0:
+                price = 'free'
+            elif price == -1:
+                price = 'membership'
 
-       # 강의 썸네일 없을 경우
-        thumbnail = i[0]['thumburl']
-        if not thumbnail:
-            thumbnail = i[0]['siteinfo__logoimage']
+           # 강의 썸네일 없을 경우
+            thumbnail = i[0]['thumburl']
+            if not thumbnail:
+                thumbnail = i[0]['siteinfo__logoimage']
 
-        overview_list.append(
-            dict([('lectureIdx', i[0]['lectureidx']),
-                  ('lectureName', i[0]['lecturename']),
-                  ('thumbUrl', thumbnail),
-                  ('lecturer', i[0]['lecturer']),
-                  ('levelIdx', int(decimal.Decimal(i[0]['level']))),
-                  ('levelName', i[0]['level__levelname']),
-                  ('price', price),
-                  ('rating', i[0]['rating']),
-                  ('siteName', sitename),
-                  ]))
+            overview_list.append(
+                dict([('lectureIdx', i[0]['lectureidx']),
+                      ('lectureName', i[0]['lecturename']),
+                      ('thumbUrl', thumbnail),
+                      ('lecturer', i[0]['lecturer']),
+                      ('levelIdx', int(decimal.Decimal(i[0]['level']))),
+                      ('levelName', i[0]['level__levelname']),
+                      ('price', price),
+                      ('rating', i[0]['rating']),
+                      ('siteName', sitename),
+                      ]))
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
