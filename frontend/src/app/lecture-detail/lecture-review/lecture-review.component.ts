@@ -31,6 +31,8 @@ export class LectureReviewComponent implements OnInit {
       data => {
         this.reviews = data['result'];
         console.log(this.reviews);
+        console.log('maxPage :');
+        console.log(data['maxPage']);
       },
       error => console.log(error)
     );

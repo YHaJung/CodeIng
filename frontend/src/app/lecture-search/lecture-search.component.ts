@@ -59,6 +59,8 @@ export class LectureSearchComponent implements OnInit {
       data => {
         this.lectures = data['result'];
        // console.log(this.lectures);
+       console.log('maxPage :');
+        console.log(data['maxPage']);
       },
       error => console.log(error)
     );
