@@ -4,7 +4,7 @@ import time
 import jwt
 from django.conf.global_settings import SECRET_KEY
 import simplejson as json
-from django.db.models import Count
+from django.db.models import Count, Avg, Q
 
 from django.http import JsonResponse, HttpResponse, QueryDict
 from rest_framework.decorators import api_view
@@ -1823,6 +1823,55 @@ def favorite_site_check(request, pk):
 
     except Exception:
         return for_exception()
+
+
+
+@api_view(['GET'])
+def lecture_stats(request, pk):
+    try:
+
+        level = {1:'기초', 2:'초급', 3:'중급', 4:'고급', 5:'실무'}
+
+        pros_list = Reviewpros.objects.filter(review__lectureidx__lectureidx = pk,isdeleted='N').values('pros__prosidx', 'pros__prostype').annotate(count=Count('pros__prosidx')).order_by('-count')[:3]
+        cons_list = Reviewcons.objects.filter(review__lectureidx__lectureidx=pk, isdeleted='N').values('cons__considx', 'cons__constype').annotate(count=Count('cons__considx')).order_by('-count')[:3]
+
+        avg_level = Review.objects.filter(~Q(profile__level__levelidx=6), lectureidx__lectureidx = pk, isdeleted='N').values('profile__level__levelidx').annotate(count=Count('profile__level__levelidx')).order_by('-count')
+        final_level = level[avg_level[0]['profile__level__levelidx']]
+
+
+        final_pros = []
+        final_cons = []
+
+
+        for i in range(3):
+            final_cons.append(cons_list[i]['cons__constype'])
+            final_pros.append(pros_list[i]['pros__prostype'])
+
+
+
+
+
+
+        fav_dict = {}
+        fav_dict['isSuccess'] = 'true'
+        fav_dict['code'] = 200
+        fav_dict['message'] = '강의별 리뷰 통계 조회 성공'
+
+        fav_dict['result'] = dict([ ('pros', final_pros), ('cons', final_cons), ('avgLevel', final_level)])
+        return_value = json.dumps(fav_dict, indent=4, use_decimal=True, ensure_ascii=False)
+        return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
+
+    except Exception:
+        return for_exception()
+
+
+
+
+
+
+
+
+
 
 
 
