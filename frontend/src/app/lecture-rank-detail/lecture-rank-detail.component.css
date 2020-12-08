@@ -77,6 +77,10 @@ h2{
   font-weight: 700;
   min-width: 70px;
 }
+/*없을 때*/
+h2{
+  font-size: 16px;
+}
 
 /*page button*/
 .page-button-div {

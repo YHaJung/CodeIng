@@ -7,7 +7,11 @@
     text-align: right;
     font-size: 0.8em;
 }
-
+/*없을 때*/
+h2{
+  font-size: 16px;
+  padding-left: 5px;
+}
 
 /*page button*/
 .page-button-div {

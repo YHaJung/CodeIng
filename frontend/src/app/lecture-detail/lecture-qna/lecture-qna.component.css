@@ -15,6 +15,12 @@
   grid-gap : 10px
 }
 
+/*없을 때*/
+h2{
+  font-size: 16px;
+  padding: 20px;
+}
+
 /*page button*/
 .page-button-div {
   text-align: center;
