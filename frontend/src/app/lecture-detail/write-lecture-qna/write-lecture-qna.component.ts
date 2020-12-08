@@ -38,10 +38,12 @@ export class WriteLectureQnaComponent implements OnInit {
       this.images
     ).subscribe(
       result => {
-        console.log(result);
         window.location.href = "/lecturedetail/"+this.lectureIdx+"/qna/view";
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        alert(error.error.message);
+      }
     );
   }
 

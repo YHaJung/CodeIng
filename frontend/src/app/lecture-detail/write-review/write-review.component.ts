@@ -100,10 +100,14 @@ export class WriteReviewComponent implements OnInit {
       this.wirteReviewForm.value.improvement, this.pros, this.cons
     ).subscribe(
       result => {
-        console.log(result);
         window.location.href="/lecturedetail/"+this.lectureIdx+"/review/view";
       },
-      error => console.log(error)
+      error => {
+        console.log(error);
+        alert(error.error.message);
+        this.pros = [];
+        this.cons = [];
+      }
     );
     
   }
