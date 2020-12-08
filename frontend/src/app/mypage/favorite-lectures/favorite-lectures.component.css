@@ -17,3 +17,28 @@ h1{
     border-radius: 5px;
 }
 
+
+/*없을 때*/
+h2{
+    font-size: 16px;
+}
+
+/*page button*/
+.page-button-div {
+    text-align: center;
+    margin : 20px;
+  }
+  .page-button-div button{
+    background: transparent;
+    border: 0px solid;
+    font-size: 15px;
+    width: 28px;
+    text-align: center;
+  }
+  
+  .currentPageButton{/*select page*/
+    font-weight: 700;
+  }
+  .gray-page{
+    color:var(--light-gray);
+  }
