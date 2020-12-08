@@ -53,8 +53,7 @@ export class LectureQnaComponent implements OnInit {
         console.log(this.qnas);
         //maxpage 불러오기
         this.maxPage = data['maxPage'];
-        console.log('maxPage :');
-        console.log( this.maxPage );
+        console.log('maxPage:'+this.maxPage );
       },
       error => console.log(error)
     );
