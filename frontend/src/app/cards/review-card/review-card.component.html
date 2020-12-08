@@ -5,7 +5,7 @@
     <div class="userInfo">
       <h3>{{review.nickname}}</h3>
       <h2>
-        <span *ngIf="review.userlevel">#{{review.userlevel}}</span>&nbsp;
+        <span *ngIf="review.userlevel!='미정'">#{{review.userlevel}}&nbsp;</span>
         <span *ngIf="jobString">#{{jobString}}</span>
       </h2>
     </div>
