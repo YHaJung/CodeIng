@@ -1544,7 +1544,7 @@ def my_reviews(request):
 
 
         my_review_list=[]
-        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N').order_by('-reviewIdx')
+        my_review = Review.objects.filter(profile__userinfo__useridx=userIdx, isdeleted='N').order_by('-reviewidx')
         cnt = len(my_review) // 6
         if len(my_review) % 6 != 0:
             cnt = cnt + 1
