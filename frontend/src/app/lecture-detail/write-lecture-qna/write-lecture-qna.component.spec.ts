@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WriteLectureQnaComponent } from './write-lecture-qna.component';
 
@@ -6,7 +6,7 @@ describe('WriteLectureQnaComponent', () => {
   let component: WriteLectureQnaComponent;
   let fixture: ComponentFixture<WriteLectureQnaComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WriteLectureQnaComponent ]
     })
