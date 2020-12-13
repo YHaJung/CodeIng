@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MypageSpecificComponent } from './mypage-specific.component';
 
@@ -6,7 +6,7 @@ describe('MypageSpecificComponent', () => {
   let component: MypageSpecificComponent;
   let fixture: ComponentFixture<MypageSpecificComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ MypageSpecificComponent ]
     })

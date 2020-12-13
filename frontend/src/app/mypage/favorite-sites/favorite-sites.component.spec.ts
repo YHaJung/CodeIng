@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FavoriteSitesComponent } from './favorite-sites.component';
 
@@ -6,7 +6,7 @@ describe('FavoriteSitesComponent', () => {
   let component: FavoriteSitesComponent;
   let fixture: ComponentFixture<FavoriteSitesComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ FavoriteSitesComponent ]
     })

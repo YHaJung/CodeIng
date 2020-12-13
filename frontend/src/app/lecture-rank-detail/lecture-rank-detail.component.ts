@@ -15,7 +15,7 @@ export class LectureRankDetailComponent implements OnInit {
   //page
   pages = [1, 2, 3 ,4, 5];
   currentPage = 1;
-  maxPage=1;
+  maxPage=0;
   
   //category
   subcategories :any =[];

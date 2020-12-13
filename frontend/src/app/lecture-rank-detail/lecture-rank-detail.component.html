@@ -48,6 +48,7 @@
         <app-lecture-card [lecture]="lecture"></app-lecture-card>
       </article>
     </section>
+    <h2 *ngIf="lectures.length==0">&nbsp;&nbsp;&nbsp;해당하는 강의가 없습니다.</h2>
     
     <!--page buttons-->
     <div class="page-button-div">

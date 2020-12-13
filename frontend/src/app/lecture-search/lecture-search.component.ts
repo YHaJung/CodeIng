@@ -26,7 +26,7 @@ export class LectureSearchComponent implements OnInit {
 
   pages = [1, 2, 3 ,4, 5];
   currentPage = 1;
-  maxPage :number ;/*임시 */
+  maxPage =0 ;/*임시 */
 
   constructor(
     private route: ActivatedRoute,

@@ -140,8 +140,8 @@ export class ApiService {
 
   //마이페이지 상세
   //관심 강의
-  getFavoriteLectures(){
-    return this.httpClient.get(this.baseUrl+'favorite-lectures', {headers: this.headers});
+  getFavoriteLectures(page:number){
+    return this.httpClient.get(this.baseUrl+'favorite-lectures?page='+page, {headers: this.headers});
   }
   patchFavoriteLectures(lectureIdx){
     return this.httpClient.patch(this.baseUrl+'favorite-lectures?lectureIdx='+lectureIdx, {}, {headers: this.headers});
@@ -160,8 +160,8 @@ export class ApiService {
     return this.httpClient.get(this.baseUrl+'sites/'+siteIdx+'/check-favorite', {headers: this.headers});
   }
   //내가쓴 리뷰
-  getMyReviews(){
-    return this.httpClient.get(this.baseUrl +'my-reviews', {headers: this.headers});
+  getMyReviews(page:number){
+    return this.httpClient.get(this.baseUrl +'my-reviews?page='+page, {headers: this.headers});
   }
   deleteMyReview(lectureIdx:number, reviewIdx:number){
     return this.httpClient.delete(this.baseUrl +'lectures/'+lectureIdx+'/review/'+reviewIdx, {headers: this.headers});
