@@ -24,10 +24,12 @@ export class ApiService {
 
   //ranking
   getLectures() {
+
     return this.httpClient.get(this.baseUrl + 'lectures', {headers: this.headers});
   }
   //강의 검색
   searchLectures(page, keyword, rate, level, lowPrice, highPrice) {
+    console.log(environment.production+"입니다");
     return this.httpClient.get(this.baseUrl + 'lectures?page='+page+'&keyword='+keyword+'&rating='+rate+'&level='+level+'&lowerLimit='+lowPrice+'&upperLimit='+highPrice, {headers: this.headers});
   }
 
