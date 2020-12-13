@@ -76,7 +76,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'backend.urls'
 
 TEMPLATES = [
@@ -119,6 +119,9 @@ REST_FRAMWORK = {
 
 CORS_ORIGIN_WHITELIST = [
     "http://localhost:4200",
+    "https://www.codeing.site",
+    "https://codeing.site",
+    "https://54.180.222.75"
     # "http://127.0.0.1:9000"
 ]
 
