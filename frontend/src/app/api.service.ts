@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {CookieService} from 'ngx-cookie-service';
+import {environment} from "../environments/environment";
 
 // api명세서
 /*https://docs.google.com/spreadsheets/d/1nkWZT2nQCqGKkkvK8B28_yZliRay6ngx6i9yA_YdLZU/edit#gid=0 */
@@ -10,7 +11,7 @@ import {CookieService} from 'ngx-cookie-service';
 })
 export class ApiService {
   token = this.cookieService.get('token');
-  baseUrl = 'https://www.coconerd.tk/';//'http://3.34.74.250/';//  'http://127.0.0.1:8000/';
+  baseUrl = environment.API_URL;//'http://3.34.74.250/';//  'http://127.0.0.1:8000/';
   headers = new HttpHeaders({
     'Content-Type': 'application/json',
     Authorization: this.token
