@@ -39,7 +39,8 @@ import {MainNavModule} from './nav/main-nav/main-nav.module';
 import { AvatarModule } from 'ngx-avatar';
 
 const appRoutes: Routes = [
-  {path: '', pathMatch: 'full', redirectTo: 'home'},
+  // {path: '', pathMatch: 'full', redirectTo: 'home'},
+  {path: '', pathMatch: 'full', redirectTo: 'signin'},
   {path: 'lecturereview/:id', redirectTo: 'lecturereview/'},
   {path: 'lectureqa/:id', redirectTo: 'lectureqa/'},
   // {path: 'lecturerankdetail', component: LectureRankDetailComponent},

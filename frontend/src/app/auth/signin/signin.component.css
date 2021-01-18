@@ -1,19 +1,28 @@
 body{margin: 0; padding: 0;}
 .whole-page{
     background-color: var(--main-blue);
-    padding: 10vw 30vw 10vw 30vw;
+    padding: 10vw;
+    /*padding: 10vw 30vw 10vw 30vw;*/
+    text-align: center;
     height: 100vh;
 }
 
 .white-logo{
   width: 250px;
   height: 70px;
-  margin : 70px auto; /*Z*/
+  margin : 20px auto; /*Z*/
 }
-
+.typo {
+  color: white;
+  font-family: var(--main-font);
+  font-weight: bold;
+  font-size: 25px;
+  text-align: center;
+}
 form {                                /*logo 제외 전체*/
   display: grid;
   grid-template-columns: 4fr 1fr;
+  padding: 1vw 15vw 0vw 15vw;
 }
 
 input{
@@ -37,13 +46,19 @@ button {                              /*'로그인' 버튼*/
 
 
 .singup-div{                      /*'회원가입'*/
-  text-align: left;
+  /*text-align: left;*/
+  text-align: center;
   margin-top: 40px;
   font-family: var(--main-font);
   font-style: normal;
   font-weight: 500;
-  font-size: 15px;
-  line-height: 15px;
+  font-size: 18px;
+  line-height: 25px;
+  color: white;
+}
+.atag {
+  margin-left:15px;
+  font-weight: 600;
 }
 .singup-div a{
   color: #FFFFFF;

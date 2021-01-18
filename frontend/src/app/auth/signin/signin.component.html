@@ -1,16 +1,23 @@
 <div class="whole-page">
-  <div class="white-logo" routerLink="/"></div>
+  <div class="white-logo" routerLink="/home"></div>
+  <h3 class="typo">이제 모든 코딩 강의 모아보자!</h3>
   <form class="middle" [formGroup]="signinForm" (submit)="login()">
     <div>
-      <input class = "idpwd" type="email" formControlName="id" placeholder="아이디(이메일)">
+      <input class="idpwd" type="email" formControlName="id" placeholder="아이디(이메일)">
       <br/>
-      <input class = "idpwd" type="password" formControlName="pw" placeholder="비밀번호">
-      <div class="singup-div">
-        <a href="/signup">회원가입</a>
-      </div>
+      <input class="idpwd" type="password" formControlName="pw" placeholder="비밀번호">
     </div>
     <button class="login" type="submit">로그인</button>
   </form>
+  <div class="singup-div">
+    정식 출시 전 회원이 되어 이용해보고
+    <br/>
+    가장 먼저 소식을 받아보아 무료 이벤트의 주인공이 되세요.
+    <br/>
+    <br/>
+    <a class="atag" href="/signup">회원가입하러 가기</a>
+    <a class="atag" href="/home">서비스 이용해보기</a>
+  </div>
 </div>
 
 
