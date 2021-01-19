@@ -14,9 +14,11 @@ img{
 }
 h1{   /*사이트이름*/
   font-size: 1.0em;
+  font-weight:600;
 }
 h2{   /*강의이름*/
-  font-size: 1.1em;
+  /*font-size: 1.1em;*/
+  font-size: 1.0em;
   overflow: hidden;
   line-height: 1.2;
   height: 2.4em;
