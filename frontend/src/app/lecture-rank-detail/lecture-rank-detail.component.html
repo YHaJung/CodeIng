@@ -1,11 +1,11 @@
 <app-main></app-main>
 <app-main-nav></app-main-nav>
-
-<div class="title">
-  <h1 *ngIf="currentSubCategoryName=='전체'">{{currentCategoryName}} 랭킹</h1>
-  <h1 *ngIf="currentSubCategoryName!='전체'">{{currentCategoryName}}({{currentSubCategoryName}}) 랭킹</h1>
+<div clas="title-parent">
+<!--<div class="title">-->
+<!--  <h1 *ngIf="currentSubCategoryName=='전체'">{{currentCategoryName}} 랭킹</h1>-->
+<!--  <h1 *ngIf="currentSubCategoryName!='전체'">{{currentCategoryName}}({{currentSubCategoryName}}) 랭킹</h1>-->
+<!--</div>-->
 </div>
-
 <!----main---->
 <div id="main-ranking">
   <div id="left">
@@ -25,6 +25,10 @@
 
   <div id="center">
     <!--subcategory-->
+    <div class="title">
+      <h1 *ngIf="currentSubCategoryName=='전체'">{{currentCategoryName}} 랭킹</h1>
+      <h1 *ngIf="currentSubCategoryName!='전체'">{{currentCategoryName}}({{currentSubCategoryName}}) 랭킹</h1>
+    </div>
     <div id="subcategory-button-field">
       <button class = "subcategory-button"
               [ngClass]="{'currentCategory':currentSubCategoryIdx==0}"
@@ -49,7 +53,7 @@
       </article>
     </section>
     <h2 *ngIf="lectures.length==0">&nbsp;&nbsp;&nbsp;해당하는 강의가 없습니다.</h2>
-    
+
     <!--page buttons-->
     <div class="page-button-div">
       <button *ngIf="pages[0]==1"></button> <!--<버튼 없어도 배열 맞추기-->

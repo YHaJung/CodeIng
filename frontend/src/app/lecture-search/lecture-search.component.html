@@ -9,28 +9,28 @@
         (mouseleave) = "levelHovered=0"
         [ngClass]="{'orange':levelHovered >= level}"
     -->
-    <div>
+    <p>
       평점(이상)<br/><!-- class="orange" -->
       <fa-icon
-        [icon]="star" 
-        *ngFor="let rate of [1,2,3,4,5]" 
+        [icon]="star"
+        *ngFor="let rate of [1,2,3,4,5]"
         (click)="rateClicked(rate)"
         [ngClass]="{'orange':currentRate >= rate}"
       ></fa-icon>
-    </div>
-    <div class="test">
+    </p>
+    <p class="test">
       수준<br/>
       <fa-icon
-        [icon]="star" 
+        [icon]="star"
         *ngFor="let level of [1,2,3,4,5]"
         (click)="levelClicked(level)"
         [ngClass]="{'orange':currentLevel >= level}"
       ></fa-icon>
-    </div>
-    <div>
+    </p>
+    <p>
       가격<br/>
       <ngx-slider [(value)]="lowPrice" [(highValue)]= "highPrice" [options]="options" (click)="priceClicked()"></ngx-slider>
-    </div>
+    </p>
   </section>
   <section>
     <section *ngFor="let lecture of lectures ">

@@ -10,9 +10,9 @@
         <a type="button" (click)="logout()">로그아웃</a>
         <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
     </nav>
-    
+
     <div id="middle">
-        <div class="logo" routerLink='/home' type="button" (click)="gohome()"></div>
+        <div class="logo" routerLink='/lecturerankdetail' type="button" (click)="gohome()"></div>
         <form [formGroup]="searchForm" (submit)="searchLectures()">
             <input type="text" [(ngModel)]="keyword" formControlName="keywordForm" placeholder="{{searchtext}}"/>
             <button type="submit" routerLink="/lecturesearch/{{keyword}}">검색</button>
