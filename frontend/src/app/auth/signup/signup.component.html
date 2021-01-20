@@ -1,0 +1,49 @@
+<div id="whole-page">
+    <div class="logo" routerLink="/"></div>
+    <form [formGroup]="signupForm" (submit)="singup()">
+        <section id="createAccount" *ngIf="page==0">
+            <h1>계정 생성</h1>
+            <input type="email" formControlName="id" placeholder="아이디(이메일)"><br/><br/>
+            <input type="password" formControlName="pw" placeholder="비밀번호"><br/><br/>
+            <input type="password" formControlName="pwCheck" placeholder="비밀번호 확인"><br/><br/>
+            <input type="text" formControlName="name" placeholder="이름"><br/><br/>
+            <input type="string" formControlName="phoneNum" placeholder="휴대전화 번호"><br/><br/>
+                <!--
+                <button>인증번호 전송</button>
+                <br/>
+                <input type="number" formControlName="certificationNum" placeholder="인증번호 입력">
+                <button>확인</button>
+                -->
+            <button id="next-button"(click)="next()">다음</button>
+        </section>
+
+        <section id="createProfile" *ngIf="page==1">
+            <h1>프로필 생성</h1>
+                <div>
+                    <input type="text" formControlName="nickname" placeholder="닉네임">
+                </div>
+                <br/>
+                <div>
+                    <input type="text" formControlName="school" placeholder="학교">
+                    <!--
+                    <br/>
+                    <input type="radio" formControlName="major" value="csMajor">컴퓨터공학 전공자
+                    <input type="radio" formControlName="major" value="nonMajor">비전공자
+                    <br/>
+                    <input type="radio" formControlName="job" value="student">학생
+                    <input type="radio" formControlName="job" value="developer">개발직군
+                    <input type="radio" formControlName="job" value="nonDeveloper">비개발직군
+                </div>
+                <br/>
+                <div>
+                    <input type="text" formControlName="interestLanguage" placeholder="관심있는 언어">
+                    <input type="text" formControlName="interestField" placeholder="관심있는 분야">-->
+                </div>
+                <br/>
+                <div id="button-col">
+                    <button id="prev-button" (click)="back()">이전</button>
+                    <button id="signup-button" type="submit">가입하기</button>
+                </div>
+        </section>
+    </form>
+</div>

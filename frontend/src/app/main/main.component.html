@@ -1,0 +1,21 @@
+<section id="top-bar">
+    <nav class="nav-auth" *ngIf="!token">
+        <a href="/signin">로그인</a>&nbsp;
+        <a href="/signup">회원가입</a>&nbsp;
+        <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
+    </nav>
+    <nav class="nav-auth" *ngIf="token">
+        <span>반갑습니다, {{nickname}}님!</span>
+        <a href="/mypage">마이페이지</a>&nbsp;
+        <a type="button" (click)="logout()">로그아웃</a>
+        <!--  <button routerLink="/signup" type="button" class="btn btn-primary">회원가입</button>-->
+    </nav>
+
+    <div id="middle">
+        <div class="logo" routerLink='/lecturerankdetail' type="button" (click)="gohome()"></div>
+        <form [formGroup]="searchForm" (submit)="searchLectures()">
+            <input type="text" [(ngModel)]="keyword" formControlName="keywordForm" placeholder="{{searchtext}}"/>
+            <button type="submit" routerLink="/lecturesearch/{{keyword}}">검색</button>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,77 @@
+<article>
+
+  <!--normal review-->
+  <div *ngIf="review.nickname" class="normal-review">
+    <div class="userInfo">
+      <h3>{{review.nickname}}</h3>
+      <h2>
+        <span *ngIf="review.userlevel!='미정'">#{{review.userlevel}}&nbsp;</span>
+        <span *ngIf="jobString">#{{jobString}}</span>
+      </h2>
+    </div>
+  </div>
+
+  <!--myreview-->
+  <div *ngIf="review.lectureName">  
+    <div id="lectureName">{{review.lectureName}}</div>
+    <div class="edit-button-div">
+      <!--<fa-icon [icon]="edit" (click)="editReview()"></fa-icon>&nbsp; -->
+      
+      <fa-icon [icon]="delete" (click)="deleteReview()"></fa-icon>
+    </div>
+  </div>
+
+
+  <div class="main">
+    <section>
+      <div>
+        <h1>총점</h1>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 0}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 1}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 2}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 3}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':review.totalRating > 4}"></fa-icon>
+      </div>
+      <br/>
+      <div>
+        <h1>강의력</h1>
+        <fa-icon
+          [icon]="star"
+          *ngFor="let num of [0,1,2,3,4]"
+          [ngClass]="{'orange':review.teachingpowerRating > num}"
+        ></fa-icon>
+      </div>
+      <br/>
+      <div>
+        <h1>가격</h1>
+        <fa-icon
+          [icon]="star"
+          *ngFor="let num of [0,1,2,3,4]"
+          [ngClass]="{'orange':review.priceRating > num}"
+        ></fa-icon>
+      </div>
+    </section>
+    <section>
+      <div>
+        <h1>장점</h1>
+        <p>{{review.pros}}</p>
+      </div>
+      <br/>
+      <div>
+        <h1>단점</h1>
+        <p>{{review.cons}}</p>
+      </div>
+      <br/>
+      <div>
+        <h1>개선점</h1>
+        <p>{{review.improvement}}</p>
+      </div>
+      <!--
+      <div class="likes-div">
+        <fa-icon [icon]="heart" class="heart-icon"></fa-icon>
+        {{review.likesCount}}
+      </div>
+      -->
+    </section>
+  </div>
+</article>

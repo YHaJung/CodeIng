@@ -1,0 +1,14 @@
+<article type="button" routerLink="/lecturedetail/{{lecture.lectureIdx}}/review/view">
+    <img src="{{lecture.thumbUrl}}"/>
+    <div class="right-div">
+        <h1>{{lecture.siteinfo.siteName}}</h1>
+        <h2>{{lecture.lectureName}}</h2>
+        <h3>{{lecture.professor}}</h3>
+        <div class="likes-div">
+            <fa-icon [icon]="heart" class="heart-icon"></fa-icon>
+            <!--{{lecture.likesCount}}-->
+        </div>
+    </div>
+    
+</article>
+

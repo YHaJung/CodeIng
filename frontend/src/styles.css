@@ -1,0 +1,55 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import url('https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Noto+Sans&family=Noto+Sans+KR&display=swap');
+/*font다운로드 경로(구글 폰트) https://fonts.google.com/specimen/Noto+Sans?selection.family=Lily+Script+One|Noto+Sans&query=Noto+Sans&sidebar.open=true*/
+body{
+  font-family: var(--main-font);
+  color:var(--dark-gray);
+  margin-bottom: 40px;
+  font-weight: 500;
+}
+button{
+  color:var(--dark-gray);
+}
+a{
+  color:var(--dark-gray);
+  font-weight: 500;
+}
+
+
+/*main colors*/
+:root{/*star - EBEBEB*/
+  --main-gray:#464646;
+  --main-blue:#0155FB;
+  --main-yellow:#FFC000;
+  
+  
+  --main-color:#0155FB;
+  --point-color:#FFC000;
+  --dark-gray:#464646;
+  --light-gray:#A5A5A5;
+  
+  --main-body-margin:4vh 12vw 4vh 12vw;
+
+  --main-font:'Noto Sans', sans-serif;
+  /* 적용가능 글씨채
+  font-family: 'Lily Script One', cursive;
+  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Noto Sans KR', sans-serif;
+  */
+}
+
+/*logo*/
+.logo {
+  background-image: url("./assets/images/logo.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+  /* image 6 */
+
+}
+
+.white-logo {
+  background-image: url("./assets/images/Coding_logo_Final_B.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}

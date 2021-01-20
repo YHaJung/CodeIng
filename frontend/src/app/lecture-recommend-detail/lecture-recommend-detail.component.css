@@ -1,0 +1,18 @@
+/*제목*/
+.title{
+  margin: 0px 150px 0px 150px;
+  text-align: center;
+  padding: 30px;
+}
+h1{
+  font-size: 21px;
+}
+
+#main-recommend{
+  margin: 0px 150px 85px 150px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 12px;
+}
+
+

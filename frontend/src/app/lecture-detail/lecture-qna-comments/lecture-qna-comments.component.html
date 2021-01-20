@@ -1,0 +1,22 @@
+<article>
+    <section class="question-section">
+        <h3>{{qna.createAt}}</h3>
+        <h1>{{qna.qnaTitle}}</h1>
+        <h2>{{qna.qnaDes}}</h2>
+    </section>
+    <section  class="comment-section">
+        <div class="comment-card" *ngFor="let comment of comments">
+            <h4>{{comment.nickname}}</h4>
+            <h5>{{comment.commentDes}}</h5>
+        </div>
+    </section>
+    <section>
+        <form [formGroup]="wirteCommentForm" (submit)="createComment()">
+            <textarea type="text" formControlName="comment" placeholder="답글을 입력하세요."></textarea>
+            <button type="submit">입력</button>
+        </form>
+        <div class="goback-div">
+            <a href="/lecturedetail/{{lectureIdx}}/qna/view">돌아가기</a>
+        </div>
+    </section>
+</article>

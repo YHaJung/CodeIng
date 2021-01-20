@@ -1,0 +1,75 @@
+#main-search{
+    margin: var(--main-body-margin);
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    grid-gap: 20px;
+}
+p{
+  font-weight: 600;
+}
+/*side*/
+#side{
+    width: 80%;
+}
+#side div{
+    margin-bottom: 15px;
+}
+fa-icon.orange{
+    color:var(--point-color);
+}
+.orange{
+    color:var(--point-color);
+}
+
+#side div fa-icon{
+    cursor: pointer; /*mouse를 pointer모양으로*/
+    font-size: 1em;
+}
+/*없을 때*/
+h2{
+    font-size: 16px;
+  }
+
+
+/*page button*/
+.page-button-div {
+    text-align: center;
+  }
+  .page-button-div button{
+    background: transparent;
+    border: 0px solid;
+    font-size: 15px;
+    width: 28px;
+    text-align: center;
+  }
+
+  .currentPageButton{/*select page*/
+    font-weight: 700;
+  }
+  .gray-page{
+    color:var(--light-gray);
+  }
+
+  /*slider*/
+  /*ngx-slider{*/
+::ng-deep .ngx-slider .ngx-slider-pointer{
+    width: 8px !important;
+    height: 16px !important;;
+    background-color: var(--dark-gray) !important;
+    border-top-left-radius: 3px !important;;
+    border-top-right-radius: 3px !important;;
+}
+::ng-deep .ngx-slider .ngx-slider-selection{
+    background-color:var(--point-color) !important;
+}
+/*작은 동그라미 없애기*/
+::ng-deep .ngx-slider .ngx-slider-pointer:after {
+    display: none !important;
+}
+/*최대최소값 숨기기*/
+::ng-deep .ngx-slider .ngx-slider-floor{
+    display: none !important;
+}
+::ng-deep .ngx-slider .ngx-slider-ceil{
+    display: none !important;
+}

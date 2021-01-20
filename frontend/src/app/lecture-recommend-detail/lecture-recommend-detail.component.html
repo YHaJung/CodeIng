@@ -1,0 +1,13 @@
+<app-main></app-main>
+<app-main-nav></app-main-nav>
+<div class="title">
+  <h1 *ngIf="token"> 맞춤 추천 컨텐츠 </h1>
+  <h1 *ngIf="!token">오늘의 추천 컨텐츠</h1>
+</div>
+
+<section id="main-recommend">
+  <div class="lecturecard" *ngFor="let lecture of lectures">
+    <app-lecture-card [lecture]="lecture"></app-lecture-card>
+  </div>
+</section>
+

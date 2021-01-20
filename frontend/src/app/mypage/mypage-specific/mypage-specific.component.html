@@ -1,0 +1,23 @@
+<app-main></app-main>
+<div class="whole">
+    <!--left-->
+    <div>
+        <section class="userInfo-section">
+            <h1>{{personalInfo.name}}</h1>
+            <h2>{{personalInfo.nickname}}</h2>
+            <p>
+                <span *ngFor="let category of profile.category"> #{{category.categoryName}} </span>
+                <span *ngFor="let subcategory of profile.subcategory"> #{{subcategory.subcategoryName}} </span> 
+            </p>
+        </section>
+        <section class="nav-section">
+            <app-mypage-nav class="nav-button" [key]="mypagekey"></app-mypage-nav>
+        </section>
+    </div>
+    <div class="center">
+        <app-favorite-lectures *ngIf="mypagekey==1"></app-favorite-lectures>
+        <app-favorite-sites *ngIf="mypagekey==2"></app-favorite-sites>
+        <app-myreviews *ngIf="mypagekey==3"></app-myreviews>
+        <app-revise-userinfo *ngIf="mypagekey==4"></app-revise-userinfo>
+    </div>
+</div>

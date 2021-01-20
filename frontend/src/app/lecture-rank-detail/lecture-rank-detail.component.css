@@ -1,0 +1,113 @@
+/*제목*/
+.title{
+  text-align: center;
+  padding-bottom: 20px;
+  /*padding: 30px 40vw 30px 40vw;*/
+}
+.title-parent {
+}
+h1{
+  font-size: 21px;
+}
+
+#main-ranking{  /*전체*/
+  margin: 0px 230px 85px 85px;
+  padding-top:50px;
+  display: grid;
+
+  grid-template-columns: 1fr 3fr;
+  grid-gap: 20px;
+}
+
+ /*category field*/
+#left {
+  text-align: center;
+  width: 170px;
+  margin-left: 30px;
+}
+h2{
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 35px;
+}
+#category-button-field{
+  background: var(--main-color);
+  border-radius: 5px;
+  color: #FFFFFF;
+  padding: 11px 0px 11px 0px;
+  width: 100%;
+}
+.category-button{
+  width:100%;
+  padding: 9px 0px 9px 0px;
+  background: transparent;
+  color:#ffffff;
+  border: 0;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+}
+
+
+/*subcategory field*/
+.subcategory-button{
+  min-width: 85px;
+  height: 36px;
+  background: var(--main-color);
+  font-weight: 500;
+  font-size: 16px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  border: 0;
+  margin : 3px;
+  text-align: center;
+  color: #FFFFFF;
+
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+/*lecture card*/
+.lecture-card-section{
+  margin: 30px 100px 50px 0px;
+}
+.lecture-card-section article{
+  display: grid;
+  grid-template-columns: 1fr 9fr;
+}
+.lecture-card-section article span{
+  font-size: 22px;
+  line-height: 162px;
+  vertical-align: middle;
+  font-weight: 700;
+  min-width: 70px;
+}
+/*없을 때*/
+h2{
+  font-size: 16px;
+}
+
+/*page button*/
+.page-button-div {
+  text-align: center;
+}
+.page-button-div button{
+  background: transparent;
+  border: 0px solid;
+  font-size: 15px;
+  width: 28px;
+  text-align: center;
+}
+
+.currentPageButton{/*select page*/
+  font-weight: 700;
+}
+.gray-page{
+  color:var(--light-gray);
+}
+
+
+/*select category*/
+.currentCategory{     /*subcategory에서도 사용*/
+  background-color: var(--point-color);
+  color:#000000;
+}

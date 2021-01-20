@@ -1,0 +1,74 @@
+<section class="whole-section">
+    <div class="userinfo-div">
+        <h1>{{user.nickname}}</h1>
+        <h2>{{user.email}}</h2>
+    </div>
+    <form [formGroup]="wirteReviewForm" (submit)="creatReview()">
+        <div class="grid-layout">
+            <div id="left">
+                <div>
+                    <input type="radio" formControlName="satisfy" value="Y"><label>&nbsp;만족</label>&nbsp;
+                    <input type="radio" formControlName="satisfy" value="N"><label>&nbsp;불만족</label>
+                </div>
+                <br/>
+                <div>
+                    <label>평점</label><br/>
+                    <fa-icon
+                      [icon]="star" 
+                      *ngFor="let rate of [1,2,3,4,5]"
+                      (click)="rateClicked(rate)"
+                      [ngClass]="{'orange':clickedRate >= rate}"
+                    ></fa-icon>
+                </div>
+                <br/>
+                <div>
+                    <label>수준(난이도)</label><br/>
+                    <fa-icon
+                      [icon]="star" 
+                      *ngFor="let level of [1,2,3,4,5]"
+                      (click)="levelClicked(level)"
+                      [ngClass]="{'orange':clickedLevel >= level}"
+                    ></fa-icon>
+                </div>
+                <br/>
+                <div>
+                    <label>가격만족도</label><br/>
+                    <fa-icon
+                      [icon]="star" 
+                      *ngFor="let price of [1,2,3,4,5]"
+                      (click)="priceClicked(price)"
+                      [ngClass]="{'orange':clickedPrice >=price}"
+                    ></fa-icon>
+                </div>
+            </div>
+    
+            <div id="right">
+                <label> 개선사항 </label><br/>
+                <textarea type="text" formControlName="improvement"></textarea>
+                <br/><br/>
+                <label> 장점 </label><br/>
+                <p><input type="checkbox" formControlName="pro1" value="1">&nbsp;설명이 친절해요</p>
+                <p><input type="checkbox" formControlName="pro2" value="2">&nbsp;수강생과 소통이 잘돼요</p>
+                <p><input type="checkbox" formControlName="pro3" value="3">&nbsp;집중이 잘돼요</p>
+                <p><input type="checkbox" formControlName="pro4" value="4">&nbsp;커리큘럼이 체계적이에요</p>
+                <p><input type="checkbox" formControlName="pro5" value="5">&nbsp;강의자료가 풍부해요</p>
+                <p><input type="checkbox" formControlName="pro6" value="6">&nbsp;없음</p>
+                <br/>
+                <label> 단점 </label>
+                <p><input type="checkbox" formControlName="con1" value="1">&nbsp;지루해요</p>
+                <p><input type="checkbox" formControlName="con2" value="2">&nbsp;발음이 이해하기 힘들어요</p>
+                <p><input type="checkbox" formControlName="con3" value="3">&nbsp;소리가 너무 작아요</p>
+                <p><input type="checkbox" formControlName="con4" value="4">&nbsp;소리가 너무 커요</p>
+                <p><input type="checkbox" formControlName="con5" value="5">&nbsp;강의자료가 부실해요</p>
+                <p><input type="checkbox" formControlName="con6" value="6">&nbsp;커리큘럼이 아쉬워요</p>
+                <p><input type="checkbox" formControlName="con7" value="7">&nbsp;설명이 불친절해요</p>
+                <p><input type="checkbox" formControlName="con8" value="8">&nbsp;없음</p>
+            </div>
+        </div>
+        <br/>
+        <section class="button-section">
+            <button (click)="cancealWriting()">취소</button>
+            <button>저장</button>
+        </section>
+    </form>
+</section>

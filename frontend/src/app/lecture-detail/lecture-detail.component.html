@@ -1,0 +1,59 @@
+<app-main></app-main>
+<div class="main-search">
+  <div class="upper-div">
+    <section class="side">
+      <div>
+        평점<br/><!-- class="orange" -->
+        <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 0}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 1}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 2}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 3}"></fa-icon>
+        <fa-icon [icon]="star" [ngClass]="{'orange':avg_rating > 4}"></fa-icon>
+      </div>
+      <div>
+        수준 : {{lectureDetail.levelName}}
+      </div>
+      <div>
+        <p>
+          <span>가격 : </span>
+          <span *ngIf="lectureDetail.price!='free'">{{lectureDetail.price}}원</span>
+          <span *ngIf="lectureDetail.price=='free'">무료</span>
+        </p>
+        
+      </div>
+    </section>
+
+    <section class="content">
+      <h1>
+        {{lectureDetail.siteName}}
+        <fa-icon [icon]="check" [ngClass]="{'orange': favoriteSite==1}" type="button" (click)="setFavoriteSite()"></fa-icon>
+      </h1>
+      <h2>
+        {{lectureDetail.lectureName}}
+        <fa-icon class="bookmark" [icon]="bookmark" [ngClass]="{'orange': favoriteLecture==1}" type="button" (click)="setFavoriteLecture()"></fa-icon>
+      </h2>
+      <h3>
+        {{lectureDetail.lectureLink}} &nbsp;
+        <a href="{{lectureDetail.lectureLink}}">수강하러 가기</a>
+      </h3>
+      <br/>
+      <div class="nav-div">
+        <a href="/lecturedetail/{{lectureIdx}}/review/view" [ngClass]="{'clicked-menu':page=='review'}">리뷰</a>&nbsp;
+        <a href="/lecturedetail/{{lectureIdx}}/qna/view"  [ngClass]="{'clicked-menu':page=='qna'}">QnA</a>
+      </div>
+      <app-lecture-review *ngIf="page=='review'"></app-lecture-review>
+      <app-lecture-qna  *ngIf="page=='qna'"></app-lecture-qna>
+    </section>
+  </div>
+  <div class="downer-div">
+      <h4>유사한 강의 추천</h4>
+      <div class="recommend-recture-card">
+        <app-lecture-card-small
+         *ngFor="let lecture of similarLectures"
+          [lecture]="lecture"
+        >
+      </app-lecture-card-small>
+      </div>
+  </div>
+    
+</div>

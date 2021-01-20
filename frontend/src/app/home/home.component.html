@@ -1,0 +1,54 @@
+<app-main></app-main>
+<app-main-nav></app-main-nav>
+
+<br/>
+
+<div id="main-home">
+  <!--lecture ranking-->
+  <section>
+    <h1>프로그램 주제별 랭킹</h1>
+    <div>
+      <a href="/lecturerankdetail"> <button class="goWhole">전체보기</button></a>
+      <div class='pagebutton'>
+        <button (click)="rankingPageMinus()"><</button>
+        <button (click)="rankingPagePuls()">></button>
+      </div>
+    </div>
+    <div class="lectures-div">
+      <article *ngFor="let lecture of rankingdoverview;">
+        <h2 *ngIf="(rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5) < 10">0{{rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5}}</h2>
+        <h2 *ngIf="(rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5) >= 10">{{rankingdoverview.indexOf(lecture) + 1 + (rankingPage-1)*5}}</h2>
+        <app-lecture-card-small
+          [lecture]="lecture">
+        </app-lecture-card-small>
+      </article>
+    </div>
+  </section>
+
+  <br/>
+  <br/>
+
+  <!--lecture ranking-->
+  <section>
+    <h1 *ngIf="!token">오늘의 추천 콘텐츠</h1>
+    <h1 *ngIf="token">{{nickname}} 님을 위한 추천 콘텐츠</h1>
+    <div>
+      <a href="/lecturerecommenddetail"> <button class="goWhole">전체보기</button></a>
+      <div class='pagebutton'>
+        <button (click)="recommendPageMinus()"><</button>
+        <button (click)="recommendPagePuls()">></button>
+      </div>
+    </div>
+    <div class="lectures-div">
+      <article *ngFor="let lecture of recommendoverview;">
+        <app-lecture-card-small
+          [lecture]="lecture">
+        </app-lecture-card-small>
+      </article>
+    </div>
+  </section>
+</div>
+<br/>
+<br/>
+
+

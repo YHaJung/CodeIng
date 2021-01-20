@@ -1,0 +1,29 @@
+article{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-gap : 5px;
+    padding: 21px;
+}
+img{
+    width: 87px;
+    height: 87px;
+    border: 1px solid var(--light-gray);
+    border-radius: 5px;
+}
+
+.right-div{
+    padding: 5px;
+}
+
+h1{
+    font-size: 1.2em;
+}
+
+.likes-div{
+    text-align: right;
+    font-size: 0.8em;
+}
+.heart-icon{
+    font-size: 0.8em;
+    color: #F3143C;
+}

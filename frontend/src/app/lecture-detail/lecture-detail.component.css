@@ -1,0 +1,66 @@
+.main-search {
+  margin: var(--main-body-margin);
+  background-color: #F6F7FA;
+  padding: 20px;
+  min-width: 600px;
+  
+}
+.upper-div{
+  display:grid;
+  grid-template-columns: 1fr 3fr;
+}
+
+/*side*/
+.side{
+  padding: 10%;
+  padding-top: 40%;
+}
+.side div {
+  margin-bottom: 15px;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+fa-icon.orange { /*can delete [icon="star"] or fa-icon[icon="star"]*/
+  color: var(--main-yellow);
+}
+
+/*search-main*/
+
+h1{
+  font-size: 1.1em;
+}
+h2{
+  font-size: 1.5em;
+}
+h3{
+  font-size: 0.9em;
+}
+.bookmark{
+  font-size: 0.8em;
+}
+
+.nav-div{
+  margin-bottom: 10px;
+}
+.content .clicked-menu {
+  border-bottom: 4px solid var(--dark-gray);
+}
+
+
+
+/*유사한 강의 추천*/
+.downer-div{
+  margin:20px;
+}
+.recommend-recture-card{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-gap : 10px;
+  margin-top: 20px;
+}
+h4{
+  font-size: 22px;
+  font-weight: 600;
+}
+
