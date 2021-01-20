@@ -1,23 +1,16 @@
 body{margin: 0; padding: 0;}
+
 .whole-page{
     background-color: var(--main-blue);
-<<<<<<< HEAD
-    padding: 10vw 30vw 10vw 30vw;
-=======
     padding: 10vw;
     /*padding: 10vw 30vw 10vw 30vw;*/
     text-align: center;
->>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
     height: 100vh;
 }
 
 .white-logo{
   width: 250px;
   height: 70px;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
   margin : 20px auto; /*Z*/
 }
 .typo {
@@ -27,22 +20,13 @@ body{margin: 0; padding: 0;}
   font-weight: 800;
   font-size: 25px;
   text-align: center;
-<<<<<<< HEAD
-=======
-  margin : 70px auto; /*Z*/
->>>>>>> parent of 71074b5b... landing page
+
 }
 
 form {                                /*logo 제외 전체*/
   display: grid;
   grid-template-columns: 4fr 1fr;
-=======
-}
-form {                                /*logo 제외 전체*/
-  display: grid;
-  grid-template-columns: 4fr 1fr;
   padding: 1vw 15vw 0vw 15vw;
->>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
 }
 
 input{
@@ -57,7 +41,8 @@ button {                              /*'로그인' 버튼*/
   width: 100%;
   height: 80px;
 
-  background: #FFFFFF;
+  background: var(--main-yellow);
+  color: var(--main-gray);
   border: 0.5px solid var(--light-gray);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   font-weight: 600;
@@ -66,11 +51,7 @@ button {                              /*'로그인' 버튼*/
 
 
 .singup-div{                      /*'회원가입'*/
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
-  /*text-align: left;*/
+
   text-align: center;
   margin-top: 18px;
   font-family: var(--main-font);
@@ -86,10 +67,6 @@ button {                              /*'로그인' 버튼*/
   color: white;
 }
 .atag a{
-  margin:5px;
-  font-weight: 400;
-<<<<<<< HEAD
-=======
   text-align: left;
   margin-top: 40px;
   font-family: var(--main-font);
@@ -97,9 +74,7 @@ button {                              /*'로그인' 버튼*/
   font-weight: 500;
   font-size: 15px;
   line-height: 15px;
->>>>>>> parent of 71074b5b... landing page
-=======
->>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
+  margin-right: 15px;
 }
 .singup-div a{
   color: #FFFFFF;
