@@ -37,6 +37,7 @@ import {LectureCardMiddleModule} from './cards/lecture-card-middle/lecture-card-
 import {MainNavModule} from './nav/main-nav/main-nav.module';
 
 import { AvatarModule } from 'ngx-avatar';
+import {GoogleAnalyticsService} from './google-analytics.service';
 
 const appRoutes: Routes = [
   // {path: '', pathMatch: 'full', redirectTo: 'home'},

@@ -37,6 +37,9 @@ ALLOWED_HOSTS = [".ap-northeast-2.compute.amazonaws.com",
                  ]
 
 # Application definition
+GOOGLE_ANALYTICS = {
+    'google_analytics_id': '259291315'
+}
 
 INSTALLED_APPS = [
     'django.contrib.sites',
