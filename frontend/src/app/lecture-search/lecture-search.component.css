@@ -4,9 +4,7 @@
     grid-template-columns: 1fr 3fr;
     grid-gap: 20px;
 }
-p{
-  font-weight: 600;
-}
+
 /*side*/
 #side{
     width: 80%;
@@ -42,7 +40,7 @@ h2{
     width: 28px;
     text-align: center;
   }
-
+  
   .currentPageButton{/*select page*/
     font-weight: 700;
   }

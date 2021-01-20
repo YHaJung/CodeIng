@@ -1,10 +1,7 @@
 /*제목*/
 .title{
   text-align: center;
-  padding-bottom: 20px;
-  /*padding: 30px 40vw 30px 40vw;*/
-}
-.title-parent {
+  padding: 30px;
 }
 h1{
   font-size: 21px;
@@ -12,15 +9,14 @@ h1{
 
 #main-ranking{  /*전체*/
   margin: 0px 230px 85px 85px;
-  padding-top:50px;
   display: grid;
-
+  
   grid-template-columns: 1fr 3fr;
   grid-gap: 20px;
 }
 
  /*category field*/
-#left {
+#left {    
   text-align: center;
   width: 170px;
   margin-left: 30px;
@@ -62,7 +58,7 @@ h2{
   margin : 3px;
   text-align: center;
   color: #FFFFFF;
-
+  
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
 }
 
