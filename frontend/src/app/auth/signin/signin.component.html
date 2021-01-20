@@ -1,4 +1,5 @@
 <div class="whole-page">
+<<<<<<< HEAD
   <div class="white-logo" routerLink="/home"></div>
   <!--  <h3 class="typo">이제 모든 코딩 강의 모아보자!</h3>-->
   <h3 class="typo">이제 모든 코딩 강의 모아보자!</h3>
@@ -22,6 +23,20 @@
       <a href="/home">서비스 이용해보기</a>
     </div>
   </div>
+=======
+  <div class="white-logo" routerLink="/"></div>
+  <form class="middle" [formGroup]="signinForm" (submit)="login()">
+    <div>
+      <input class = "idpwd" type="email" formControlName="id" placeholder="아이디(이메일)">
+      <br/>
+      <input class = "idpwd" type="password" formControlName="pw" placeholder="비밀번호">
+      <div class="singup-div">
+        <a href="/signup">회원가입</a>
+      </div>
+    </div>
+    <button class="login" type="submit">로그인</button>
+  </form>
+>>>>>>> parent of 71074b5b... landing page
 </div>
 
 

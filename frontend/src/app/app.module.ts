@@ -40,8 +40,7 @@ import { AvatarModule } from 'ngx-avatar';
 import {GoogleAnalyticsService} from './google-analytics.service';
 
 const appRoutes: Routes = [
-  // {path: '', pathMatch: 'full', redirectTo: 'home'},
-  {path: '', pathMatch: 'full', redirectTo: 'signin'},
+  {path: '', pathMatch: 'full', redirectTo: 'home'},
   {path: 'lecturereview/:id', redirectTo: 'lecturereview/'},
   {path: 'lectureqa/:id', redirectTo: 'lectureqa/'},
   // {path: 'lecturerankdetail', component: LectureRankDetailComponent},
