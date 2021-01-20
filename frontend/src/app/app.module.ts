@@ -37,10 +37,17 @@ import {LectureCardMiddleModule} from './cards/lecture-card-middle/lecture-card-
 import {MainNavModule} from './nav/main-nav/main-nav.module';
 
 import { AvatarModule } from 'ngx-avatar';
+<<<<<<< HEAD
 import {GoogleAnalyticsService} from './google-analytics.service';
 
 const appRoutes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'home'},
+=======
+
+const appRoutes: Routes = [
+  // {path: '', pathMatch: 'full', redirectTo: 'home'},
+  {path: '', pathMatch: 'full', redirectTo: 'signin'},
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
   {path: 'lecturereview/:id', redirectTo: 'lecturereview/'},
   {path: 'lectureqa/:id', redirectTo: 'lectureqa/'},
   // {path: 'lecturerankdetail', component: LectureRankDetailComponent},

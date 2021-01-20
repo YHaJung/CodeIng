@@ -4,7 +4,13 @@
     grid-template-columns: 1fr 3fr;
     grid-gap: 20px;
 }
+<<<<<<< HEAD
 
+=======
+p{
+  font-weight: 600;
+}
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
 /*side*/
 #side{
     width: 80%;
@@ -40,7 +46,11 @@ h2{
     width: 28px;
     text-align: center;
   }
+<<<<<<< HEAD
   
+=======
+
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
   .currentPageButton{/*select page*/
     font-weight: 700;
   }
@@ -70,4 +80,8 @@ h2{
 }
 ::ng-deep .ngx-slider .ngx-slider-ceil{
     display: none !important;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d

@@ -3,21 +3,47 @@
   margin-top: 2vw;
   border-top: 1px solid #E7E7E7;
   border-bottom: 1px solid #E7E7E7;
+<<<<<<< HEAD
   height:5vw;
   line-height: 4vw;
+=======
+  /*height:5vw;*/
+  height: 40px;
+  /*line-height: 4vw;*/
+  line-height: 30px;
+
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
 }
 #main-menu nav{
   margin : 0vh 12vw 0vh 12vw;
   height: 100%;
   vertical-align: middle;
 }
+<<<<<<< HEAD
 #main-menu nav div{
   display: inline-block;
 }
+=======
+
+#main-menu nav div{
+  display: inline-block;
+  margin-right: 5px;
+
+}
+#main-menu nav div a{
+  font-family: 'Lily Script One';
+  color: var(--main-gray);
+}
+
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
 #main-menu nav .clicked-menu{
   border-top: 4px solid;
   color:var(--main-color);
 }
 #main-menu nav .clicked-menu a{
   color:var(--main-color);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d

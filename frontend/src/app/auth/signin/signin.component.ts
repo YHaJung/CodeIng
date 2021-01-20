@@ -30,7 +30,12 @@ export class SigninComponent implements OnInit {
       (result:SigninResults) => {
         console.log(result);
         this.cookieService.set('token', result.token);
+<<<<<<< HEAD
         window.location.href="/home/1";
+=======
+        // window.location.href="/home/1";
+        window.location.href="/lecturerankdetail";
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
       },
       error => {
         console.log(error);
@@ -38,10 +43,18 @@ export class SigninComponent implements OnInit {
         //alert(error[message])
       }
     );
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
   }
 
   ngOnInit(): void {
   }
 
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d

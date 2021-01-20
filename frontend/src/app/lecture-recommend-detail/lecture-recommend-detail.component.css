@@ -1,5 +1,9 @@
 /*제목*/
 .title{
+<<<<<<< HEAD
+=======
+  margin: 0px 150px 0px 150px;
+>>>>>>> 4c4d65a3799313f9061bb0ea681cf05766f9a95d
   text-align: center;
   padding: 30px;
 }
