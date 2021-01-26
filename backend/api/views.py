@@ -67,11 +67,6 @@ def decimal_default(obj):
 
 
 def generate_binary():
-    # .userinfo
-    # print(Profile.objects.only("userinfo"))
-    # print(Profile.objects.filter(userinfo=1)[0].userinfo)
-    # only("userinfo") .userinfo only("userinfo")
-    # print(list(map(lambda x: x.userinfo, Profile.objects.all().only("userinfo") )))
     all_user_ids = list(map(lambda x: x.userinfo.useridx, Profile.objects.all()))
     # print(all_user_names)
     # all_user_ids = list(map(lambda x: x.useridx, all_user_names))
@@ -81,8 +76,6 @@ def generate_binary():
     #     # print(i.userinfo.useridx)
     #     print(i,i.userinfo.useridx)
     #     all_user_names.append(i.userinfo.useridx)
-    # print(all_user_names)
-    # print(all_user_names)
     all_category_ids = list(map(lambda x: x.categoryidx, Category.objects.all()))
 
     all_subcategory_ids = list(map(lambda x: x.subcategoryidx, Subcategory.objects.all()))
@@ -361,7 +354,6 @@ def CBRSlist(request):
     recommend = pickle.load(open('knn_models/recommend.pkl', 'rb'))
     lectures = pickle.load(open('knn_models/lectures.pkl', 'rb'))
     nneigh = 25
-    # print('query',querys[pk])
 
     overview_list = []
     overview_dict = {}
@@ -384,7 +376,6 @@ def CBRSlist(request):
                                                                          'level', 'price', 'rating', 'level__levelidx',
                                                                          'level__levelname',
                                                                          'siteinfo', 'siteinfo__logoimage').distinct()
-                # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
                 price = i[0]['price']
                 if price == 0:
@@ -477,7 +468,6 @@ def itemcbs(request, pk=None):
     overview_dict['isSuccess'] = 'true'
     overview_dict['code'] = 200
     overview_dict['message'] = '추천컨텐츠 조회 성공'
-    # print(recommend.shape)
     r, c = recommend.shape
     if pk < r:
         krecommend = np.argsort(-recommend[int(pk)])[:10]
@@ -495,7 +485,6 @@ def itemcbs(request, pk=None):
                                                                          'level', 'price', 'rating', 'level__levelidx',
                                                                          'level__levelname',
                                                                          'siteinfo', 'siteinfo__logoimage').distinct()
-                # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
                 price = i[0]['price']
                 if price == 0:
@@ -563,7 +552,6 @@ def Poprs(request, pk=None):
                                                                          'level__levelname', 'price', 'rating',
                                                                          'siteinfo').distinct()
 
-                # sitename = Siteinfo.objects.select_related('sitename').get(siteidx=i[0]['siteinfo'])
                 sitename = Siteinfo.objects.get(siteidx=i[0]['siteinfo']).sitename
                 price = i[0]['price']
                 if price == 0:
@@ -981,8 +969,6 @@ def sim_movies_to(request, pk=None):
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-    # response = {'message': 'success'}
-    # return JsonResponse(response, safe=False)
 
 
 @api_view(['GET'])
@@ -1044,5 +1030,3 @@ def recommend_movies_to(request, pk=None):
     overview_dict['result'] = overview_list
     return_value = json.dumps(overview_dict, indent=4, default=decimal_default, ensure_ascii=False)
     return HttpResponse(return_value, content_type="text/json-comment-filtered", status=status.HTTP_200_OK)
-    # response = {'message': 'success'}
-    # return JsonResponse(response, safe=False)
