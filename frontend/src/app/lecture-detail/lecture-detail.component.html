@@ -19,7 +19,7 @@
           <span *ngIf="lectureDetail.price!='free'">{{lectureDetail.price}}원</span>
           <span *ngIf="lectureDetail.price=='free'">무료</span>
         </p>
-        
+
       </div>
     </section>
 
@@ -46,14 +46,14 @@
     </section>
   </div>
   <div class="downer-div">
-      <h4>유사한 강의 추천</h4>
-      <div class="recommend-recture-card">
-        <app-lecture-card-small
-         *ngFor="let lecture of similarLectures"
-          [lecture]="lecture"
-        >
+    <h4>유사한 강의 추천</h4>
+    <div class="recommend-recture-card">
+      <app-lecture-card-small
+        *ngFor="let lecture of similarLectures"
+        [lecture]="lecture"
+      >
       </app-lecture-card-small>
-      </div>
+    </div>
   </div>
-    
+
 </div>

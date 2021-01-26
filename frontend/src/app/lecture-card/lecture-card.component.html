@@ -1,3 +1,4 @@
+<!--<div class="col-sm-6">-->
 <article type="button" routerLink="/lecturedetail/{{lecture.lectureIdx}}/review/view">
     <div class="thumbnail-div"><img src="{{lecture.thumbUrl}}"/></div>
   <div class="text-div">
@@ -27,7 +28,9 @@
       <h3 class="price" *ngIf="lecture.price != 'free' && lecture.price != 'membership' ">{{lecture.price}} 원</h3>
     </div>
   </div>
+
 </article>
 
+<!--</div>-->
 
 
