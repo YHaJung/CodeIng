@@ -1,3 +1,4 @@
-#  meongeun/CodeIng에서 작업한 Code-ing사이트 베타버전 백업용 fork  
-http://www.codeing.site
-2021-02-03
+#  Code-ing사이트 베타버전 백업용 fork  
+result : http://www.codeing.site  
+worked at : github.com/meongeun/CodeIng  
+2021-02-03  
